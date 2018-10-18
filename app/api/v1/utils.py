@@ -36,3 +36,11 @@ class Validator:
         elif not re.search("^.*(?=.*[@#$%^&+=]).*$", self.password):
             Message = "Password must have a special charater"
             abort(400, Message)
+
+    def validate_product_description(self, data):
+        if len(data["description"]) < 20:
+            Message = "Product description cant be less than 20 characters"
+            abort(400, Message)
+        if data["title"] == "" or data["category"] == "" or data["price"] == "" or data["quantity"] == "" or data["minimum_stock"] == "":
+            Message = "All Product details ought to be filled up"
+            abort(400, Message)

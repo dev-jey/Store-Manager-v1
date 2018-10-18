@@ -7,7 +7,31 @@ import jwt
 import datetime
 
 from .utils import Validator
-from .models import User_Model, users
+from .models import User_Model, users, Product_Model, products
+
+
+def token_required(fnc):
+        @wraps(fnc)
+        def decorated(*args, **kwargs):
+            token = None
+            current_user = None
+            if 'x-access-token' in request.headers:
+                token = request.headers['x-access-token']
+            if not token:
+                return make_response(jsonify({
+                            "message": "Token Missing, Login to get one"
+                                            }), 401)
+            try:
+                data = jwt.decode(token, app_config["development"].SECRET_KEY)
+                for user in users:
+                    if user["email"] == data["email"]:
+                        current_user = user
+            except:
+                return make_response(jsonify({"message": "token invalid"}),
+                                     403)
+            return fnc(current_user, *args, **kwargs)
+        return decorated
+
 
 class SignUp(Resource):
     def post(self):
@@ -51,5 +75,3 @@ class Login(Resource):
         return make_response(jsonify({
                         "Message": "Login failed, check credentials"
                         }), 403)
-
-

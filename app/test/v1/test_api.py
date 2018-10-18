@@ -54,12 +54,73 @@ class TestsForApi(unittest.TestCase):
                                                 })
         self.data = json.loads(login_attendant.data.decode())
         self.attendant_token = self.data["token"]
+        self.product = json.dumps(
+            {
+                "title": "infinix",
+                "category": "phones",
+                "price": 3000,
+                "quantity": 10,
+                "minimum_stock": 5,
+                "description": "great smartphone to have"
+            })
+        self.test_client.post("/api/v1/products", data=self.product,
+                              headers={
+                                    'content-type': 'application/json',
+                                    'x-access-token': self.admin_token
+                                      })
         self.context = self.app.app_context()
         self.context.push()
 
     def tearDown(self):
         destroy()
         self.context.pop()
+
+    '''
+    Tests for all products and sales modules
+    '''
+
+    def test_for_empty_product_registration(self):
+        resp = self.test_client.post("/api/v1/products",
+                                     data=json.dumps({
+                                        "title": "",
+                                        "category": "",
+                                        "price": 3000,
+                                        "quantity": 10,
+                                        "minimum_stock": 5,
+                                        "description": "great products to have"
+                                            }),
+                                     headers={
+                                        'content-type': 'application/json',
+                                        'x-access-token': self.admin_token
+                                        })
+        self.assertEqual(resp.status_code, 400)
+
+    def test_product_description_less_than_20_chars(self):
+        resp = self.test_client.post("/api/v1/products",
+                                     data=json.dumps({
+                                                "title": "infinix",
+                                                "category": "phones",
+                                                "price": 3000,
+                                                "quantity": 10,
+                                                "minimum_stock": 5,
+                                                "description": "great"
+                                            }),
+                                     headers={
+                                            'content-type': 'application/json',
+                                            'x-access-token': self.admin_token
+                                            })
+        self.assertEqual(resp.status_code, 400)
+    
+    def test_for_successful_product_registration(self):
+        resp = self.test_client.post("/api/v1/products",
+                                     data=self.product,
+                                     headers={
+                                        'x-access-token': self.admin_token,
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 201)
+
+    '''Tests for signup modules'''
 
     def test_successful_signup(self):
         data = json.dumps({
