@@ -2,6 +2,7 @@ users = []
 products = []
 sales = []
 
+
 class User_Model():
     def __init__(self, email, password, role):
         self.id = len(users) + 1
@@ -41,7 +42,6 @@ class Product_Model():
             "description": self.description
         }
         products.append(new_product)
-
 
 
 def destroy():

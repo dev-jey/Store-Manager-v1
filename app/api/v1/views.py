@@ -104,6 +104,7 @@ class Product(Resource):
                                     "Message": "Successfully added",
                                     "Products": products
                                     }), 201)
+
     @token_required
     def get(current_user, self):
         if current_user:
