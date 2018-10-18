@@ -128,6 +128,21 @@ class TestsForApi(unittest.TestCase):
                                             })
         self.assertEqual(resp.status_code, 201)
 
+    def test_for_token_authentication(self):
+        resp = self.test_client.post("/api/v1/products",
+                                     data=json.dumps({
+                                        "title": "infinix",
+                                        "category": "phones",
+                                        "price": 3000,
+                                        "quantity": 10,
+                                        "minimum_stock": 5,
+                                        "description": "great products to have at hoome"
+                                            }),
+                                     headers={
+                                             'content-type': 'application/json'
+                                             })
+        self.assertEqual(resp.status_code, 401)
+
     def test_getting_all_products(self):
         resp = self.test_client.get("/api/v1/products",
                                     headers={
