@@ -104,4 +104,16 @@ class Product(Resource):
                                     "Message": "Successfully added",
                                     "Products": products
                                     }), 201)
+    @token_required
+    def get(current_user, self):
+        if current_user:
+            if len(products) > 0:
+                response = make_response(jsonify({
+                                        "products": products
+                                        }), 200)
+            else:
+                response = make_response(jsonify({
+                    "Message": "No products found"
+                                                 }), 404)
+        return response
 
