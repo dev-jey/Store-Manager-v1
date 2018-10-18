@@ -75,3 +75,33 @@ class Login(Resource):
         return make_response(jsonify({
                         "Message": "Login failed, check credentials"
                         }), 403)
+
+
+class Product(Resource):
+    @token_required
+    def post(current_user, self):
+        if current_user and current_user["role"] != "Admin":
+            return make_response(jsonify({
+                                    "Message": "You must be an admin"
+                                    }), 403)
+        data = request.get_json()
+        if not data:
+            return make_response(jsonify({
+                            "message": "Kindly enter product details",
+                            }), 400)
+        id = len(products) + 1
+        title = data["title"]
+        category = data["category"]
+        price = data["price"]
+        quantity = data["quantity"]
+        minimum_stock = data["minimum_stock"]
+        description = data["description"]
+        product = Product_Model(title, category, price, quantity,
+                                minimum_stock, description)
+        Validator.validate_product_description(self, data)
+        product.save()
+        return make_response(jsonify({
+                                    "Message": "Successfully added",
+                                    "Products": products
+                                    }), 201)
+
