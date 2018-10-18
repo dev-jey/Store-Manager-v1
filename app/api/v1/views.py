@@ -7,7 +7,7 @@ import jwt
 import datetime
 
 from .utils import Validator
-from .models import User_Model, users, Product_Model, products
+from .models import User_Model, users, Product_Model, products, sales
 
 
 def token_required(fnc):
@@ -116,4 +116,3 @@ class Product(Resource):
                     "Message": "No products found"
                                                  }), 404)
         return response
-

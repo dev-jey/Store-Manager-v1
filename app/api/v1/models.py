@@ -1,6 +1,6 @@
 users = []
 products = []
-
+sales = []
 
 class User_Model():
     def __init__(self, email, password, role):
@@ -47,3 +47,4 @@ class Product_Model():
 def destroy():
     users.clear()
     products.clear()
+    sales.clear()
