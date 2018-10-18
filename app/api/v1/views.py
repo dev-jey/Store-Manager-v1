@@ -189,3 +189,18 @@ class Sale(Resource):
             return make_response(jsonify({
                                         "Message": "Must be an admin"
                                         }), 401)
+
+
+class OneProduct(Resource):
+    @token_required
+    def get(current_user, self, productId):
+        if current_user:
+            for product in products:
+                if int(productId) == product["productId"]:
+                    return make_response(jsonify({
+                                                "Message": "Success",
+                                                "Product": product
+                                                }), 200)
+            return make_response(jsonify({
+                                    "Message": "Product non-existent"
+                                    }), 404)
