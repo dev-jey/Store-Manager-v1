@@ -167,6 +167,20 @@ class TestsForApi(unittest.TestCase):
                                             })
         self.assertEqual(resp.status_code, 401)
 
+    def test_getting_one_product(self):
+        resp = self.test_client.get("/api/v1/products/1",
+                                    headers={
+                                        'x-access-token': self.attendant_token
+                                            })
+        self.assertEqual(resp.status_code, 200)
+
+    def test_getting_one_product_using_wrong_productId(self):
+        resp = self.test_client.get("/api/v1/products/5",
+                                    headers={
+                                        'x-access-token': self.attendant_token
+                                            })
+        self.assertEqual(resp.status_code, 404)
+
     '''Tests for signup modules'''
 
     def test_successful_signup(self):
