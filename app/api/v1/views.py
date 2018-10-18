@@ -204,3 +204,30 @@ class OneProduct(Resource):
             return make_response(jsonify({
                                     "Message": "Product non-existent"
                                     }), 404)
+
+
+class OneSale(Resource):
+    @token_required
+    def get(current_user, self, saleId):
+        if len(sales) == 0:
+            response = make_response(jsonify({
+                            "Message": "No sales at all"
+                            }), 404)
+        else:
+            for sale in sales:
+                if int(saleId) == sale["saleId"]:
+                    if current_user["role"] == "Admin" or current_user["id"] == sale["userId"]:
+                        return make_response(jsonify({
+                                    "Message": "Success",
+                                    "Sale": sale
+                                    }), 200)
+                    else:
+                        return make_response(jsonify({
+                                    "Message": "Access denied"
+                                    }), 401)
+                else:
+                    response = make_response(jsonify({
+                                    "Message": "Sale non-existent"
+                                    }), 404)
+        return response
+

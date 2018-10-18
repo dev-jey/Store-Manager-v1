@@ -7,7 +7,7 @@ install:
 before_script:
    - export SECRET_KEY="james"
 script:
- - pytest
+ - pytest -v -W error::UserWarning
  - pytest --cov=app
 after_success:
  - coveralls
