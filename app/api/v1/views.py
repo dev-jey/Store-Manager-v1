@@ -116,3 +116,57 @@ class Product(Resource):
                     "Message": "No products found"
                                                  }), 404)
         return response
+
+
+class Sale(Resource):
+
+    @token_required
+    def post(current_user, self):
+        if current_user and current_user["role"] == "Attendant":
+            data = request.get_json()
+            if not data:
+                return jsonify({
+                                "message": "Kindly enter product to sell",
+                                }, 400)
+            id = len(sales) + 1
+            productId = data["productId"]
+            for product in products:
+                total_price = 0
+                if product["productId"] == productId:
+                        userId = current_user["id"]
+                        new_sale = {
+                            "saleId": id,
+                            "userId": userId,
+                            "product": product
+                        }
+                        product["quantity"] = product["quantity"]-1
+                        sales.append(new_sale)
+                        for sale in sales:
+                            if product["productId"] in sale.values():
+                                price = int(product["price"])
+                            total_price = total_price+price
+
+                        if product["quantity"] <= 0:
+                            response = make_response(jsonify({
+                                            "Message": "Products sold up"
+                                            }), 404)
+                        elif product["quantity"] < product["minimum_stock"]:
+                            response = make_response(jsonify({
+                                            "Message": "Minimum stock reached",
+                                            "Sales made": sales,
+                                            "total price": total_price
+                                            }), 201)
+                        else:
+                            response = make_response(jsonify({
+                                                "message": "successfully sold",
+                                                "Sales made": sales,
+                                                "total price": total_price
+                                                }), 201)
+                        return response
+            return make_response(jsonify({
+                                        "Message": "Product non-existent"
+                                        }), 404)
+        else:
+            return make_response(jsonify({
+                                        "Message": "Must be an attendant!"
+                                        }), 401)
