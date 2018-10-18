@@ -181,6 +181,27 @@ class TestsForApi(unittest.TestCase):
                                             })
         self.assertEqual(resp.status_code, 404)
 
+    def test_getting_one_sale_admin(self):
+        resp = self.test_client.get("/api/v1/sales/1",
+                                    headers={
+                                        'x-access-token': self.admin_token
+                                            })
+        self.assertEqual(resp.status_code, 200)
+
+    def test_getting_one_sale_attendant(self):
+        resp = self.test_client.get("/api/v1/sales/1",
+                                    headers={
+                                        'x-access-token': self.attendant_token
+                                            })
+        self.assertEqual(resp.status_code, 200)
+
+    def test_getting_one_sale_with_wrong_saleId(self):
+        resp = self.test_client.get("/api/v1/sales/4",
+                                    headers={
+                                        'x-access-token': self.attendant_token
+                                            })
+        self.assertEqual(resp.status_code, 404)
+
     '''Tests for signup modules'''
 
     def test_successful_signup(self):
