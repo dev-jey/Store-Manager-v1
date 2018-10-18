@@ -1,2 +1,2 @@
 web:gunicorn --workers=1 run:app
-release echo "some stuff"
+release: echo "some stuff"
