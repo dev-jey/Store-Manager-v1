@@ -34,9 +34,9 @@ The api endpoints are
 | Endpoint | Description |
 | --- | --- |
 | GET /products | Fetch all products |
-| GET /products/<productId> | Fetch a single product record |
+| GET /products/productId | Fetch a single product record |
 | GET /sales | Fetch all sale records |
-| GET /sales/<saleId> | Fetch a single sale record |
+| GET /sales/saleId | Fetch a single sale record |
 | POST /products | Create a product |
 | POST /sales | Create a sale order |
 | POST /auth/signup | Signup a user |
