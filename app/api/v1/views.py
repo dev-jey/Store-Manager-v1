@@ -6,35 +6,39 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 import datetime
 
-from .utils import Validator
+'''Local imports'''
+from .utils import Validator, Validator_products
 from .models import User_Model, users, Product_Model, products, sales
 
 
 def token_required(fnc):
-        @wraps(fnc)
-        def decorated(*args, **kwargs):
-            token = None
-            current_user = None
-            if 'x-access-token' in request.headers:
-                token = request.headers['x-access-token']
-            if not token:
-                return make_response(jsonify({
-                            "message": "Token Missing, Login to get one"
-                                            }), 401)
-            try:
-                data = jwt.decode(token, app_config["development"].SECRET_KEY)
-                for user in users:
-                    if user["email"] == data["email"]:
-                        current_user = user
-            except:
-                return make_response(jsonify({"message": "token invalid"}),
-                                     403)
-            return fnc(current_user, *args, **kwargs)
-        return decorated
+    '''Creates decorator to decode tokens and assign them to current users'''
+    @wraps(fnc)
+    def decorated(*args, **kwargs):
+        token = None
+        current_user = None
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
+        if not token:
+            return make_response(jsonify({
+                        "message": "Token Missing, Login to get one"
+                                        }), 401)
+        try:
+            data = jwt.decode(token, app_config["development"].SECRET_KEY)
+            for user in users:
+                if user["email"] == data["email"]:
+                    current_user = user
+        except:
+            return make_response(jsonify({"message": "token invalid"}),
+                                 403)
+        return fnc(current_user, *args, **kwargs)
+    return decorated
 
 
 class SignUp(Resource):
+    '''Signup endpont'''
     def post(self):
+        '''Method to create a new user'''
         data = request.get_json()
         if not data:
             return make_response(jsonify({
@@ -47,13 +51,14 @@ class SignUp(Resource):
         Validator.validate_credentials(self, data)
         user.save()
         return make_response(jsonify({
-                                    "Message": "Success",
-                                    "users": users
+                                    "Message": user.getEmail() + ": was Successfully registered"
                                     }), 201)
 
 
 class Login(Resource):
+    '''Login endpoint'''
     def post(self):
+        '''Method to login a user and create a unique JWT token'''
         data = request.get_json()
         if not data:
             return make_response(jsonify({
@@ -80,6 +85,7 @@ class Login(Resource):
 class Product(Resource):
     @token_required
     def post(current_user, self):
+        '''Post product endpoint that creates a new product'''
         if current_user and current_user["role"] != "Admin":
             return make_response(jsonify({
                                     "Message": "You must be an admin"
@@ -97,7 +103,7 @@ class Product(Resource):
         minimum_stock = data["minimum_stock"]
         description = data["description"]
         product = Product_Model(data)
-        Validator.validate_product_description(self, data)
+        Validator_products.validate_product_description(self, data)
         product.save()
         return make_response(jsonify({
                                     "Message": "Successfully added",
@@ -106,6 +112,8 @@ class Product(Resource):
 
     @token_required
     def get(current_user, self):
+        '''Get all products endpoint that fetches all products
+        and outputs them to the user'''
         if current_user:
             if len(products) > 0:
                 response = make_response(jsonify({
@@ -119,9 +127,9 @@ class Product(Resource):
 
 
 class Sale(Resource):
-
     @token_required
     def post(current_user, self):
+        '''Create an endpoint for attendants to make sales'''
         if current_user and current_user["role"] == "Attendant":
             data = request.get_json()
             if not data:
@@ -173,6 +181,7 @@ class Sale(Resource):
 
     @token_required
     def get(current_user, self):
+        '''Method for getting all sales'''
         if current_user and current_user["role"] == "Admin":
             if len(sales) > 0:
                 response = make_response(jsonify({
@@ -193,6 +202,7 @@ class Sale(Resource):
 class OneProduct(Resource):
     @token_required
     def get(current_user, self, productId):
+        '''Gets one product using its product id'''
         if current_user:
             for product in products:
                 if int(productId) == product["productId"]:
@@ -208,6 +218,7 @@ class OneProduct(Resource):
 class OneSale(Resource):
     @token_required
     def get(current_user, self, saleId):
+        '''Gets one sale using its sale Id'''
         if len(sales) == 0:
             response = make_response(jsonify({
                             "Message": "No sales at all"
@@ -229,4 +240,4 @@ class OneSale(Resource):
                                     "Message": "Sale non-existent"
                                     }), 404)
         return response
-
+        

@@ -1,9 +1,11 @@
+'''Creation of all data structures and CRUD manipulation functions'''
 users = []
 products = []
 sales = []
 
 
 class User_Model():
+    '''Initializes a new user object'''
     def __init__(self, email, password, role):
         self.id = len(users) + 1
         self.email = email
@@ -11,6 +13,7 @@ class User_Model():
         self.role = role
 
     def save(self):
+        '''Saves a user by appending to the users list'''
         new_user = {
                 "id": self.id,
                 "email": self.email,
@@ -18,14 +21,20 @@ class User_Model():
                 "role": self.role
             }
         users.append(new_user)
+    
+    def getEmail(self):
+        return self.email
 
 
 class Product_Model():
+    '''Inittializes a new product'''
     def __init__(self, data):
         self.id = len(products) + 1
         self.product = data
 
     def save(self):
+        '''Method to save a product by appending it to existing
+        products list'''
         new_product = {
             "productId": self.id,
             "title": self.product["title"],
@@ -39,6 +48,8 @@ class Product_Model():
 
 
 def destroy():
+    '''Destroys all the data in the data structures duting teardown
+    in testing'''
     users.clear()
     products.clear()
     sales.clear()

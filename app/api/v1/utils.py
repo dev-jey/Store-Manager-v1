@@ -5,7 +5,8 @@ import re
 from .models import users
 
 
-class Validator:
+class Validator(object):
+    '''User validations undertaken here'''
     def validate_credentials(self, data):
         self.email = data["email"]
         self.password = data["password"]
@@ -37,7 +38,10 @@ class Validator:
             Message = "Password must have a special charater"
             abort(400, Message)
 
+
+class Validator_products(object):
     def validate_product_description(self, data):
+        '''Product descriptions validated here'''
         if len(data["description"]) < 20:
             Message = "Product description cant be less than 20 characters"
             abort(400, Message)

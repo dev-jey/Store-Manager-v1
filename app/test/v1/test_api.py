@@ -7,6 +7,8 @@ from app.api.v1.models import destroy
 
 
 class TestsForApi(unittest.TestCase):
+    '''Set up method to create an attendant, admin, product,
+    and a sale for use in other tests and authentication'''
     def setUp(self):
         self.app = create_app(config_name="testing")
         self.test_client = self.app.test_client()
@@ -80,14 +82,13 @@ class TestsForApi(unittest.TestCase):
         self.context.push()
 
     def tearDown(self):
+        '''Method to clear all dictionaries and
+        lists before another test is undertaken'''
         destroy()
         self.context.pop()
 
-    '''
-    Tests for all products and sales modules
-    '''
-
     def test_for_empty_product_registration(self):
+        '''Tests for an empty product registration'''
         resp = self.test_client.post("/api/v1/products",
                                      data=json.dumps({
                                         "title": "",
@@ -104,6 +105,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 400)
 
     def test_product_description_less_than_20_chars(self):
+        '''Test for short product descriptions'''
         resp = self.test_client.post("/api/v1/products",
                                      data=json.dumps({
                                                 "title": "infinix",
@@ -120,6 +122,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 400)
 
     def test_for_successful_product_registration(self):
+        '''Tests for a successful product registration'''
         resp = self.test_client.post("/api/v1/products",
                                      data=self.product,
                                      headers={
@@ -129,6 +132,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 201)
 
     def test_for_token_authentication(self):
+        '''Test for the functionality of token based authentication'''
         resp = self.test_client.post("/api/v1/products",
                                      data=json.dumps({
                                         "title": "infinix",
@@ -144,6 +148,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 401)
 
     def test_getting_all_products(self):
+        '''Test for getting all products'''
         resp = self.test_client.get("/api/v1/products",
                                     headers={
                                             'x-access-token': self.admin_token
@@ -151,6 +156,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_post_sale_attendant(self):
+        '''Test for posting a sale'''
         resp = self.test_client.post("/api/v1/sales",
                                      data=json.dumps({"productId": 1}),
                                      headers={
@@ -160,6 +166,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 201)
 
     def test_post_sale_admin(self):
+        '''Test for administrator posting a sale'''
         resp = self.test_client.post("/api/v1/sales",
                                      data=json.dumps({"productId": 1}),
                                      headers={
@@ -169,6 +176,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 401)
 
     def test_get_all_sales_admin(self):
+        '''Test for admin getting all sales'''
         resp = self.test_client.get("/api/v1/sales",
                                     headers={
                                             'x-access-token': self.admin_token
@@ -176,6 +184,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_get_all_sales_attendant(self):
+        '''Test for attendant getting all sales'''
         resp = self.test_client.get("/api/v1/sales",
                                     headers={
                                         'x-access-token': self.attendant_token
@@ -183,6 +192,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 401)
 
     def test_getting_one_product(self):
+        '''Test for getting one product'''
         resp = self.test_client.get("/api/v1/products/1",
                                     headers={
                                         'x-access-token': self.attendant_token
@@ -190,6 +200,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_getting_one_product_using_wrong_productId(self):
+        '''Test for getting one product using wrong id'''
         resp = self.test_client.get("/api/v1/products/5",
                                     headers={
                                         'x-access-token': self.attendant_token
@@ -197,6 +208,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 404)
 
     def test_getting_one_sale_admin(self):
+        '''Test for getting one sale for an admin'''
         resp = self.test_client.get("/api/v1/sales/1",
                                     headers={
                                         'x-access-token': self.admin_token
@@ -204,6 +216,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_getting_one_sale_attendant(self):
+        '''Test for getting one sale for an attendant'''
         resp = self.test_client.get("/api/v1/sales/1",
                                     headers={
                                         'x-access-token': self.attendant_token
@@ -211,15 +224,15 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_getting_one_sale_with_wrong_saleId(self):
+        '''Test for getting one sale when a person enters wrong saleID'''
         resp = self.test_client.get("/api/v1/sales/4",
                                     headers={
                                         'x-access-token': self.attendant_token
                                             })
         self.assertEqual(resp.status_code, 404)
 
-    '''Tests for signup modules'''
-
     def test_successful_signup(self):
+        '''Tests for a successful signup'''
         data = json.dumps({
                            "email": "mary@gmail.com",
                            "password": "mardsd2@Qss",
@@ -233,6 +246,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(res.status_code, 201)
 
     def test_success_login(self):
+        '''Test for successful login'''
         resp = self.test_client.post("/api/v1/auth/login",
                                      data=self.admin_login_details,
                                      headers={
@@ -241,6 +255,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_fail_login(self):
+        '''Test for a failing login'''
         response = self.test_client.post("/api/v1/auth/login",
                                          data=json.dumps({
                                                         "email": "m@ew",
@@ -252,6 +267,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_login_with_no_credentials_given(self):
+        '''Test for a login with no credentials given'''
         resp = self.test_client.post("/api/v1/auth/login",
                                      headers={
                                              'content-type': 'application/json'
@@ -259,6 +275,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 400)
 
     def test_wrong_email_signup(self):
+        '''Test for a signup with wrong email format given'''
         resp = self.test_client.post("/api/v1/auth/signup",
                                      data=json.dumps({
                                                     "id": 5,
@@ -271,6 +288,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 400)
 
     def test_email_already_exists(self):
+        '''Test for signing up with an already existing email'''
         resp = self.test_client.post("/api/v1/auth/signup",
                                      data=json.dumps({
                                                     "id": 5,
@@ -284,6 +302,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 406)
 
     def test_signup_with_details_missing(self):
+        '''Tests for signup with no details'''
         resp = self.test_client.post("/api/v1/auth/signup",
                                      data=json.dumps({
                                                     "id": 5,
@@ -297,6 +316,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 400)
 
     def test_short_password(self):
+        '''Test for a signup with a short password'''
         resp = self.test_client.post("/api/v1/auth/signup",
                                      data=json.dumps({
                                                     "id": 5,
@@ -310,6 +330,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 400)
 
     def test_long_password(self):
+        '''Test for a signup with a long password'''
         resp = self.test_client.post("/api/v1/auth/signup",
                                      data=json.dumps({
                                             "id": 5,
@@ -322,6 +343,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 400)
 
     def test_password_lacks_digit(self):
+        '''Test for signup witha password that lacks a numerical digit'''
         resp = self.test_client.post("/api/v1/auth/signup",
                                      data=json.dumps({
                                         "id": 5,
@@ -334,6 +356,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 400)
 
     def test_password_lacks_upperCase(self):
+        '''Test for signup with a password with no uppercase character'''
         resp = self.test_client.post("/api/v1/auth/signup",
                                      data=json.dumps({
                                         "id": 5,
@@ -346,6 +369,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 400)
 
     def test_password_lacks_lowerCase(self):
+        '''Test for signup with no lower case character'''
         resp = self.test_client.post("/api/v1/auth/signup",
                                      data=json.dumps({
                                         "id": 5,
@@ -358,6 +382,7 @@ class TestsForApi(unittest.TestCase):
         self.assertEqual(resp.status_code, 400)
 
     def test_password_lacks_specialChar(self):
+        '''Test for signup with a password that lacks a special character'''
         resp = self.test_client.post("/api/v1/auth/signup",
                                      data=json.dumps({
                                         "id": 5,
