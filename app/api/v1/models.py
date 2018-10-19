@@ -21,25 +21,19 @@ class User_Model():
 
 
 class Product_Model():
-    def __init__(self, title, category, price, quantity, minimum_stock,
-                 description):
+    def __init__(self, data):
         self.id = len(products) + 1
-        self.title = title
-        self.category = category
-        self.price = price
-        self.quantity = quantity
-        self.minimum_stock = minimum_stock
-        self.description = description
+        self.product = data
 
     def save(self):
         new_product = {
             "productId": self.id,
-            "title": self.title,
-            "category": self.category,
-            "price": self.price,
-            "quantity": self.quantity,
-            "minimum_stock": self.minimum_stock,
-            "description": self.description
+            "title": self.product["title"],
+            "category": self.product["category"],
+            "price": self.product["price"],
+            "quantity": self.product["quantity"],
+            "minimum_stock": self.product["minimum_stock"],
+            "description": self.product["description"]
         }
         products.append(new_product)
 

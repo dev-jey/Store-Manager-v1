@@ -96,8 +96,7 @@ class Product(Resource):
         quantity = data["quantity"]
         minimum_stock = data["minimum_stock"]
         description = data["description"]
-        product = Product_Model(title, category, price, quantity,
-                                minimum_stock, description)
+        product = Product_Model(data)
         Validator.validate_product_description(self, data)
         product.save()
         return make_response(jsonify({
