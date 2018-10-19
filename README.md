@@ -1,6 +1,8 @@
 # Store-Manager-v1
 This is a simple store management application\
-[![Build Status](https://travis-ci.org/codeMarble254/Store-Manager-v1.svg?branch=bg-fix-heroku-deployment-161331066)](https://travis-ci.org/codeMarble254/Store-Manager-v1) [![Coverage Status](https://coveralls.io/repos/github/codeMarble254/Store-Manager-v1/badge.svg?branch=ft-signup-api-161309703)](https://coveralls.io/github/codeMarble254/Store-Manager-v1?branch=ft-signup-api-161309703) [![Maintainability](https://api.codeclimate.com/v1/badges/836fa03585ea46a6136d/maintainability)](https://codeclimate.com/github/codeMarble254/Store-Manager-v1/maintainability)\
+[![Build Status](https://travis-ci.org/codeMarble254/Store-Manager-v1.svg?branch=bg-fix-heroku-deployment-161331066)](https://travis-ci.org/codeMarble254/Store-Manager-v1)
+[![Coverage Status](https://coveralls.io/repos/github/codeMarble254/Store-Manager-v1/badge.svg?branch=bg-commenting-and-refactor-161332975)](https://coveralls.io/github/codeMarble254/Store-Manager-v1?branch=bg-commenting-and-refactor-161332975)
+[![Maintainability](https://api.codeclimate.com/v1/badges/836fa03585ea46a6136d/maintainability)](https://codeclimate.com/github/codeMarble254/Store-Manager-v1/maintainability)\
 To run this project you should follow the following steps:
 
 1. Create a virual enviroment with the command
