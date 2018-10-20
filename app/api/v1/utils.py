@@ -39,13 +39,13 @@ class User_validator(object):
         '''Validates if the data keys are not entered'''
         if "email" not in data or "password" not in data:
             Message = "Must enter all credentials"
-            abort(401, Message)
+            abort(400, Message)
 
     def validate_data_types(self, data):
         '''Verifies the data types of different data items passed'''
         if type(data["email"]) is not str or type(data["role"]) is not str or type(data["password"]) is not str:
             Message = "Details must be strings characters"
-            abort(401, Message)
+            abort(400, Message)
 
     def validate_data_types_login(self, data):
         '''Validates data types of data passed during login'''

@@ -121,6 +121,50 @@ class TestsForApi(unittest.TestCase):
                                             })
         self.assertEqual(resp.status_code, 400)
 
+    def test_for_empty_product_entries(self):
+        '''Test for empty/no product entries'''
+        resp = self.test_client.post("/api/v1/products",
+                                     data=json.dumps({}),
+                                     headers={
+                                            'content-type': 'application/json',
+                                            'x-access-token': self.admin_token
+                                            })
+        self.assertEqual(resp.status_code, 400)
+    
+    def test_for_product_creation_data_types(self):
+        '''Test for product creation using wrong data types'''
+        resp = self.test_client.post("/api/v1/products",
+                                     data=json.dumps({
+                                        "title": 1212,
+                                        "category": 1212,
+                                        "price": "ds",
+                                        "quantity": "qw",
+                                        "minimum_stock": 12,
+                                        "description": 2232
+                                     }),
+                                     headers={
+                                            'content-type': 'application/json',
+                                            'x-access-token': self.admin_token
+                                            })
+        self.assertEqual(resp.status_code, 400)
+
+    def test_if_price_is_a_float(self):
+        '''Test for product creation using wrong data types'''
+        resp = self.test_client.post("/api/v1/products",
+                                     data=json.dumps({
+                                        "title": "Mandazi",
+                                        "category": "food",
+                                        "price": 120.50,
+                                        "quantity": 23,
+                                        "minimum_stock": 2,
+                                        "description": "Great product to possess at school"
+                                     }),
+                                     headers={
+                                            'content-type': 'application/json',
+                                            'x-access-token': self.admin_token
+                                            })
+        self.assertEqual(resp.status_code, 201)
+
     def test_for_successful_product_registration(self):
         '''Tests for a successful product registration'''
         resp = self.test_client.post("/api/v1/products",
@@ -164,6 +208,37 @@ class TestsForApi(unittest.TestCase):
                                         'content-type': 'application/json'
                                             })
         self.assertEqual(resp.status_code, 201)
+
+    def test_validate_posting_empty_product_id(self):
+        '''Test for posting a sale with no product id'''
+        resp = self.test_client.post("/api/v1/sales",
+                                     data=json.dumps({}),
+                                     headers={
+                                        'x-access-token': self.attendant_token,
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 400)
+
+    def test_validate_posting_with_no_correct_key(self):
+        '''Test for posting a sale with no correct key for productId'''
+        resp = self.test_client.post("/api/v1/sales",
+                                     data=json.dumps({"prod": "ew"}),
+                                     headers={
+                                        'x-access-token': self.attendant_token,
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 400)
+
+    def validate_product_id_data_type(self):
+        '''Test to assert the correct datatype for product id when
+        making a sale'''
+        resp = self.test_client.post("/api/v1/sales",
+                                     data=json.dumps({"productId": "one"}),
+                                     headers={
+                                        'x-access-token': self.attendant_token,
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 400)
 
     def test_post_sale_admin(self):
         '''Test for administrator posting a sale'''
@@ -389,6 +464,40 @@ class TestsForApi(unittest.TestCase):
                                         "email": "jame@gmail.com",
                                         "password": "ddddssd2D",
                                         "role": "Admin"}),
+                                     headers={
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 400)
+
+    def test_for_missing_login_data(self):
+        '''Test for login without any data passed'''
+        resp = self.test_client.post("/api/v1/auth/login",
+                                     data=json.dumps({}),
+                                     headers={
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 400)
+
+    def test_for_login_details_data_types(self):
+        '''Test for login details where wrong data types are given'''
+        resp = self.test_client.post("/api/v1/auth/login",
+                                     data=json.dumps({
+                                         "email": 2014,
+                                         "password": 3.29
+                                     }),
+                                     headers={
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 401)
+
+    def test_for_signup_details_data_types(self):
+        '''Test for signup details where wrong data types are given'''
+        resp = self.test_client.post("/api/v1/auth/signup",
+                                     data=json.dumps({
+                                         "email": 2014,
+                                         "password": 3.29,
+                                         "role": 3232
+                                     }),
                                      headers={
                                         'content-type': 'application/json'
                                             })
