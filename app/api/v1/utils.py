@@ -38,6 +38,11 @@ class Validator(object):
             Message = "Password must have a special charater"
             abort(400, Message)
 
+    def validate_missing_data(self, data):
+        if "email" not in data or "password" not in data:
+            Message = "Must enter all credentials"
+            abort(401, Message)
+
 
 class Validator_products(object):
     def validate_product_description(self, data):
@@ -47,4 +52,20 @@ class Validator_products(object):
             abort(400, Message)
         if data["title"] == "" or data["category"] == "" or data["price"] == "" or data["quantity"] == "" or data["minimum_stock"] == "":
             Message = "All Product details ought to be filled up"
+            abort(400, Message)
+
+    def validate_missing_data(self, data):
+        if "title" not in data or "category" not in data or "price" not in data or "quantity" not in data or "minimum_stock" not in data or "description" not in data:
+            Message = "Must enter all product details"
+            abort(400, Message)
+
+
+class Validator_sales(object):
+    def validate_missing_data(self, data):
+        if "productId" not in data:
+            Message = "Must enter the product Id"
+            abort(400, Message)
+
+        if data["productId"] == "":
+            Message = "Kindly enter the productId to sell"
             abort(400, Message)

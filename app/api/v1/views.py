@@ -7,8 +7,8 @@ import jwt
 import datetime
 
 '''Local imports'''
-from .utils import Validator, Validator_products
-from .models import User_Model, users, Product_Model, products, sales
+from .utils import Validator, Validator_products, Validator_sales
+from .models import User_Model, users, Product_Model, products, Sales_Model, sales
 
 
 def token_required(fnc):
@@ -64,6 +64,7 @@ class Login(Resource):
             return make_response(jsonify({
                             "message": "Kindly enter your credentials",
                             }), 400)
+        Validator.validate_missing_data(self, data)
         email = data["email"]
         password = data["password"]
         for user in users:
@@ -95,6 +96,7 @@ class Product(Resource):
             return make_response(jsonify({
                             "message": "Kindly enter product details",
                             }), 400)
+        Validator_products.validate_missing_data(self, data)
         id = len(products) + 1
         title = data["title"]
         category = data["category"]
@@ -132,6 +134,7 @@ class Sale(Resource):
         '''Create an endpoint for attendants to make sales'''
         if current_user and current_user["role"] == "Attendant":
             data = request.get_json()
+            Validator_sales.validate_missing_data(self, data)
             if not data:
                 return jsonify({
                                 "message": "Kindly enter product to sell",
@@ -142,18 +145,13 @@ class Sale(Resource):
                 total_price = 0
                 if product["productId"] == productId:
                         userId = current_user["id"]
-                        new_sale = {
-                            "saleId": id,
-                            "userId": userId,
-                            "product": product
-                        }
+                        sale_obj = Sales_Model(id, userId, product)
                         product["quantity"] = product["quantity"]-1
-                        sales.append(new_sale)
+                        sale_obj.save()
                         for sale in sales:
                             if product["productId"] in sale.values():
                                 price = int(product["price"])
-                            total_price = total_price+price
-
+                                total_price = total_price+price
                         if product["quantity"] <= 0:
                             response = make_response(jsonify({
                                             "Message": "Products sold up"

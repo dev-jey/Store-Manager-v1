@@ -21,7 +21,7 @@ class User_Model():
                 "role": self.role
             }
         users.append(new_user)
-    
+
     def getEmail(self):
         return self.email
 
@@ -45,6 +45,22 @@ class Product_Model():
             "description": self.product["description"]
         }
         products.append(new_product)
+
+
+class Sales_Model():
+    '''Initializes a sale'''
+    def __init__(self, saleId, userId, product):
+        self.saleId = saleId
+        self.userId = userId
+        self.product = product
+    '''Saves a sale to sale records'''
+    def save(self):
+        new_sale = {
+                    "saleId": self.saleId,
+                    "userId": self.userId,
+                    "product": self.product
+                    }
+        sales.append(new_sale)
 
 
 def destroy():
