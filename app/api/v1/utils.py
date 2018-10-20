@@ -36,16 +36,19 @@ class User_validator(object):
             abort(400, Message)
 
     def validate_missing_data(self, data):
+        '''Validates if the data keys are not entered'''
         if "email" not in data or "password" not in data:
             Message = "Must enter all credentials"
             abort(401, Message)
 
     def validate_data_types(self, data):
+        '''Verifies the data types of different data items passed'''
         if type(data["email"]) is not str or type(data["role"]) is not str or type(data["password"]) is not str:
             Message = "Details must be strings characters"
             abort(401, Message)
 
     def validate_data_types_login(self, data):
+        '''Validates data types of data passed during login'''
         if type(data["email"]) is not str or type(data["password"]) is not str:
             Message = "Details must be strings characters"
             abort(401, Message)
@@ -62,11 +65,13 @@ class Validator_products(object):
             abort(400, Message)
 
     def validate_missing_data(self, data):
+        '''Checks for missing data keys in data passed during product registration'''
         if "title" not in data or "category" not in data or "price" not in data or "quantity" not in data or "minimum_stock" not in data or "description" not in data:
             Message = "Must enter all product details"
             abort(400, Message)
 
     def validate_data_types(self, data):
+        '''Verifies data types of product details'''
         try:
             data["price"] = float(data["price"])
         except:
@@ -78,6 +83,7 @@ class Validator_products(object):
 
 class Validator_sales(object):
     def validate_missing_data(self, data):
+        '''checks for missing data when making a sale'''
         if "productId" not in data:
             Message = "Must enter the product Id"
             abort(400, Message)
@@ -87,6 +93,7 @@ class Validator_sales(object):
             abort(400, Message)
 
     def validate_data_types(self, data):
+        '''validates datatype of the product id passed'''
         if type(data["productId"]) is not int:
             Message = "Product Id must be an integer"
             abort(400, Message)

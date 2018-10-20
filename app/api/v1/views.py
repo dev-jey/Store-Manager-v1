@@ -213,9 +213,9 @@ class OneProduct(Resource):
                                                 "Message": "Success",
                                                 "Product": product
                                                 }), 200)
-            return make_response(jsonify({
-                                    "Message": "Product non-existent"
-                                    }), 404)
+        return make_response(jsonify({
+                                "Message": "Product non-existent"
+                                }), 404)
 
 
 class OneSale(Resource):
@@ -230,17 +230,18 @@ class OneSale(Resource):
             for sale in sales:
                 if int(saleId) == sale["saleId"]:
                     if current_user["role"] == "Admin" or current_user["id"] == sale["userId"]:
-                        return make_response(jsonify({
+                        resp = make_response(jsonify({
                                     "Message": "Success",
                                     "Sale": sale
                                     }), 200)
                     else:
-                        return make_response(jsonify({
+                        resp = make_response(jsonify({
                                     "Message": "Access denied"
                                     }), 401)
+                    return resp
                 else:
                     response = make_response(jsonify({
                                     "Message": "Sale non-existent"
                                     }), 404)
         return response
-        
+
