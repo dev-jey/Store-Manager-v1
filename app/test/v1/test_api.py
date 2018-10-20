@@ -93,10 +93,27 @@ class TestsForApi(unittest.TestCase):
                                      data=json.dumps({
                                         "title": "",
                                         "category": "",
-                                        "price": 3000,
-                                        "quantity": 10,
-                                        "minimum_stock": 5,
+                                        "price": "",
+                                        "quantity": "",
+                                        "minimum_stock": "",
                                         "description": "great products to have"
+                                            }),
+                                     headers={
+                                        'content-type': 'application/json',
+                                        'x-access-token': self.admin_token
+                                        })
+        self.assertEqual(resp.status_code, 400)
+    
+    def test_for_empty_keys_product_registration(self):
+        '''Tests for an empty product registration'''
+        resp = self.test_client.post("/api/v1/products",
+                                     data=json.dumps({
+                                        "": "infinix",
+                                        "": "phones",
+                                        "": 536,
+                                        "": 5,
+                                        "": 2,
+                                        "": "great products to have"
                                             }),
                                      headers={
                                         'content-type': 'application/json',
@@ -223,6 +240,16 @@ class TestsForApi(unittest.TestCase):
         '''Test for posting a sale with no correct key for productId'''
         resp = self.test_client.post("/api/v1/sales",
                                      data=json.dumps({"prod": "ew"}),
+                                     headers={
+                                        'x-access-token': self.attendant_token,
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 400)
+
+    def test_validate_posting_with_no_correct_key(self):
+        '''Test for posting a sale with blank key for productId'''
+        resp = self.test_client.post("/api/v1/sales",
+                                     data=json.dumps({"prod": ""}),
                                      headers={
                                         'x-access-token': self.attendant_token,
                                         'content-type': 'application/json'
@@ -473,6 +500,18 @@ class TestsForApi(unittest.TestCase):
         '''Test for login without any data passed'''
         resp = self.test_client.post("/api/v1/auth/login",
                                      data=json.dumps({}),
+                                     headers={
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 400)
+
+    def test_for_missing_login_keys_data(self):
+        '''Test for login without any data passed in keys'''
+        resp = self.test_client.post("/api/v1/auth/login",
+                                     data=json.dumps({
+                                        "": "j@gmail",
+                                        "": "sdinsund"                
+                                     }),
                                      headers={
                                         'content-type': 'application/json'
                                             })

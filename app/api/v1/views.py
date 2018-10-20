@@ -206,6 +206,10 @@ class OneProduct(Resource):
     @token_required
     def get(current_user, self, productId):
         '''Gets one product using its product id'''
+        if len(products) == 0:
+            response = make_response(jsonify({
+                            "Message": "No products yet"
+                            }), 404)
         if current_user:
             for product in products:
                 if int(productId) == product["productId"]:
