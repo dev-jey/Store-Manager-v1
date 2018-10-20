@@ -7,7 +7,7 @@ import jwt
 import datetime
 
 '''Local imports'''
-from .utils import Validator, Validator_products, Validator_sales
+from .utils import User_validator, Validator_products, Validator_sales
 from .models import User_Model, users, Product_Model, products, Sales_Model, sales
 
 
@@ -40,6 +40,8 @@ class SignUp(Resource):
     def post(self):
         '''Method to create a new user'''
         data = request.get_json()
+        User_validator.validate_missing_data(self, data)
+        User_validator.validate_data_types(self, data)
         if not data:
             return make_response(jsonify({
                                     "Message": "Kindly enter credentials"
@@ -48,7 +50,7 @@ class SignUp(Resource):
         password = generate_password_hash(data["password"], method='sha256')
         role = data["role"]
         user = User_Model(email, password, role)
-        Validator.validate_credentials(self, data)
+        User_validator.validate_credentials(self, data)
         user.save()
         return make_response(jsonify({
                                     "Message": user.getEmail() + ": was Successfully registered"
@@ -64,7 +66,8 @@ class Login(Resource):
             return make_response(jsonify({
                             "message": "Kindly enter your credentials",
                             }), 400)
-        Validator.validate_missing_data(self, data)
+        User_validator.validate_missing_data(self, data)
+        User_validator.validate_data_types_login(self, data)
         email = data["email"]
         password = data["password"]
         for user in users:
@@ -97,6 +100,7 @@ class Product(Resource):
                             "message": "Kindly enter product details",
                             }), 400)
         Validator_products.validate_missing_data(self, data)
+        Validator_products.validate_data_types(self, data)
         id = len(products) + 1
         title = data["title"]
         category = data["category"]
@@ -135,6 +139,7 @@ class Sale(Resource):
         if current_user and current_user["role"] == "Attendant":
             data = request.get_json()
             Validator_sales.validate_missing_data(self, data)
+            Validator_sales.validate_data_types(self, data)
             if not data:
                 return jsonify({
                                 "message": "Kindly enter product to sell",

@@ -5,42 +5,49 @@ import re
 from .models import users
 
 
-class Validator(object):
+class User_validator(object):
     '''User validations undertaken here'''
     def validate_credentials(self, data):
-        self.email = data["email"]
-        self.password = data["password"]
-        self.role = data["role"]
-        valid_email = validate_email(self.email)
+        valid_email = validate_email(data["email"])
         for user in users:
-            if self.email == user["email"]:
+            if data["email"] == user["email"]:
                 Message = "User already exists"
                 abort(406, Message)
-        if self.email == "" or self.password == "" or self.role == "":
+        if data["email"] == "" or data["password"] == "" or data["role"] == "":
             Message = "Kindly enter your full credentials"
             abort(400, Message)
         if not valid_email:
             Message = "Invalid email"
             abort(400, Message)
-        elif len(self.password) < 6 or len(self.password) > 12:
+        elif len(data["password"]) < 6 or len(data["password"]) > 12:
             Message = "Password must be long than 6 characters or less than 12"
             abort(400, Message)
-        elif not any(char.isdigit() for char in self.password):
+        elif not any(char.isdigit() for char in data["password"]):
             Message = "Password must have a digit"
             abort(400, Message)
-        elif not any(char.isupper() for char in self.password):
+        elif not any(char.isupper() for char in data["password"]):
             Message = "Password must have an upper case character"
             abort(400, Message)
-        elif not any(char.islower() for char in self.password):
+        elif not any(char.islower() for char in data["password"]):
             Message = "Password must have a lower case character"
             abort(400, Message)
-        elif not re.search("^.*(?=.*[@#$%^&+=]).*$", self.password):
+        elif not re.search("^.*(?=.*[@#$%^&+=]).*$", data["password"]):
             Message = "Password must have a special charater"
             abort(400, Message)
 
     def validate_missing_data(self, data):
         if "email" not in data or "password" not in data:
             Message = "Must enter all credentials"
+            abort(401, Message)
+
+    def validate_data_types(self, data):
+        if type(data["email"]) is not str or type(data["role"]) is not str or type(data["password"]) is not str:
+            Message = "Details must be strings characters"
+            abort(401, Message)
+
+    def validate_data_types_login(self, data):
+        if type(data["email"]) is not str or type(data["password"]) is not str:
+            Message = "Details must be strings characters"
             abort(401, Message)
 
 
@@ -59,6 +66,15 @@ class Validator_products(object):
             Message = "Must enter all product details"
             abort(400, Message)
 
+    def validate_data_types(self, data):
+        try:
+            data["price"] = float(data["price"])
+        except:
+            pass
+        if type(data["title"]) is not str or type(data["category"]) is not str or type(data["price"]) is not float or type(data["quantity"]) is not int or type(data["minimum_stock"]) is not int or type(data["description"]) is not str:
+            Message = "Wrong data types given"
+            abort(400, Message)
+
 
 class Validator_sales(object):
     def validate_missing_data(self, data):
@@ -68,4 +84,9 @@ class Validator_sales(object):
 
         if data["productId"] == "":
             Message = "Kindly enter the productId to sell"
+            abort(400, Message)
+
+    def validate_data_types(self, data):
+        if type(data["productId"]) is not int:
+            Message = "Product Id must be an integer"
             abort(400, Message)
