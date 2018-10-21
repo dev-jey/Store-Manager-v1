@@ -42,10 +42,6 @@ class SignUp(Resource):
         data = request.get_json()
         User_validator.validate_missing_data(self, data)
         User_validator.validate_data_types(self, data)
-        if not data:
-            return make_response(jsonify({
-                                    "Message": "Kindly enter credentials"
-                                    }), 400)
         email = data["email"]
         password = generate_password_hash(data["password"], method='sha256')
         role = data["role"]
@@ -53,7 +49,9 @@ class SignUp(Resource):
         User_validator.validate_credentials(self, data)
         user.save()
         return make_response(jsonify({
-                                    "Message": user.getEmail() + ": was Successfully registered"
+                                    "Message ": "User registered",
+                                    "Email": email,
+                                    "Role": role
                                     }), 201)
 
 
@@ -62,10 +60,6 @@ class Login(Resource):
     def post(self):
         '''Method to login a user and create a unique JWT token'''
         data = request.get_json()
-        if not data:
-            return make_response(jsonify({
-                            "message": "Kindly enter your credentials",
-                            }), 400)
         User_validator.validate_missing_data(self, data)
         User_validator.validate_data_types_login(self, data)
         email = data["email"]
@@ -95,12 +89,10 @@ class Product(Resource):
                                     "Message": "You must be an admin"
                                     }), 403)
         data = request.get_json()
-        if not data:
-            return make_response(jsonify({
-                            "message": "Kindly enter product details",
-                            }), 400)
         Validator_products.validate_missing_data(self, data)
         Validator_products.validate_data_types(self, data)
+        Validator_products.validate_duplication(self, data)
+        Validator_products.validate_negations(self, data)
         id = len(products) + 1
         title = data["title"]
         category = data["category"]
@@ -129,7 +121,11 @@ class Product(Resource):
                 response = make_response(jsonify({
                     "Message": "No products found"
                                                  }), 404)
-        return response
+            return response
+        else:
+            return make_response(jsonify({
+                                        "message": "Must be logged in"
+                                        }), 401)
 
 
 class Sale(Resource):
@@ -140,10 +136,6 @@ class Sale(Resource):
             data = request.get_json()
             Validator_sales.validate_missing_data(self, data)
             Validator_sales.validate_data_types(self, data)
-            if not data:
-                return jsonify({
-                                "message": "Kindly enter product to sell",
-                                }, 400)
             id = len(sales) + 1
             productId = data["productId"]
             for product in products:
@@ -179,7 +171,7 @@ class Sale(Resource):
                                         }), 404)
         else:
             return make_response(jsonify({
-                                        "Message": "Must be an attendant!"
+                                        "Message": "Must be an admin!"
                                         }), 401)
 
     @token_required

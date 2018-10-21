@@ -58,17 +58,45 @@ class TestsForApi(unittest.TestCase):
         self.attendant_token = self.data["token"]
         self.product = json.dumps(
             {
-                "title": "infinix",
+                "title": "tecno",
                 "category": "phones",
                 "price": 3000,
                 "quantity": 10,
                 "minimum_stock": 5,
                 "description": "great smartphone to have"
             })
+        self.product2 = json.dumps(
+            {
+                "title": "tecno spark",
+                "category": "phones",
+                "price": 3000,
+                "quantity": 10,
+                "minimum_stock": 10,
+                "description": "great smartphone to have"
+            })
+        self.product3 = json.dumps(
+            {
+                "title": "tecno camon",
+                "category": "phones",
+                "price": 3000,
+                "quantity": 0,
+                "minimum_stock": 10,
+                "description": "great smartphone to have"
+            })
         self.sale = json.dumps({
             "productId": 1
         })
         self.test_client.post("/api/v1/products", data=self.product,
+                              headers={
+                                    'content-type': 'application/json',
+                                    'x-access-token': self.admin_token
+                                      })
+        self.test_client.post("/api/v1/products", data=self.product2,
+                              headers={
+                                    'content-type': 'application/json',
+                                    'x-access-token': self.admin_token
+                                      })
+        self.test_client.post("/api/v1/products", data=self.product3,
                               headers={
                                     'content-type': 'application/json',
                                     'x-access-token': self.admin_token
@@ -120,6 +148,50 @@ class TestsForApi(unittest.TestCase):
                                         'x-access-token': self.admin_token
                                         })
         self.assertEqual(resp.status_code, 400)
+    
+    def test_validate_duplication(self):
+        '''Test for duplicate product registration'''
+        resp = self.test_client.post("/api/v1/products",
+                                     data=self.product,
+                                     headers={
+                                            'content-type': 'application/json',
+                                            'x-access-token': self.admin_token
+                                            })
+        self.assertEqual(resp.status_code, 400)
+
+    def test_product_minimum_stock_more_than_quantity(self):
+        '''Test for minimum stock more than quantity'''
+        resp = self.test_client.post("/api/v1/products",
+                                     data=json.dumps({
+                                                "title": "infinix",
+                                                "category": "phones",
+                                                "price": 3000,
+                                                "quantity": 1,
+                                                "minimum_stock": 5,
+                                                "description": "great"
+                                            }),
+                                     headers={
+                                            'content-type': 'application/json',
+                                            'x-access-token': self.admin_token
+                                            })
+        self.assertEqual(resp.status_code, 400)
+    
+    def test_product_details_negative(self):
+        '''Test for product price, quantity, and minimum stock negation'''
+        resp = self.test_client.post("/api/v1/products",
+                                     data=json.dumps({
+                                                "title": "infinix",
+                                                "category": "phones",
+                                                "price": -3000,
+                                                "quantity": -1,
+                                                "minimum_stock": -5,
+                                                "description": "great"
+                                            }),
+                                     headers={
+                                            'content-type': 'application/json',
+                                            'x-access-token': self.admin_token
+                                            })
+        self.assertEqual(resp.status_code, 400)
 
     def test_product_description_less_than_20_chars(self):
         '''Test for short product descriptions'''
@@ -165,13 +237,13 @@ class TestsForApi(unittest.TestCase):
                                             })
         self.assertEqual(resp.status_code, 400)
 
-    def test_if_price_is_a_float(self):
+    def test_if_price_is_converted_to_a_float(self):
         '''Test for product creation using wrong data types'''
         resp = self.test_client.post("/api/v1/products",
                                      data=json.dumps({
                                         "title": "Mandazi",
                                         "category": "food",
-                                        "price": 120.50,
+                                        "price": 12050,
                                         "quantity": 23,
                                         "minimum_stock": 2,
                                         "description": "Great product to possess at school"
@@ -185,12 +257,36 @@ class TestsForApi(unittest.TestCase):
     def test_for_successful_product_registration(self):
         '''Tests for a successful product registration'''
         resp = self.test_client.post("/api/v1/products",
-                                     data=self.product,
+                                     data=json.dumps({
+                                        "title": "infinix",
+                                        "category": "phones",
+                                        "price": 3000,
+                                        "quantity": 10,
+                                        "minimum_stock": 5,
+                                        "description": "great products to have at hoome"
+                                            }),
                                      headers={
                                         'x-access-token': self.admin_token,
                                         'content-type': 'application/json'
                                             })
         self.assertEqual(resp.status_code, 201)
+    
+    def test_for_product_registration_attendant(self):
+        '''Tests for a product registration by a sales attendant'''
+        resp = self.test_client.post("/api/v1/products",
+                                     data=json.dumps({
+                                        "title": "infinix",
+                                        "category": "phones",
+                                        "price": 3000,
+                                        "quantity": 10,
+                                        "minimum_stock": 5,
+                                        "description": "great products to have at hoome"
+                                            }),
+                                     headers={
+                                        'x-access-token': self.attendant_token,
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 403)
 
     def test_for_token_authentication(self):
         '''Test for the functionality of token based authentication'''
@@ -216,6 +312,15 @@ class TestsForApi(unittest.TestCase):
                                             })
         self.assertEqual(resp.status_code, 200)
 
+    def test_getting_all_products_fail(self):
+        '''Test for getting all products fail'''
+        destroy()
+        resp = self.test_client.get("/api/v1/products",
+                                    headers={
+                                            'x-access-token': self.admin_token
+                                            })
+        self.assertEqual(resp.status_code, 401)
+
     def test_post_sale_attendant(self):
         '''Test for posting a sale'''
         resp = self.test_client.post("/api/v1/sales",
@@ -225,6 +330,36 @@ class TestsForApi(unittest.TestCase):
                                         'content-type': 'application/json'
                                             })
         self.assertEqual(resp.status_code, 201)
+    
+    def test_post_sale_product_non_existent(self):
+        '''Test for posting a sale in which the product doesnt exist'''
+        resp = self.test_client.post("/api/v1/sales",
+                                     data=json.dumps({"productId": 91}),
+                                     headers={
+                                        'x-access-token': self.attendant_token,
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 404)
+    
+    def test_post_sale_minimum_stock_reached(self):
+        '''Test for posting a sale while the minimum stock is reached'''
+        resp = self.test_client.post("/api/v1/sales",
+                                     data=json.dumps({"productId": 2}),
+                                     headers={
+                                        'x-access-token': self.attendant_token,
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 201)
+    
+    def test_post_sale_product_sold_up(self):
+        '''Test for posting a sale while product sold up'''
+        resp = self.test_client.post("/api/v1/sales",
+                                     data=json.dumps({"productId": 3}),
+                                     headers={
+                                        'x-access-token': self.attendant_token,
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 404)
 
     def test_validate_posting_empty_product_id(self):
         '''Test for posting a sale with no product id'''
@@ -239,17 +374,17 @@ class TestsForApi(unittest.TestCase):
     def test_validate_posting_with_no_correct_key(self):
         '''Test for posting a sale with no correct key for productId'''
         resp = self.test_client.post("/api/v1/sales",
-                                     data=json.dumps({"prod": "ew"}),
+                                     data=json.dumps({"prod": 1}),
                                      headers={
                                         'x-access-token': self.attendant_token,
                                         'content-type': 'application/json'
                                             })
         self.assertEqual(resp.status_code, 400)
 
-    def test_validate_posting_with_no_correct_key(self):
+    def test_validate_posting_with_blank_key(self):
         '''Test for posting a sale with blank key for productId'''
         resp = self.test_client.post("/api/v1/sales",
-                                     data=json.dumps({"prod": ""}),
+                                     data=json.dumps({"": 1}),
                                      headers={
                                         'x-access-token': self.attendant_token,
                                         'content-type': 'application/json'
@@ -290,6 +425,15 @@ class TestsForApi(unittest.TestCase):
         resp = self.test_client.get("/api/v1/sales",
                                     headers={
                                         'x-access-token': self.attendant_token
+                                            })
+        self.assertEqual(resp.status_code, 401)
+    
+    def test_get_all_sales_no_sale(self):
+        '''Test for admin getting all sales if no sales are made yet'''
+        destroy()
+        resp = self.test_client.get("/api/v1/sales",
+                                    headers={
+                                        'x-access-token': self.admin_token
                                             })
         self.assertEqual(resp.status_code, 401)
 
@@ -347,6 +491,130 @@ class TestsForApi(unittest.TestCase):
                                             })
         self.assertEqual(res.status_code, 201)
 
+    def test_wrong_email_signup(self):
+        '''Test for a signup with wrong email format given'''
+        resp = self.test_client.post("/api/v1/auth/signup",
+                                     data=json.dumps({
+                                                    "email": "emailcom",
+                                                    "password": "ssdsdD2@ja",
+                                                    "role": "Admin"}),
+                                     headers={
+                                             'content-type': 'application/json'
+                                             })
+        self.assertEqual(resp.status_code, 400)
+
+    def test_email_already_exists(self):
+        '''Test for signing up with an already existing email'''
+        resp = self.test_client.post("/api/v1/auth/signup",
+                                     data=json.dumps({
+                                                    "email": "maria@gmail.com",
+                                                    "password": "ssdsdD2@ja",
+                                                    "role": "Admin"
+                                                    }),
+                                     headers={
+                                             'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 406)
+
+    def test_signup_with_details_missing(self):
+        '''Tests for signup with no details'''
+        resp = self.test_client.post("/api/v1/auth/signup",
+                                     data=json.dumps({
+                                                    "email": "",
+                                                    "password": "dsdE@sdD3",
+                                                    "role": "Admin"
+                                                    }),
+                                     headers={
+                                             'content-type': 'application/json'
+                                             })
+        self.assertEqual(resp.status_code, 400)
+
+    def test_short_password(self):
+        '''Test for a signup with a short password'''
+        resp = self.test_client.post("/api/v1/auth/signup",
+                                     data=json.dumps({
+                                                    "email": "jame@gmail.com",
+                                                    "password": "dS#e3",
+                                                    "role": "Admin"
+                                                    }),
+                                     headers={
+                                            'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 400)
+
+    def test_long_password(self):
+        '''Test for a signup with a long password'''
+        resp = self.test_client.post("/api/v1/auth/signup",
+                                     data=json.dumps({
+                                            "email": "jame@gmail.com",
+                                            "password": "dhsdsdsdssdhjh3#dDd",
+                                            "role": "Admin"}),
+                                     headers={
+                                             'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 400)
+
+    def test_password_lacks_digit(self):
+        '''Test for signup witha password that lacks a numerical digit'''
+        resp = self.test_client.post("/api/v1/auth/signup",
+                                     data=json.dumps({
+                                        "email": "jame@gmail.com",
+                                        "password": "ssrrdjD@",
+                                        "role": "Admin"}),
+                                     headers={
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 400)
+
+    def test_password_lacks_upperCase(self):
+        '''Test for signup with a password with no uppercase character'''
+        resp = self.test_client.post("/api/v1/auth/signup",
+                                     data=json.dumps({
+                                        "email": "jame@gmail.com",
+                                        "password": "dddsdsd2@",
+                                        "role": "Admin"}),
+                                     headers={
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 400)
+
+    def test_password_lacks_lowerCase(self):
+        '''Test for signup with no lower case character'''
+        resp = self.test_client.post("/api/v1/auth/signup",
+                                     data=json.dumps({
+                                        "email": "jame@gmail.com",
+                                        "password": "DHDHDDHD2@",
+                                        "role": "Admin"}),
+                                     headers={
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 400)
+
+    def test_password_lacks_specialChar(self):
+        '''Test for signup with a password that lacks a special character'''
+        resp = self.test_client.post("/api/v1/auth/signup",
+                                     data=json.dumps({
+                                        "email": "jame@gmail.com",
+                                        "password": "ddddssd2D",
+                                        "role": "Admin"}),
+                                     headers={
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 400)
+    
+    def test_for_signup_details_data_types(self):
+        '''Test for signup details where wrong data types are given'''
+        resp = self.test_client.post("/api/v1/auth/signup",
+                                     data=json.dumps({
+                                         "email": 2014,
+                                         "password": 3.29,
+                                         "role": 3232
+                                     }),
+                                     headers={
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 400)
+
     def test_success_login(self):
         '''Test for successful login'''
         resp = self.test_client.post("/api/v1/auth/login",
@@ -376,126 +644,6 @@ class TestsForApi(unittest.TestCase):
                                             })
         self.assertEqual(resp.status_code, 400)
 
-    def test_wrong_email_signup(self):
-        '''Test for a signup with wrong email format given'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                                    "id": 5,
-                                                    "email": "emailcom",
-                                                    "password": "ssdsdD2@ja",
-                                                    "role": "Admin"}),
-                                     headers={
-                                             'content-type': 'application/json'
-                                             })
-        self.assertEqual(resp.status_code, 400)
-
-    def test_email_already_exists(self):
-        '''Test for signing up with an already existing email'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                                    "id": 5,
-                                                    "email": "maria@gmail.com",
-                                                    "password": "ssdsdD2@ja",
-                                                    "role": "Admin"
-                                                    }),
-                                     headers={
-                                             'content-type': 'application/json'
-                                            })
-        self.assertEqual(resp.status_code, 406)
-
-    def test_signup_with_details_missing(self):
-        '''Tests for signup with no details'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                                    "id": 5,
-                                                    "email": "",
-                                                    "password": "dsdE@sdD3",
-                                                    "role": "Admin"
-                                                    }),
-                                     headers={
-                                             'content-type': 'application/json'
-                                             })
-        self.assertEqual(resp.status_code, 400)
-
-    def test_short_password(self):
-        '''Test for a signup with a short password'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                                    "id": 5,
-                                                    "email": "jame@gmail.com",
-                                                    "password": "dS#e3",
-                                                    "role": "Admin"
-                                                    }),
-                                     headers={
-                                            'content-type': 'application/json'
-                                            })
-        self.assertEqual(resp.status_code, 400)
-
-    def test_long_password(self):
-        '''Test for a signup with a long password'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                            "id": 5,
-                                            "email": "jame@gmail.com",
-                                            "password": "dhsdsdsdssdhjh3#dDd",
-                                            "role": "Admin"}),
-                                     headers={
-                                             'content-type': 'application/json'
-                                            })
-        self.assertEqual(resp.status_code, 400)
-
-    def test_password_lacks_digit(self):
-        '''Test for signup witha password that lacks a numerical digit'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                        "id": 5,
-                                        "email": "jame@gmail.com",
-                                        "password": "ssrrdjD@",
-                                        "role": "Admin"}),
-                                     headers={
-                                        'content-type': 'application/json'
-                                            })
-        self.assertEqual(resp.status_code, 400)
-
-    def test_password_lacks_upperCase(self):
-        '''Test for signup with a password with no uppercase character'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                        "id": 5,
-                                        "email": "jame@gmail.com",
-                                        "password": "dddsdsd2@",
-                                        "role": "Admin"}),
-                                     headers={
-                                        'content-type': 'application/json'
-                                            })
-        self.assertEqual(resp.status_code, 400)
-
-    def test_password_lacks_lowerCase(self):
-        '''Test for signup with no lower case character'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                        "id": 5,
-                                        "email": "jame@gmail.com",
-                                        "password": "DHDHDDHD2@",
-                                        "role": "Admin"}),
-                                     headers={
-                                        'content-type': 'application/json'
-                                            })
-        self.assertEqual(resp.status_code, 400)
-
-    def test_password_lacks_specialChar(self):
-        '''Test for signup with a password that lacks a special character'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                        "id": 5,
-                                        "email": "jame@gmail.com",
-                                        "password": "ddddssd2D",
-                                        "role": "Admin"}),
-                                     headers={
-                                        'content-type': 'application/json'
-                                            })
-        self.assertEqual(resp.status_code, 400)
-
     def test_for_missing_login_data(self):
         '''Test for login without any data passed'''
         resp = self.test_client.post("/api/v1/auth/login",
@@ -504,13 +652,25 @@ class TestsForApi(unittest.TestCase):
                                         'content-type': 'application/json'
                                             })
         self.assertEqual(resp.status_code, 400)
+  
+    def test_for_missing_login_data(self):
+        '''Test for login without any data keys passed'''
+        resp = self.test_client.post("/api/v1/auth/login",
+                                     data=json.dumps({
+                                         "email": "",
+                                         "password": ""
+                                     }),
+                                     headers={
+                                        'content-type': 'application/json'
+                                            })
+        self.assertEqual(resp.status_code, 403)
 
     def test_for_missing_login_keys_data(self):
         '''Test for login without any data passed in keys'''
         resp = self.test_client.post("/api/v1/auth/login",
                                      data=json.dumps({
                                         "": "j@gmail",
-                                        "": "sdinsund"                
+                                        "": "sdinsund@D2"                
                                      }),
                                      headers={
                                         'content-type': 'application/json'
@@ -528,16 +688,3 @@ class TestsForApi(unittest.TestCase):
                                         'content-type': 'application/json'
                                             })
         self.assertEqual(resp.status_code, 401)
-
-    def test_for_signup_details_data_types(self):
-        '''Test for signup details where wrong data types are given'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                         "email": 2014,
-                                         "password": 3.29,
-                                         "role": 3232
-                                     }),
-                                     headers={
-                                        'content-type': 'application/json'
-                                            })
-        self.assertEqual(resp.status_code, 400)

@@ -2,7 +2,7 @@ from flask import make_response, jsonify, abort
 from validate_email import validate_email
 import re
 
-from .models import users
+from .models import users, products
 
 
 class User_validator(object):
@@ -78,6 +78,21 @@ class Validator_products(object):
             pass
         if type(data["title"]) is not str or type(data["category"]) is not str or type(data["price"]) is not float or type(data["quantity"]) is not int or type(data["minimum_stock"]) is not int or type(data["description"]) is not str:
             Message = "Wrong data types given"
+            abort(400, Message)
+
+    def validate_duplication(self, data):
+        for product in products:
+            if data["title"] == product["title"]:
+                Message = "Product already exists"
+                abort(400, Message)
+
+    def validate_negations(self, data):
+        if data["price"] < 1 or data["quantity"] < 1 or data["minimum_stock"] < 0:
+            Message = "Price, quantity or minmum stock cant be negative"
+            abort(400, Message)
+
+        if data["quantity"] < data["minimum_stock"]:
+            Message = "Minmum stock cant be more than quantity"
             abort(400, Message)
 
 
