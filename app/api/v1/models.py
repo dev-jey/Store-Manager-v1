@@ -1,5 +1,6 @@
 users = []
 products = []
+sales = []
 
 
 class User_Model():
@@ -43,7 +44,7 @@ class Product_Model():
         products.append(new_product)
 
 
-
 def destroy():
     users.clear()
     products.clear()
+    sales.clear()
