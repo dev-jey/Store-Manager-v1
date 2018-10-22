@@ -101,11 +101,7 @@ class Validator_sales(object):
         '''checks for missing data when making a sale'''
         if "productId" not in data:
             Message = "Must enter the product Id"
-            abort(400, Message)
-
-        if data["productId"] == "":
-            Message = "Kindly enter the productId to sell"
-            abort(400, Message)
+            abort(400, Message) 
 
     def validate_data_types(self, data):
         '''validates datatype of the product id passed'''

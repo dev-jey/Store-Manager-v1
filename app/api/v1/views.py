@@ -49,7 +49,7 @@ class SignUp(Resource):
         User_validator.validate_credentials(self, data)
         user.save()
         return make_response(jsonify({
-                                    "Message ": "User registered",
+                                    "Message": "User registered",
                                     "Email": email,
                                     "Role": role
                                     }), 201)
@@ -132,8 +132,8 @@ class Sale(Resource):
     @token_required
     def post(current_user, self):
         '''Create an endpoint for attendants to make sales'''
+        data = request.get_json()
         if current_user and current_user["role"] == "Attendant":
-            data = request.get_json()
             Validator_sales.validate_missing_data(self, data)
             Validator_sales.validate_data_types(self, data)
             id = len(sales) + 1
