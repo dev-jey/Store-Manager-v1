@@ -171,7 +171,7 @@ class Sale(Resource):
                                         }), 404)
         else:
             return make_response(jsonify({
-                                        "Message": "Must be an admin!"
+                                        "Message": "Must be an attendant!"
                                         }), 401)
 
     @token_required
