@@ -128,6 +128,21 @@ class TestsForApi(unittest.TestCase):
                                             })
         self.assertEqual(resp.status_code, 201)
 
+    def test_for_token_authentication(self):
+        resp = self.test_client.post("/api/v1/products",
+                                     data=json.dumps({
+                                        "title": "infinix",
+                                        "category": "phones",
+                                        "price": 3000,
+                                        "quantity": 10,
+                                        "minimum_stock": 5,
+                                        "description": "great products to have at hoome"
+                                            }),
+                                     headers={
+                                             'content-type': 'application/json'
+                                             })
+        self.assertEqual(resp.status_code, 401)
+
     def test_getting_all_products(self):
         resp = self.test_client.get("/api/v1/products",
                                     headers={
@@ -176,6 +191,27 @@ class TestsForApi(unittest.TestCase):
 
     def test_getting_one_product_using_wrong_productId(self):
         resp = self.test_client.get("/api/v1/products/5",
+                                    headers={
+                                        'x-access-token': self.attendant_token
+                                            })
+        self.assertEqual(resp.status_code, 404)
+
+    def test_getting_one_sale_admin(self):
+        resp = self.test_client.get("/api/v1/sales/1",
+                                    headers={
+                                        'x-access-token': self.admin_token
+                                            })
+        self.assertEqual(resp.status_code, 200)
+
+    def test_getting_one_sale_attendant(self):
+        resp = self.test_client.get("/api/v1/sales/1",
+                                    headers={
+                                        'x-access-token': self.attendant_token
+                                            })
+        self.assertEqual(resp.status_code, 200)
+
+    def test_getting_one_sale_with_wrong_saleId(self):
+        resp = self.test_client.get("/api/v1/sales/4",
                                     headers={
                                         'x-access-token': self.attendant_token
                                             })
