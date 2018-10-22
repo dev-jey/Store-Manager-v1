@@ -171,3 +171,21 @@ class Sale(Resource):
             return make_response(jsonify({
                                         "Message": "Must be an attendant!"
                                         }), 401)
+
+    @token_required
+    def get(current_user, self):
+        if current_user and current_user["role"] == "Admin":
+            if len(sales) > 0:
+                response = make_response(jsonify({
+                                            "Message": "Success",
+                                            "Sales": sales
+                                                }), 200)
+            else:
+                response = make_response(jsonify({
+                                        "Message": "Failure, no sales made yet"
+                                                 }), 404)
+            return response
+        else:
+            return make_response(jsonify({
+                                        "Message": "Must be an admin"
+                                        }), 401)
