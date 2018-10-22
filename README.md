@@ -1,7 +1,7 @@
 # Store-Manager-v1
 This is a simple store management application\
 [![Build Status](https://travis-ci.org/codeMarble254/Store-Manager-v1.svg?branch=bg-fix-heroku-deployment-161331066)](https://travis-ci.org/codeMarble254/Store-Manager-v1)
-[![Coverage Status](https://coveralls.io/repos/github/codeMarble254/Store-Manager-v1/badge.svg?branch=ft-make-sale-api-161312937)](https://coveralls.io/github/codeMarble254/Store-Manager-v1?branch=ft-make-sale-api-161312937)
+[![Coverage Status](https://coveralls.io/repos/github/codeMarble254/Store-Manager-v1/badge.svg?branch=develop)](https://coveralls.io/github/codeMarble254/Store-Manager-v1?branch=develop)
 [![Maintainability](https://api.codeclimate.com/v1/badges/66cf3a604295b849139d/maintainability)](https://codeclimate.com/github/codeMarble254/Store-Manager-v1/maintainability)\
 To run this project you should follow the following steps:
 
