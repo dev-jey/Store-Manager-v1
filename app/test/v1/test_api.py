@@ -119,6 +119,13 @@ class TestsForApi(unittest.TestCase):
                                         'content-type': 'application/json'
                                             })
         self.assertEqual(resp.status_code, 201)
+    
+    def test_getting_all_products(self):
+        resp = self.test_client.get("/api/v1/products",
+                                    headers={
+                                            'x-access-token': self.admin_token
+                                            })
+        self.assertEqual(resp.status_code, 200)
 
     '''Tests for signup modules'''
 
