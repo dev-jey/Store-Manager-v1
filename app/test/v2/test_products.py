@@ -244,3 +244,21 @@ class TestProducts(TestsForApi):
                                     })
         self.assertEqual(resp.status_code, 404)
 
+    def test_for_successful_product_update(self):
+        '''Tests for a successful product updating'''
+        resp = self.test_client.put("/api/v2/products/1",
+                                     data=json.dumps({
+                                         "title": "infinix",
+                                         "category": "phones",
+                                         "price": 2000,
+                                         "quantity": 10,
+                                         "minimum_stock": 5,
+                                         "description": "great products to have at hoome"
+                                     }),
+                                     headers={
+                                         'x-access-token': self.admin_token,
+                                         'content-type': 'application/json'
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(response["Message"], "Successfully updated")
+        self.assertEqual(resp.status_code, 200)
