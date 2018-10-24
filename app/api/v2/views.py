@@ -6,8 +6,9 @@ from instance.config import app_config
 import jwt
 import datetime
 '''Local imports'''
-from .utils import User_validator
+from .utils import User_validator, Validator_products
 from .models.user_model import User_Model
+from .models.product_models import Product_Model
 
 
 def token_required(fnc):
@@ -23,11 +24,14 @@ def token_required(fnc):
                         "message": "Token Missing, Login to get one"
                                         }), 401)
         try:
-            data = jwt.decode(token, app_config["development"].SECRET_KEY)
+            data = jwt.decode(token, app_config["development"].SECRET_KEY, algorithms=['HS256'])
+            model = User_Model()
+            users = model.get()
             for user in users:
                 if user["email"] == data["email"]:
                     current_user = user
-        except:
+        except Exception as e:
+            print(e)
             return make_response(jsonify({"message": "token invalid"}),
                                  403)
         return fnc(current_user, *args, **kwargs)
@@ -70,7 +74,7 @@ class Login(Resource):
                 token = jwt.encode({"email": email, "password": password,
                                     'exp': datetime.datetime.utcnow() +
                                     datetime.timedelta(minutes=30)},
-                                   app_config["development"].SECRET_KEY)
+                                   app_config["development"].SECRET_KEY, algorithm='HS256')
                 return make_response(jsonify({
                                 "message": "Login success",
                                 "token": token.decode("UTF-8"
@@ -78,4 +82,5 @@ class Login(Resource):
         return make_response(jsonify({
                         "Message": "Login failed, check credentials"
                         }), 403)
+
 
