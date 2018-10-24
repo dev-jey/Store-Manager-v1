@@ -52,3 +52,30 @@ class SignUp(Resource):
                                     "Email": email,
                                     "Role": role
                                     }), 201)
+
+
+class Login(Resource):
+    '''Login endpoint'''
+    def post(self):
+        '''Method to login a user and create a unique JWT token'''
+        data = request.get_json()
+        User_validator.validate_missing_data(self, data)
+        User_validator.validate_data_types_login(self, data)
+        email = data["email"]
+        password = data["password"]
+        users = User_Model.get(self)
+        for user in users:
+            if email == user["email"] and check_password_hash(user["password"],
+                                                              password):
+                token = jwt.encode({"email": email, "password": password,
+                                    'exp': datetime.datetime.utcnow() +
+                                    datetime.timedelta(minutes=30)},
+                                   app_config["development"].SECRET_KEY)
+                return make_response(jsonify({
+                                "message": "Login success",
+                                "token": token.decode("UTF-8"
+                                                      )}), 200)
+        return make_response(jsonify({
+                        "Message": "Login failed, check credentials"
+                        }), 403)
+
