@@ -219,20 +219,3 @@ class TestProducts(TestsForApi):
         self.assertEqual(response["message"],
                          "Token Missing, Login to get one")
         self.assertEqual(resp.status_code, 401)
-
-    def test_getting_all_products(self):
-        '''Test for getting all products'''
-        resp = self.test_client.get("/api/v2/products",
-                                    headers={
-                                        'x-access-token': self.admin_token
-                                    })
-        self.assertEqual(resp.status_code, 200)
-
-    def test_getting_all_products_fail(self):
-        '''Test for getting all products fail'''
-        destroy()
-        resp = self.test_client.get("/api/v2/products",
-                                    headers={
-                                        'x-access-token': self.admin_token
-                                    })
-        self.assertEqual(resp.status_code, 401)

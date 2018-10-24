@@ -84,3 +84,29 @@ class Login(Resource):
                         }), 403)
 
 
+class Product(Resource):
+    @token_required
+    def post(current_user, self):
+        '''Post product endpoint that creates a new product'''
+        if current_user and current_user["role"] != "Admin":
+            return make_response(jsonify({
+                                    "Message": "You must be an admin"
+                                    }), 403)
+        data = request.get_json()
+        Validator_products.validate_missing_data(self, data)
+        Validator_products.validate_data_types(self, data)
+        Validator_products.validate_duplication(self, data)
+        Validator_products.validate_negations(self, data)
+        title = data["title"]
+        category = data["category"]
+        price = data["price"]
+        quantity = data["quantity"]
+        minimum_stock = data["minimum_stock"]
+        description = data["description"]
+        product = Product_Model(data)
+        Validator_products.validate_product_description(self, data)
+        product.save()
+        return make_response(jsonify({
+                                    "Message": "Successfully added",
+                                    "Products": product.get()
+                                    }), 201)
