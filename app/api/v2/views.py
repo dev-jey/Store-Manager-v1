@@ -132,3 +132,24 @@ class Product(Resource):
                                         "message": "Must be logged in"
                                         }), 401)
 
+
+class OneProduct(Resource):
+    @token_required
+    def get(current_user, self, productId):
+        '''Gets one product using its product id'''
+        product = Product_Model()
+        products = product.get()
+        if len(products) == 0:
+            response = make_response(jsonify({
+                            "Message": "No products yet"
+                            }), 404)
+        if current_user:
+            for product in products:
+                if int(productId) == product["id"]:
+                    return make_response(jsonify({
+                                                "Message": "Success",
+                                                "Product": product
+                                                }), 200)
+        return make_response(jsonify({
+                                "Message": "Product non-existent"
+                                }), 404)
