@@ -30,6 +30,7 @@ class User_Model(Db):
     def get(self):
         db = Db()
         self.conn = db.createConnection()
+        db.createTables()
         cursor = self.conn.cursor()
         sql = "SELECT * FROM users"
         cursor.execute(sql)
