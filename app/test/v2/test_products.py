@@ -227,4 +227,20 @@ class TestProducts(TestsForApi):
                                         'x-access-token': self.admin_token
                                     })
         self.assertEqual(resp.status_code, 200)
+    
+    def test_getting_one_product(self):
+        '''Test for getting one product'''
+        resp = self.test_client.get("/api/v2/products/1",
+                                    headers={
+                                        'x-access-token': self.attendant_token
+                                    })
+        self.assertEqual(resp.status_code, 200)
+
+    def test_getting_one_product_using_wrong_productId(self):
+        '''Test for getting one product using wrong id'''
+        resp = self.test_client.get("/api/v2/products/5",
+                                    headers={
+                                        'x-access-token': self.attendant_token
+                                    })
+        self.assertEqual(resp.status_code, 404)
 

@@ -131,3 +131,4 @@ class Product(Resource):
             return make_response(jsonify({
                                         "message": "Must be logged in"
                                         }), 401)
+
