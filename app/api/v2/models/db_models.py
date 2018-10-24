@@ -15,7 +15,7 @@ class Db(object):
 
     def createConnection(self):
         try:
-            if os.getenv("APP_SETTINGS") == "testing":
+            if Config.APP_SETTINGS == "testing":
                 self.conn = psycopg2.connect(database="test_db")
             else:
                 self.conn = psycopg2.connect(

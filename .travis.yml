@@ -9,9 +9,10 @@ install:
 before_script:
    - export SECRET="jemo"
    - export DB_NAME="test_db"
-   - export SECRET="secret"
+   - export APP_SETTINGS="testing"
    - psql -c 'create database test_db;' -U postgres
 script:
+ - pytest --ignore=v1
  - pytest --cov=app -v -W error::UserWarning
 after_success:
  - coveralls

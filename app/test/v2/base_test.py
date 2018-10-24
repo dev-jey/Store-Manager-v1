@@ -2,7 +2,7 @@ import unittest
 import json
 
 from app import create_app
-from instance.config import app_config
+from instance.config import Config
 from app.api.v2.models.db_models import Db
 
 
@@ -12,7 +12,7 @@ class TestsForApi(unittest.TestCase):
     def setUp(self):
         self.db = Db()
         self.db.createTables()
-        self.app = create_app(config_name="testing")
+        self.app = create_app(config_name=Config.APP_SETTINGS)
         self.test_client = self.app.test_client()
         self.context = self.app.app_context()
         self.context.push()

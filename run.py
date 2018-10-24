@@ -1,6 +1,7 @@
 from app import create_app
+from instance.config import Config
 
-app = create_app(config_name="development")
+app = create_app(config_name=Config.APP_SETTINGS)
 
 '''Call the main flask app'''
 

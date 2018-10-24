@@ -12,6 +12,7 @@ class User_Model(Db):
         self.password = password
         self.role = role
         db = Db()
+        db.createTables()
         self.conn = db.createConnection()
 
     def save(self):

@@ -9,6 +9,7 @@ class Config(object):
     DB_HOST = os.getenv("DB_HOST")
     DB_USER = os.getenv("DB_USER")
     DB_PASSWORD = os.getenv("DB_PASSWORD")
+    APP_SETTINGS = os.getenv("APP_SETTINGS")
 
 
 class Development(Config):
