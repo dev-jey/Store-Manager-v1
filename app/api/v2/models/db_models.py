@@ -7,20 +7,16 @@ from instance.config import Config
 
 class Db(object):
     def __init__(self):
-        # self.db_name = Config.DB_NAME
-        # self.db_host = Config.DB_HOST
-        # self.db_user = Config.DB_USER
-        # self.DB_PASSWORD = Config.DB_PASSWORD
-        self.db_name = "storemanager"
-        self.db_host = "localhost"
-        self.db_user = "postgres"
-        self.db_password = "    "
+        self.db_name = Config.DB_NAME
+        self.db_host = Config.DB_HOST
+        self.db_user = Config.DB_USER
+        self.db_password = Config.DB_PASSWORD
         self.conn = None
 
     def createConnection(self):
         try:
             if os.getenv("APP_SETTINGS") == "testing":
-                self.conn = psycopg2.connect(database="test_db", host=self.db_host, password=self.db_password)
+                self.conn = psycopg2.connect(database="test_db")
             else:
                 self.conn = psycopg2.connect(
                     database=self.db_name, host=self.db_host, password=self.db_password)
