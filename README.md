@@ -25,9 +25,12 @@ To run this project you should follow the following steps:
 now we are ready to run.
 
 7. for tests run
+`$ export SECRET_KEY="jemo"`\
+`$ export APP_SETTINGS="testing"`\
 `$ pytest -v`
 8. for the application run \
-`$ export SECRET_KEY="<your key>"`\
+`$ export SECRET_KEY="jemo"`\
+`$ export APP_SETTINGS="development"`\
 `$ export FLASK_APP=run.py`\
 `$ flask run` \
 If you ran the aplication you can test the various api endpoints using postman.
