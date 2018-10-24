@@ -33,6 +33,7 @@ class TestsForApi(unittest.TestCase):
                                             headers={
                                                 'content-type': 'application/json'
                                             })
+        self.admin_token = json.loads(admin_login.data.decode())["token"]
         self.context = self.app.app_context()
         self.context.push()
 
