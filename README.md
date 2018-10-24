@@ -16,15 +16,15 @@ To run this project you should follow the following steps:
 4. clone this repo
 `$ git clone https://github.com/codeMarble254/Store-Manager-v1.git`
 
-5. Switch to `develop` branch \
-`$ git checkout develop`
+5. Switch to ` ft-signup-v2-161420591` branch \
+`$ git checkout ft-signup-v2-161420591`
 
-6. install requirements
+6. install requirements \
 `$ pip install -r requirements.txt`
 
 now we are ready to run.
 
-7. for tests run
+7. for tests run \
 `$ export SECRET_KEY="jemo"`\
 `$ export APP_SETTINGS="testing"`\
 `$ pytest -v`
