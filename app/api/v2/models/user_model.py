@@ -24,7 +24,6 @@ class User_Model(Db):
         cursor.execute("SELECT id FROM users WHERE email = %s", (self.email,))
         row = cursor.fetchone()
         self.id = row[0]
-        print(self.id)
         self.conn.commit()
         self.conn.close()
 
