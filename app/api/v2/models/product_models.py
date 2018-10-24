@@ -32,6 +32,9 @@ class Product_Model(Db):
     def update(self, productId):
         '''Method is meant to update a product by editing its details in the
         products table'''
+        db = Db()
+        self.conn = db.createConnection()
+        db.createTables()
         cursor = self.conn.cursor()
         cursor.execute(
             """UPDATE products SET title = %s, category = %s, 
