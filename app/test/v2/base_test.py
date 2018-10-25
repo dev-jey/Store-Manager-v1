@@ -38,7 +38,7 @@ class TestsForApi(unittest.TestCase):
         self.attendant = json.dumps({
             "email": "james@gmail.com",
             "password": "as@dsDdz2a",
-                        "role": "Attendant"
+            "role": "Attendant"
         })
         self.attendant_login_details = json.dumps({
             "email": "james@gmail.com",

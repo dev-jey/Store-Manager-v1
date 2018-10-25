@@ -21,6 +21,7 @@ class Db(object):
                 self.conn = psycopg2.connect(
                     database=self.db_name, host=self.db_host, password=self.db_password)
             return self.conn
+
         except:
             return jsonify({"error": "failed to connect"})
 
