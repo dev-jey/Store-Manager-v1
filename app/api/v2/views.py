@@ -46,9 +46,11 @@ class SignUp(Resource):
     def post(current_user, self):
         '''Method to create a new user'''
         data = request.get_json()
-        User_validator.validate_missing_data(self, data)
-        User_validator.validate_data_types(self, data)
-        User_validator.validate_credentials(self, data)
+        valid = User_validator(data)
+        valid.validate_missing_data()
+        valid.validate_data_types()
+        valid.validate_credentials()
+        valid.validate_password()
         email = data["email"]
         password = generate_password_hash(data["password"], method='sha256')
         role = data["role"]
@@ -60,10 +62,38 @@ class SignUp(Resource):
                 "Email": email,
                 "Role": role
             }), 201)
-        
+
         return make_response(jsonify({
-                "Message": "Permission denied, must be admin"
-            }), 201)
+            "Message": "Permission denied, must be admin"
+        }), 201)
+
+
+class UpdateUser(Resource):
+    @token_required
+    def put(current_user, self, userId):
+        '''Update user endpoint'''
+        data = request.get_json()
+        role = data["role"]
+        user = User_Model(role)
+        if current_user["role"] == "Admin" or current_user["role"] == "admin":
+            item = User_Model()
+            users = item.get()
+            for user in users:
+                if user["id"] == userId:
+                    if user["role"] != "Admin":
+                        item.update(userId)
+                        return make_response(jsonify({
+                            "Message": "User updated to:",
+                            "Role": role
+                        }), 201)
+                    else:
+                        return make_response(jsonify({
+                            "message":  "User already an admin"
+                            }), 403)
+            return make_response(jsonify({"message":  "User non-existent"}), 404)
+        return make_response(jsonify({
+            "Message": "Permission denied, must be admin"
+        }), 401)
 
 
 class Login(Resource):
@@ -72,8 +102,9 @@ class Login(Resource):
     def post(self):
         '''Method to login a user and create a unique JWT token'''
         data = request.get_json()
-        User_validator.validate_missing_data(self, data)
-        User_validator.validate_data_types_login(self, data)
+        valid = User_validator(data)
+        valid.validate_missing_data()
+        valid.validate_data_types_login()
         email = data["email"]
         password = data["password"]
         users = User_Model.get(self)
@@ -102,10 +133,11 @@ class Product(Resource):
                 "Message": "You must be an admin"
             }), 403)
         data = request.get_json()
-        Validator_products.validate_missing_data(self, data)
-        Validator_products.validate_data_types(self, data)
-        Validator_products.validate_duplication(self, data)
-        Validator_products.validate_negations(self, data)
+        valid = Validator_products(data)
+        valid.validate_missing_data()
+        valid.validate_data_types()
+        valid.validate_duplication()
+        valid.validate_negations()
         title = data["title"]
         category = data["category"]
         price = data["price"]
@@ -113,7 +145,7 @@ class Product(Resource):
         minimum_stock = data["minimum_stock"]
         description = data["description"]
         product = Product_Model(data)
-        Validator_products.validate_product_description(self, data)
+        valid.validate_product_description()
         product.save()
         return make_response(jsonify({
             "Message": "Successfully added",
@@ -171,16 +203,17 @@ class OneProduct(Resource):
                 "Message": "You must be an admin"
             }), 403)
         data = request.get_json()
-        Validator_products.validate_missing_data(self, data)
-        Validator_products.validate_data_types(self, data)
-        Validator_products.validate_negations(self, data)
+        valid = Validator_products(data)
+        valid.validate_missing_data()
+        valid.validate_data_types()
+        valid.validate_negations()
         title = data["title"]
         category = data["category"]
         price = data["price"]
         quantity = data["quantity"]
         minimum_stock = data["minimum_stock"]
         description = data["description"]
-        Validator_products.validate_product_description(self, data)
+        valid.validate_product_description()
         product = Product_Model(data)
         products = product.get()
         if len(products) == 0:
@@ -221,8 +254,9 @@ class Sale(Resource):
         '''Create an endpoint for attendants to make sales'''
         data = request.get_json()
         if current_user and current_user["role"] == "Attendant":
-            Validator_sales.validate_missing_data(self, data)
-            Validator_sales.validate_data_types(self, data)
+            valid = Validator_sales(data)
+            valid.validate_missing_data()
+            valid.validate_data_types()
             productId = data["productId"]
             item = Product_Model(data)
             products = item.get()
