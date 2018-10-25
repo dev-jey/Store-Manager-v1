@@ -192,4 +192,18 @@ class OneProduct(Resource):
             "Message": "Product non-existent"
         }), 404)
 
- 
+    @token_required
+    def delete(current_user, self, productId):
+        '''deletes product'''
+        product = Product_Model()
+        products = product.get()
+        if current_user["role"] == "Admin":
+            for item in products:
+                if productId == item["id"]:
+                    product.delete(productId)
+                    response = make_response(jsonify({
+                        "message": "Deleted successfully"}), 200)
+                    return response
+        response = make_response(jsonify(
+            {"Message": "Attempting to delete a product that doesn't exist"}), 404)
+        return response

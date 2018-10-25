@@ -9,6 +9,7 @@ from app.api.v2.models.db_models import Db
 class TestsForApi(unittest.TestCase):
     '''Set up method to create an attendant, admin, product,
     and a sales table for use in other tests and authentication'''
+
     def setUp(self):
         self.db = Db()
         self.db.createTables()
