@@ -8,6 +8,7 @@ import re
 class User_validator(object):
     def __init__(self, data):
         self.data = data
+        
     '''User validations undertaken here'''
     def validate_credentials(self):
         item = User_Model()

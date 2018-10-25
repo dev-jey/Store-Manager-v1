@@ -102,6 +102,10 @@ class Login(Resource):
     def post(self):
         '''Method to login a user and create a unique JWT token'''
         data = request.get_json()
+        if not data:
+            return make_response(jsonify({
+                    "Message": "Please, provide your credentials"
+                        }), 403)
         valid = User_validator(data)
         valid.validate_missing_data()
         valid.validate_data_types_login()
