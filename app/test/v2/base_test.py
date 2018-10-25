@@ -74,7 +74,7 @@ class TestsForApi(unittest.TestCase):
                                   'content-type': 'application/json',
                                   'x-access-token': self.admin_token
                               })
-        self.test_client.post("/api/v2/sales", data=self.sale,
+        x = self.test_client.post("/api/v2/sales", data=self.sale,
                               headers={
                                   'content-type': 'application/json',
                                   'x-access-token': self.attendant_token

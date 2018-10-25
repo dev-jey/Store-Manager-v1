@@ -282,4 +282,3 @@ class Sale(Resource):
             return make_response(jsonify({
                                         "Message": "Must be an admin"
                                         }), 401)
-

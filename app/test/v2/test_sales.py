@@ -108,3 +108,27 @@ class TestSales(TestsForApi):
         response = json.loads(resp.data)
         self.assertEqual(response["Message"], "Must be an admin")
         self.assertEqual(resp.status_code, 401)
+    
+    def test_getting_one_sale_admin(self):
+        '''Test for getting one sale for an admin'''
+        resp = self.test_client.get("/api/v2/sales/1",
+                                    headers={
+                                        'x-access-token': self.admin_token
+                                    })
+        self.assertEqual(resp.status_code, 200)
+
+    def test_getting_one_sale_attendant(self):
+        '''Test for getting one sale for an attendant'''
+        resp = self.test_client.get("/api/v2/sales/1",
+                                    headers={
+                                        'x-access-token': self.attendant_token
+                                    })
+        self.assertEqual(resp.status_code, 200)
+
+    def test_getting_one_sale_with_wrong_saleId(self):
+        '''Test for getting one sale when a person enters wrong saleID'''
+        resp = self.test_client.get("/api/v2/sales/400",
+                                    headers={
+                                        'x-access-token': self.attendant_token
+                                    })
+        self.assertEqual(resp.status_code, 404)
