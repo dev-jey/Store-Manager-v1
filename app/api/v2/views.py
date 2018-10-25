@@ -262,4 +262,25 @@ class Sale(Resource):
                                         }), 401)
 
 
+    @token_required
+    def get(current_user, self):
+        '''Method for getting all sales'''
+        if current_user and current_user["role"] == "Admin":
+            sale_obj = Sales_Model()
+            sales = sale_obj.get()
+            if len(sales) > 0:
+                response = make_response(jsonify({
+                                            "Message": "Success",
+                                            "Sales": sale_obj.get()
+                                                }), 200)
+            else:
+                response = make_response(jsonify({
+                                        "Message": "Failure, no sales made yet"
+                                                 }), 404)
+            return response
+        else:
+            return make_response(jsonify({
+                                        "Message": "Must be an admin"
+                                        }), 401)
+
 
