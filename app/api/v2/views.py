@@ -209,3 +209,54 @@ class OneProduct(Resource):
             {"Message": "Attempting to delete a product that doesn't exist"}), 404)
         return response
 
+
+class Sale(Resource):
+    @token_required
+    def post(current_user, self):
+        '''Create an endpoint for attendants to make sales'''
+        data = request.get_json()
+        if current_user and current_user["role"] == "Attendant":
+            Validator_sales.validate_missing_data(self, data)
+            Validator_sales.validate_data_types(self, data)
+            productId = data["productId"]
+            item = Product_Model(data)
+            products = item.get()
+            for product in products:
+                total_price = 0
+                if product["id"] == productId:
+                        userId = current_user["id"]
+                        sale_obj = Sales_Model(userId, product)
+                        product["quantity"] = product["quantity"]-1
+                        sale_obj.save()
+                        prod = Product_Model(data)
+                        prod.updateQuanitity(product["quantity"], productId)
+                        sales = sale_obj.get()
+                        for sale in sales:
+                            if product["id"] in sale.values():
+                                price = int(product["price"])
+                                total_price = total_price+price
+                        
+                        if product["quantity"] <= 0:
+                            response = make_response(jsonify({
+                                            "Message": "Products sold up"
+                                            }), 404)
+                        elif product["quantity"] < int(product["minimum_stock"]):
+                            response = make_response(jsonify({
+                                            "Message": "Minimum stock reached",
+                                            "Sales made": products,
+                                            "total price": total_price
+                                            }), 201)
+                        else:
+                            response = make_response(jsonify({
+                                                "message": "successfully sold",
+                                                "Sales made": products,
+                                                "total price": total_price
+                                                }), 201)
+                        return response
+            return make_response(jsonify({
+                                        "Message": "Product non-existent"
+                                        }), 404)
+        else:
+            return make_response(jsonify({
+                                        "Message": "Must be an attendant!"
+                                        }), 401)
