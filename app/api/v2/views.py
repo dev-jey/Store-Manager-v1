@@ -224,43 +224,42 @@ class Sale(Resource):
             for product in products:
                 total_price = 0
                 if product["id"] == productId:
-                        userId = current_user["id"]
-                        sale_obj = Sales_Model(userId, product)
-                        product["quantity"] = product["quantity"]-1
-                        sale_obj.save()
-                        prod = Product_Model(data)
-                        prod.updateQuanitity(product["quantity"], productId)
-                        sales = sale_obj.get()
-                        for sale in sales:
-                            if product["id"] in sale.values():
-                                price = int(product["price"])
-                                total_price = total_price+price
-                        
-                        if product["quantity"] <= 0:
-                            response = make_response(jsonify({
-                                            "Message": "Products sold up"
-                                            }), 404)
-                        elif product["quantity"] < int(product["minimum_stock"]):
-                            response = make_response(jsonify({
-                                            "Message": "Minimum stock reached",
-                                            "Sales made": products,
-                                            "total price": total_price
-                                            }), 201)
-                        else:
-                            response = make_response(jsonify({
-                                                "message": "successfully sold",
-                                                "Sales made": products,
-                                                "total price": total_price
-                                                }), 201)
-                        return response
+                    userId = current_user["id"]
+                    sale_obj = Sales_Model(userId, product)
+                    product["quantity"] = product["quantity"]-1
+                    sale_obj.save()
+                    prod = Product_Model(data)
+                    prod.updateQuanitity(product["quantity"], productId)
+                    sales = sale_obj.get()
+                    for sale in sales:
+                        if product["id"] in sale.values():
+                            price = int(product["price"])
+                            total_price = total_price+price
+
+                    if product["quantity"] <= 0:
+                        response = make_response(jsonify({
+                            "Message": "Products sold up"
+                        }), 404)
+                    elif product["quantity"] < int(product["minimum_stock"]):
+                        response = make_response(jsonify({
+                            "Message": "Minimum stock reached",
+                            "Sales made": products,
+                            "total price": total_price
+                        }), 201)
+                    else:
+                        response = make_response(jsonify({
+                            "message": "successfully sold",
+                            "Sales made": products,
+                            "total price": total_price
+                        }), 201)
+                    return response
             return make_response(jsonify({
-                                        "Message": "Product non-existent"
-                                        }), 404)
+                "Message": "Product non-existent"
+            }), 404)
         else:
             return make_response(jsonify({
-                                        "Message": "Must be an attendant!"
-                                        }), 401)
-
+                "Message": "Must be an attendant!"
+            }), 401)
 
     @token_required
     def get(current_user, self):
@@ -270,15 +269,45 @@ class Sale(Resource):
             sales = sale_obj.get()
             if len(sales) > 0:
                 response = make_response(jsonify({
-                                            "Message": "Success",
-                                            "Sales": sale_obj.get()
-                                                }), 200)
+                    "Message": "Success",
+                    "Sales": sale_obj.get()
+                }), 200)
             else:
                 response = make_response(jsonify({
-                                        "Message": "Failure, no sales made yet"
-                                                 }), 404)
+                    "Message": "Failure, no sales made yet"
+                }), 404)
             return response
         else:
             return make_response(jsonify({
-                                        "Message": "Must be an admin"
-                                        }), 401)
+                "Message": "Must be an admin"
+            }), 401)
+
+
+class OneSale(Resource):
+    @token_required
+    def get(current_user, self, saleId):
+        '''Gets one sale using its sale Id'''
+        sale = Sales_Model()
+        sales = sale.get()
+        if len(sales) == 0:
+            response = make_response(jsonify({
+                "Message": "No sales at all"
+            }), 404)
+        else:
+            for item in sales:
+                if int(saleId) == item["id"]:
+                    if current_user["role"] == "Admin" or current_user["id"] == item["userId"]:
+                        resp = make_response(jsonify({
+                            "Message": "Success",
+                            "Sale": item
+                        }), 200)
+                    else:
+                        resp = make_response(jsonify({
+                            "Message": "Access denied"
+                        }), 401)
+                    return resp
+                else:
+                    response = make_response(jsonify({
+                        "Message": "Sale non-existent"
+                    }), 404)
+        return response
