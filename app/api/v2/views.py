@@ -6,9 +6,10 @@ from instance.config import app_config
 import jwt
 import datetime
 '''Local imports'''
-from .utils import User_validator, Validator_products
+from .utils import User_validator, Validator_products, Validator_sales
 from .models.user_model import User_Model
 from .models.product_models import Product_Model
+from .models.sale_models import Sales_Model
 
 
 def token_required(fnc):
@@ -207,3 +208,4 @@ class OneProduct(Resource):
         response = make_response(jsonify(
             {"Message": "Attempting to delete a product that doesn't exist"}), 404)
         return response
+

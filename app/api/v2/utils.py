@@ -100,3 +100,17 @@ class Validator_products(object):
         if data["quantity"] < data["minimum_stock"]:
             Message = "Minmum stock cant be more than quantity"
             abort(400, Message)
+
+
+class Validator_sales(object):
+    def validate_missing_data(self, data):
+        '''checks for missing data when making a sale'''
+        if "productId" not in data:
+            Message = "Must enter the product Id"
+            abort(400, Message) 
+
+    def validate_data_types(self, data):
+        '''validates datatype of the product id passed'''
+        if type(data["productId"]) is not int:
+            Message = "Product Id must be an integer"
+            abort(400, Message)
