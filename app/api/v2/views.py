@@ -42,8 +42,8 @@ def token_required(fnc):
 
 class SignUp(Resource):
     '''Signup endpont'''
-
-    def post(self):
+    @token_required
+    def post(current_user, self):
         '''Method to create a new user'''
         data = request.get_json()
         User_validator.validate_missing_data(self, data)
@@ -53,12 +53,17 @@ class SignUp(Resource):
         password = generate_password_hash(data["password"], method='sha256')
         role = data["role"]
         user = User_Model(email, password, role)
-        user.save()
+        if current_user["role"] == "Admin" or current_user["role"] == "admin":
+            user.save()
+            return make_response(jsonify({
+                "Message": "User registered",
+                "Email": email,
+                "Role": role
+            }), 201)
+        
         return make_response(jsonify({
-            "Message": "User registered",
-            "Email": email,
-            "Role": role
-        }), 201)
+                "Message": "Permission denied, must be admin"
+            }), 201)
 
 
 class Login(Resource):
