@@ -8,9 +8,10 @@ from .db_models import Db
 class Sales_Model():
     '''Initializes a sale'''
 
-    def __init__(self, userId, product):
-        self.userId = userId
-        self.productId = product["id"]
+    def __init__(self, userId=None, product=None):
+        if product and userId:
+            self.userId = userId
+            self.productId = product["id"]
         self.date = datetime.datetime.now()
         db = Db()
         db.createTables()

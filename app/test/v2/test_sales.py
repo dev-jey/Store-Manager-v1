@@ -88,3 +88,23 @@ class TestSales(TestsForApi):
         response = json.loads(resp.data)
         self.assertEqual(response["Message"], "Must be an attendant!")
         self.assertEqual(resp.status_code, 401)
+
+    def test_get_all_sales_admin(self):
+        '''Test for admin getting all sales'''
+        resp = self.test_client.get("/api/v2/sales",
+                                    headers={
+                                        'x-access-token': self.admin_token
+                                    })
+        response = json.loads(resp.data)
+        self.assertEqual(response["Message"], "Success")
+        self.assertEqual(resp.status_code, 200)
+
+    def test_get_all_sales_attendant(self):
+        '''Test for attendant getting all sales'''
+        resp = self.test_client.get("/api/v2/sales",
+                                    headers={
+                                        'x-access-token': self.attendant_token
+                                    })
+        response = json.loads(resp.data)
+        self.assertEqual(response["Message"], "Must be an admin")
+        self.assertEqual(resp.status_code, 401)

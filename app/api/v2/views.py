@@ -260,3 +260,6 @@ class Sale(Resource):
             return make_response(jsonify({
                                         "Message": "Must be an attendant!"
                                         }), 401)
+
+
+
