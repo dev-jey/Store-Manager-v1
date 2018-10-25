@@ -64,6 +64,15 @@ class Product_Model(Db):
             oneproduct["minimum_stock"] = list_of_items[5]
             oneproduct["description"] = list_of_items[6]
             allproducts.append(oneproduct)
-        cursor.close()
-        self.conn.close()
+        self.conn.commit()
         return allproducts
+
+    def delete(self, productId):
+        self.productId = productId
+        cursor = self.conn.cursor()
+        cursor.execute(
+            "DELETE from products where id = %s",
+            (self.productId,)
+        )
+        self.conn.commit()
+        self.conn.close()
