@@ -26,7 +26,7 @@ To run this project you should follow the following steps: \
 `$ export DB_NAME="storemanager"` \
 `$ export DB_HOST="fill in your localhost"` \
 `$ export DB_USER="fill in the db user"` \
-`$ export DB_PASSWORD="fill in your db user password"` \
+`$ export DB_PASSWORD="fill in your db user password"`
 
 6. create the dev database \
 `createdb storemanager`
@@ -80,10 +80,13 @@ The api endpoints are
 https://travis-ci.org/ \
 https://apiary.io/ \
 https://codeclimate.com/ \
-https://coveralls.io/ 
+https://coveralls.io/ \
+Python \
+Flask \
+Postgres SQL
 
-**Acknowledgements** \
-1. I acknowledge Andela Kenya for giving the platform to develop this product \
+**Acknowledgements**  
+1. I acknowledge Andela Kenya for giving the platform to develop this product  
 1. I also acknowledge my teammates for their collaboration
 
 
