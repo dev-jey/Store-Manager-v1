@@ -49,6 +49,7 @@ Run \
 `pytest app/test/v2 -v --cov=app/test/v2`
 
 9. for the application run \
+(To run v2, you have to signup an admin using the `/users` route) \
 `$ export SECRET_KEY="<your key>"`\
 `export APP_SETTINGS="development"` \
 `$ export FLASK_APP=run.py`\
@@ -67,6 +68,7 @@ The api endpoints are
 | POST /sales | Create a sale order |
 | POST /auth/signup | Signup a user |
 | POST /auth/login | Login a user |
+| POST /users | Signup admin user |
 | PUT /users/userId | Update a user |
 | PUT /products/productId | Update a product |
 | DELETE /products/productId | Delete a product |
