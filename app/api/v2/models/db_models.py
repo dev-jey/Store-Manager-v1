@@ -17,6 +17,9 @@ class Db(object):
         try:
             if Config.APP_SETTINGS == "testing":
                 self.conn = psycopg2.connect(database="test_db")
+            elif Config.APP_SETTINGS == "development":
+                self.conn = psycopg2.connect(
+                    database=self.db_name, host=self.db_host, password=self.db_password)
             else:
                 self.conn = psycopg2.connect(os.environ['DATABASE_URL'], sslmode='require')
             return self.conn
