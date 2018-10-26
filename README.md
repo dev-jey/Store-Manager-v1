@@ -18,6 +18,18 @@ To run this project you should follow the following steps: \
 
 4. clone this repo
 `$ git clone https://github.com/codeMarble254/Store-Manager-v1.git`
+5. cd into the folder \
+`Store-Manager-v1`
+
+5. export environment variables \
+`$ export APP_SETTINGS="development"`
+`$ export DB_NAME="development"`
+
+6. create the dev database \
+`createdb test_db`
+
+6. create the testing database \
+`$ createdb test_db`
 
 5. Switch to `develop` branch \
 `$ git checkout develop`
@@ -27,10 +39,18 @@ To run this project you should follow the following steps: \
 
 now we are ready to run.
 
-7. for tests run
+7. for tests on v1 run
 `$ pytest -v`
+8. for tests on v2 change to run \
+Switch to the latest branch \
+`bg-heroku-deployment-v2-161493704 `
+Run \
+`export APP_SETTINGS="testing"`
+`pytest app/test/v2 -v --cov=app/test/v2`
+
 8. for the application run \
 `$ export SECRET_KEY="<your key>"`\
+`export APP_SETTINGS="development"`
 `$ export FLASK_APP=run.py`\
 `$ flask run` \
 If you ran the aplication you can test the various api endpoints using postman.
