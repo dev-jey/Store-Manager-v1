@@ -3,7 +3,10 @@ This is a simple store management application\
 [![Build Status](https://travis-ci.org/codeMarble254/Store-Manager-v1.svg?branch=bg-fix-heroku-deployment-161331066)](https://travis-ci.org/codeMarble254/Store-Manager-v1)
 [![Coverage Status](https://coveralls.io/repos/github/codeMarble254/Store-Manager-v1/badge.svg?branch=develop)](https://coveralls.io/github/codeMarble254/Store-Manager-v1?branch=develop)
 [![Maintainability](https://api.codeclimate.com/v1/badges/66cf3a604295b849139d/maintainability)](https://codeclimate.com/github/codeMarble254/Store-Manager-v1/maintainability)\
-To run this project you should follow the following steps:
+To run this project you should follow the following steps: \
+**Find the web UI here**https://codemarble254.github.io/Store-Manager/UI/ 
+
+**Find the app on heroku** https://jemo-store-manager.herokuapp.com/ 
 
 1. Create a virual enviroment with the command
 `$ virtualenv -p python3 env`
@@ -44,3 +47,16 @@ The api endpoints are
 | POST /sales | Create a sale order |
 | POST /auth/signup | Signup a user |
 | POST /auth/login | Login a user |
+
+**Resources used** \
+https://travis-ci.org/ \
+https://apiary.io/ \
+https://codeclimate.com/ \
+https://coveralls.io/ 
+
+**Acknowledgements** \
+I acknowledge Andela Kenya for giving the platform to develop this product \
+I also acknowledge my teammates for their collaboration
+
+
+
