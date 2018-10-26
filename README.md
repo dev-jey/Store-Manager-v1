@@ -22,7 +22,7 @@ To run this project you should follow the following steps: \
 `Store-Manager-v1`
 
 5. export environment variables \
-`$ export APP_SETTINGS="development"`
+`$ export APP_SETTINGS="development"` \
 `$ export DB_NAME="development"`
 
 6. create the dev database \
@@ -43,14 +43,14 @@ now we are ready to run.
 `$ pytest -v`
 8. for tests on v2 change to run \
 Switch to the latest branch \
-`bg-heroku-deployment-v2-161493704 `
+`bg-heroku-deployment-v2-161493704 ` \
 Run \
-`export APP_SETTINGS="testing"`
+`export APP_SETTINGS="testing"` \
 `pytest app/test/v2 -v --cov=app/test/v2`
 
-8. for the application run \
+9. for the application run \
 `$ export SECRET_KEY="<your key>"`\
-`export APP_SETTINGS="development"`
+`export APP_SETTINGS="development"` \
 `$ export FLASK_APP=run.py`\
 `$ flask run` \
 If you ran the aplication you can test the various api endpoints using postman.
@@ -67,6 +67,9 @@ The api endpoints are
 | POST /sales | Create a sale order |
 | POST /auth/signup | Signup a user |
 | POST /auth/login | Login a user |
+| PUT /users/<userId> | Update a user |
+| PUT /products/<productId> | Update a product |
+| DELETE /products/<productId> | Delete a product |
 
 **Resources used** \
 https://travis-ci.org/ \
@@ -75,8 +78,8 @@ https://codeclimate.com/ \
 https://coveralls.io/ 
 
 **Acknowledgements** \
-I acknowledge Andela Kenya for giving the platform to develop this product \
-I also acknowledge my teammates for their collaboration
+1. I acknowledge Andela Kenya for giving the platform to develop this product \
+1. I also acknowledge my teammates for their collaboration
 
 
 
