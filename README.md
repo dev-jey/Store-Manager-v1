@@ -67,9 +67,9 @@ The api endpoints are
 | POST /sales | Create a sale order |
 | POST /auth/signup | Signup a user |
 | POST /auth/login | Login a user |
-| PUT /users/<userId> | Update a user |
-| PUT /products/<productId> | Update a product |
-| DELETE /products/<productId> | Delete a product |
+| PUT /users/userId | Update a user |
+| PUT /products/productId | Update a product |
+| DELETE /products/productId | Delete a product |
 
 **Resources used** \
 https://travis-ci.org/ \
