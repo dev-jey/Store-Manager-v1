@@ -23,10 +23,13 @@ To run this project you should follow the following steps: \
 
 5. export environment variables \
 `$ export APP_SETTINGS="development"` \
-`$ export DB_NAME="development"`
+`$ export DB_NAME="storemanager"` \
+`$ export DB_HOST="fill in your localhost"` \
+`$ export DB_USER="fill in the db user"` \
+`$ export DB_PASSWORD="fill in your db user password"` \
 
 6. create the dev database \
-`createdb test_db`
+`createdb storemanager`
 
 6. create the testing database \
 `$ createdb test_db`
