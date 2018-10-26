@@ -72,6 +72,36 @@ class SignUp(Resource):
         }), 201)
 
 
+class AdminSignUp(Resource):
+    '''Signup endpont'''
+    def post(self):
+        '''Method to create a new user'''
+        data = request.get_json()
+        if not data:
+            return make_response(jsonify({
+                    "Message": "Please, provide your credentials"
+                        }), 403)
+        if data["role"] != "Admin":
+            return make_response(jsonify({
+                    "Message": "Role must be admin"
+                        }), 403)
+        valid = User_validator(data)
+        valid.validate_missing_data()
+        valid.validate_data_types()
+        valid.validate_credentials()
+        valid.validate_password()
+        email = data["email"]
+        password = generate_password_hash(data["password"], method='sha256')
+        role = data["role"]
+        user = User_Model(email, password, role)
+        user.save()
+        return make_response(jsonify({
+                "Message": "User registered",
+                "Email": email,
+                "Role": role
+            }), 201)
+
+
 class UpdateUser(Resource):
     @token_required
     def put(current_user, self, userId):

@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask_restful import Api, Resource
 
-from .views import SignUp, Login, Product, OneProduct, Sale, OneSale, UpdateUser
+from .views import SignUp, Login, Product, OneProduct, Sale, OneSale, UpdateUser, AdminSignUp
 
 '''Creation of blue prints and routes for endpoints'''
 blprint2 = Blueprint('api2', __name__, url_prefix="/api/v2")
@@ -13,3 +13,4 @@ api.add_resource(OneProduct, "/products/<int:productId>")
 api.add_resource(Sale, "/sales")
 api.add_resource(OneSale, "/sales/<int:saleId>")
 api.add_resource(UpdateUser, "/users/<int:userId>")
+api.add_resource(AdminSignUp, "/users")

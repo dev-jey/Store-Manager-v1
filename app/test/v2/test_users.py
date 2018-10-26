@@ -18,6 +18,7 @@ class TestUsers(TestsForApi):
                                         'content-type': 'application/json'
                                     })
         response = json.loads(res.data)
+        print(json.loads(res.data.decode()))
         self.assertEqual(response["Message"], "User registered")
         self.assertEqual(res.status_code, 201)
 

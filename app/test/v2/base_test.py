@@ -16,12 +16,20 @@ class TestsForApi(unittest.TestCase):
         self.db.createTables()
         self.app = create_app(config_name="testing")
         self.test_client = self.app.test_client()
-        user = User_Model()
-        user.saveAdmin()
         self.admin_login_details = json.dumps({
-            "email": "maria@gmail.com",
+            "email": "james@gmail.com",
             "password": "as@dsDdz2a"
         })
+        self.admin_details = json.dumps({
+            "email": "james@gmail.com",
+            "password": "as@dsDdz2a",
+            "role": "Admin"
+        })
+        admin_signup = self.test_client.post("/api/v2/users",
+                                                 data=self.admin_details,
+                                                 headers={
+                                                     'content-type': 'application/json'
+                                                 })
         admin_login = self.test_client.post("/api/v2/auth/login",
                                             data=self.admin_login_details,
                                             headers={
@@ -29,12 +37,12 @@ class TestsForApi(unittest.TestCase):
                                             })
         self.admin_token = json.loads(admin_login.data.decode())["token"]
         self.attendant = json.dumps({
-            "email": "james@gmail.com",
+            "email": "james2@gmail.com",
             "password": "as@dsDdz2a",
             "role": "Attendant"
         })
         self.attendant_login_details = json.dumps({
-            "email": "james@gmail.com",
+            "email": "james2@gmail.com",
             "password": "as@dsDdz2a"
         })
         signup_attendant = self.test_client.post("/api/v2/auth/signup",
@@ -49,6 +57,7 @@ class TestsForApi(unittest.TestCase):
                                                 headers={
                                                     'content-type': 'application/json'
                                                 })
+        print(json.loads(login_attendant.data.decode()))
         self.data = json.loads(login_attendant.data.decode())
         self.attendant_token = self.data["token"]
         self.product = json.dumps(
