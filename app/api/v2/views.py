@@ -46,6 +46,10 @@ class SignUp(Resource):
     def post(current_user, self):
         '''Method to create a new user'''
         data = request.get_json()
+        if not data:
+            return make_response(jsonify({
+                    "Message": "Please, provide your credentials"
+                        }), 403)
         valid = User_validator(data)
         valid.validate_missing_data()
         valid.validate_data_types()
@@ -73,6 +77,10 @@ class UpdateUser(Resource):
     def put(current_user, self, userId):
         '''Update user endpoint'''
         data = request.get_json()
+        if not data:
+            return make_response(jsonify({
+                    "Message": "Please, provide your credentials"
+                        }), 403)
         role = data["role"]
         user = User_Model(role)
         if current_user["role"] == "Admin" or current_user["role"] == "admin":
@@ -207,6 +215,10 @@ class OneProduct(Resource):
                 "Message": "You must be an admin"
             }), 403)
         data = request.get_json()
+        if not data:
+            return make_response(jsonify({
+                    "Message": "Please, provide your credentials"
+                        }), 403)
         valid = Validator_products(data)
         valid.validate_missing_data()
         valid.validate_data_types()
