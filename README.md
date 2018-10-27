@@ -11,7 +11,7 @@ To run this project you should follow the following steps: \
 1. Create a virual enviroment with the command
 `$ virtualenv -p python3 env`
 
-2. Activate the venv with the command
+2. Activate the env with the command
 `$ source env/bin/activate`
 
 3. Install git
@@ -51,10 +51,10 @@ Run \
 `export APP_SETTINGS="testing"` \
 `pytest app/test/v2 -v --cov=app/test/v2`
 
-9. for the application run \
+9. for the application run  
 
 `export APP_SETTINGS="development"` \
-`$ flask run` \
+`$ flask run`  
 
 If you ran the aplication you can test the various api endpoints using postman.
 
