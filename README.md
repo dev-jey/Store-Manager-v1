@@ -28,7 +28,7 @@ To run this project you should follow the following steps: \
 `$ export DB_USER="fill in the db user"` \
 `$ export DB_PASSWORD="fill in your db user password"` \
 `$ export SECRET_KEY="<your key>"` \
-`$ export FLASK_APP=run.py` \
+`$ export FLASK_APP=run.py`
 
 6. create the dev database \
 `createdb storemanager`
