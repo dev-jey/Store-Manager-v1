@@ -37,7 +37,7 @@ class TestSales(TestsForApi):
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Must enter the product Id")
+        self.assertEqual(response["message"], "Must enter the product details in the body")
         self.assertEqual(resp.status_code, 400)
 
     def test_validate_posting_with_no_correct_key(self):
@@ -49,7 +49,7 @@ class TestSales(TestsForApi):
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Must enter the product Id")
+        self.assertEqual(response["message"], "Must enter the product Id key well")
         self.assertEqual(resp.status_code, 400)
 
     def test_validate_posting_with_blank_key(self):
@@ -61,7 +61,7 @@ class TestSales(TestsForApi):
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Must enter the product Id")
+        self.assertEqual(response["message"], "Must enter the product Id key well")
         self.assertEqual(resp.status_code, 400)
 
     def test_validate_product_id_data_type(self):

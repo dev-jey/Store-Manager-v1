@@ -57,7 +57,6 @@ class TestsForApi(unittest.TestCase):
                                                 headers={
                                                     'content-type': 'application/json'
                                                 })
-        print(json.loads(login_attendant.data.decode()))
         self.data = json.loads(login_attendant.data.decode())
         self.attendant_token = self.data["token"]
         self.product = json.dumps(

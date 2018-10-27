@@ -63,8 +63,8 @@ class TestUsers(TestsForApi):
         self.assertEqual(response["message"], "User already exists")
         self.assertEqual(resp.status_code, 406)
 
-    def test_signup_with_details_missing(self):
-        '''Tests for signup with no details'''
+    def test_signup_with_email_missing(self):
+        '''Tests for signup with no email'''
         resp = self.test_client.post("/api/v2/auth/signup",
                                      data=json.dumps({
                                          "email": "",
@@ -77,7 +77,7 @@ class TestUsers(TestsForApi):
                                      })
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "Kindly enter your full credentials")
+                         "Kindly enter your email")
         self.assertEqual(resp.status_code, 400)
 
     def test_short_password(self):
@@ -176,13 +176,13 @@ class TestUsers(TestsForApi):
                          "Password must have a special charater")
         self.assertEqual(resp.status_code, 400)
 
-    def test_for_signup_details_data_types(self):
-        '''Test for signup details where wrong data types are given'''
+    def test_for_signup_email_data_types(self):
+        '''Test for signup details where wrong email data type is are given'''
         resp = self.test_client.post("/api/v2/auth/signup",
                                      data=json.dumps({
                                          "email": 2014,
-                                         "password": 3.29,
-                                         "role": 3232
+                                         "password": "James@12",
+                                         "role": "Admin"
                                      }),
                                      headers={
                                          'x-access-token': self.admin_token,
@@ -190,7 +190,7 @@ class TestUsers(TestsForApi):
                                      })
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "Details must be strings characters")
+                         "Email must contain string characters only")
         self.assertEqual(resp.status_code, 400)
 
     def test_success_login(self):
@@ -237,20 +237,20 @@ class TestUsers(TestsForApi):
                                      headers={
                                          'content-type': 'application/json'
                                      })
-        self.assertEqual(resp.status_code, 403)
+        self.assertEqual(resp.status_code, 400)
 
-    def test_for_missing_login_keys_data(self):
-        '''Test for login without any data passed in keys'''
+    def test_for_missing_email_login_key_data(self):
+        '''Test for login without any data passed in email key'''
         resp = self.test_client.post("/api/v2/auth/login",
                                      data=json.dumps({
                                          "": "j@gmail",
-                                         "": "sdinsund@D2"
+                                         "password": "sdinsund@D2"
                                      }),
                                      headers={
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Must enter all credentials")
+        self.assertEqual(response["message"], "Email field must be filled precisely")
         self.assertEqual(resp.status_code, 400)
 
     def test_for_login_details_data_types(self):
@@ -258,12 +258,12 @@ class TestUsers(TestsForApi):
         resp = self.test_client.post("/api/v2/auth/login",
                                      data=json.dumps({
                                          "email": 2014,
-                                         "password": 3.29
+                                         "password": "James@12"
                                      }),
                                      headers={
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "Details must be strings characters")
-        self.assertEqual(resp.status_code, 401)
+                         "Email must contain string characters only")
+        self.assertEqual(resp.status_code, 400)

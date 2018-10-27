@@ -38,12 +38,12 @@ class User_Model(Db):
         users = cursor.fetchall()
         allusers = []
         for user in users:
-            list_of_items = list(user)
+            list_of_users = list(user)
             oneuser = {}
-            oneuser["id"] = list_of_items[0]
-            oneuser["email"] = list_of_items[1]
-            oneuser["password"] = list_of_items[2]
-            oneuser["role"] = list_of_items[3]
+            oneuser["id"] = list_of_users[0]
+            oneuser["email"] = list_of_users[1]
+            oneuser["password"] = list_of_users[2]
+            oneuser["role"] = list_of_users[3]
             allusers.append(oneuser)
         return allusers
 

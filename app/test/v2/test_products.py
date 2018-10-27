@@ -8,18 +8,18 @@ class TestProducts(TestsForApi):
         resp = self.test_client.post("/api/v2/products",
                                      data=json.dumps({
                                          "title": "",
-                                         "category": "",
-                                         "price": "",
-                                         "quantity": "",
-                                         "minimum_stock": "",
-                                         "description": "great products to have"
+                                         "category": "Phones",
+                                         "price": 40000,
+                                         "quantity": 10,
+                                         "minimum_stock": 1,
+                                         "description": "great products to have while at home"
                                      }),
                                      headers={
                                          'content-type': 'application/json',
                                          'x-access-token': self.admin_token
                                      })
         response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Wrong data types given")
+        self.assertEqual(response["message"], "Product title is missing")
         self.assertEqual(resp.status_code, 400)
 
     def test_for_empty_keys_product_registration(self):
@@ -27,18 +27,18 @@ class TestProducts(TestsForApi):
         resp = self.test_client.post("/api/v2/products",
                                      data=json.dumps({
                                          "": "infinix",
-                                         "": "phones",
-                                         "": 536,
-                                         "": 5,
-                                         "": 2,
-                                         "": "great products to have"
+                                         "category": "phones",
+                                         "price": 536,
+                                         "quantity": 5,
+                                         "Minimum_stock": 2,
+                                         "description": "great products to have at home while sleeping"
                                      }),
                                      headers={
                                          'content-type': 'application/json',
                                          'x-access-token': self.admin_token
                                      })
         response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Must enter all product details")
+        self.assertEqual(response["message"], "Product title key/field missing or mistyped")
         self.assertEqual(resp.status_code, 400)
 
     def test_validate_duplication(self):
@@ -62,7 +62,7 @@ class TestProducts(TestsForApi):
                                          "price": 3000,
                                          "quantity": 1,
                                          "minimum_stock": 5,
-                                         "description": "great"
+                                         "description": "great phone to have at home daily"
                                      }),
                                      headers={
                                          'content-type': 'application/json',
@@ -82,7 +82,7 @@ class TestProducts(TestsForApi):
                                          "price": -3000,
                                          "quantity": -1,
                                          "minimum_stock": -5,
-                                         "description": "great"
+                                         "description": "great phone to have at home in any situation"
                                      }),
                                      headers={
                                          'content-type': 'application/json',
@@ -122,7 +122,7 @@ class TestProducts(TestsForApi):
                                          'x-access-token': self.admin_token
                                      })
         response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Must enter all product details")
+        self.assertEqual(response["message"], "No product details given yet")
         self.assertEqual(resp.status_code, 400)
 
     def test_for_product_creation_data_types(self):
@@ -130,18 +130,18 @@ class TestProducts(TestsForApi):
         resp = self.test_client.post("/api/v2/products",
                                      data=json.dumps({
                                          "title": 1212,
-                                         "category": 1212,
-                                         "price": "ds",
-                                         "quantity": "qw",
+                                         "category": "phones",
+                                         "price": 10000,
+                                         "quantity": 10,
                                          "minimum_stock": 12,
-                                         "description": 2232
+                                         "description": "This is a great product to have while in camping sites"
                                      }),
                                      headers={
                                          'content-type': 'application/json',
                                          'x-access-token': self.admin_token
                                      })
         response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Wrong data types given")
+        self.assertEqual(response["message"], "Title field only accepts a string")
         self.assertEqual(resp.status_code, 400)
 
     def test_if_price_is_converted_to_a_float(self):

@@ -45,16 +45,18 @@ class SignUp(Resource):
     @token_required
     def post(current_user, self):
         '''Method to create a new user'''
-        data = request.get_json()
-        if not data:
+        try:
+            data = request.get_json()
+        except:
             return make_response(jsonify({
-                    "Message": "Please, provide your credentials"
-                        }), 403)
+                "Message": "Please, provide your credentials"
+            }), 403)
         valid = User_validator(data)
-        valid.validate_missing_data()
-        valid.validate_data_types()
-        valid.validate_credentials()
-        valid.validate_password()
+        valid.validate_missing_keys_signup()
+        valid.validate_data_types_signup()
+        valid.validate_missing_data_signup()
+        valid.validate_signup_password()
+        valid.validate_user_exists()
         email = data["email"]
         password = generate_password_hash(data["password"], method='sha256')
         role = data["role"]
@@ -74,60 +76,57 @@ class SignUp(Resource):
 
 class AdminSignUp(Resource):
     '''Signup endpont'''
+
     def post(self):
         '''Method to create a new user'''
-        data = request.get_json()
-        if not data:
+        try:
+            data = request.get_json()
+        except:
             return make_response(jsonify({
-                    "Message": "Please, provide your credentials"
-                        }), 403)
+                "Message": "Please, provide your credentials"
+            }), 403)
         if data["role"] != "Admin":
             return make_response(jsonify({
-                    "Message": "Role must be admin"
-                        }), 403)
+                "Message": "Role must be 'Admin'"
+            }), 403)
         valid = User_validator(data)
-        valid.validate_missing_data()
-        valid.validate_data_types()
-        valid.validate_credentials()
-        valid.validate_password()
+        valid.validate_missing_keys_signup()
+        valid.validate_data_types_signup()
+        valid.validate_missing_data_signup()
+        valid.validate_signup_password()
+        valid.validate_user_exists()
         email = data["email"]
         password = generate_password_hash(data["password"], method='sha256')
         role = data["role"]
         user = User_Model(email, password, role)
         user.save()
         return make_response(jsonify({
-                "Message": "User registered",
-                "Email": email,
-                "Role": role
-            }), 201)
+            "Message": "User registered",
+            "Email": email,
+            "Role": role
+        }), 201)
 
 
 class UpdateUser(Resource):
     @token_required
     def put(current_user, self, userId):
         '''Update user endpoint'''
-        data = request.get_json()
-        if not data:
-            return make_response(jsonify({
-                    "Message": "Please, provide your credentials"
-                        }), 403)
-        role = data["role"]
-        user = User_Model(role)
-        if current_user["role"] == "Admin" or current_user["role"] == "admin":
+        if current_user["role"] == "Admin":
             item = User_Model()
             users = item.get()
             for user in users:
                 if user["id"] == userId:
                     if user["role"] != "Admin":
                         item.update(userId)
-                        return make_response(jsonify({
+                        response = make_response(jsonify({
                             "Message": "User updated to:",
-                            "Role": role
+                            "Role": "Admin"
                         }), 201)
                     else:
-                        return make_response(jsonify({
+                        response = make_response(jsonify({
                             "message":  "User already an admin"
-                            }), 403)
+                        }), 403)
+                    return response
             return make_response(jsonify({"message":  "User non-existent"}), 404)
         return make_response(jsonify({
             "Message": "Permission denied, must be admin"
@@ -139,16 +138,18 @@ class Login(Resource):
 
     def post(self):
         '''Method to login a user and create a unique JWT token'''
-        data = request.get_json()
-        if not data:
+        try:
+            data = request.get_json()
+        except:
             return make_response(jsonify({
-                    "Message": "Please, provide your credentials"
-                        }), 403)
+                "Message": "Please, provide your credentials"
+            }), 403)
         valid = User_validator(data)
-        valid.validate_missing_data()
+        valid.validate_missing_data_login()
         valid.validate_data_types_login()
-        email = data["email"]
-        password = data["password"]
+        valid.validate_empty_items_login()
+        email = data["email"].strip()
+        password = data["password"].strip()
         users = User_Model.get(self)
         for user in users:
             if email == user["email"] and check_password_hash(user["password"],
@@ -174,20 +175,18 @@ class Product(Resource):
             return make_response(jsonify({
                 "Message": "You must be an admin"
             }), 403)
-        data = request.get_json()
+        try:
+            data = request.get_json()
+        except:
+            return make_response(jsonify({
+                "Message": "Please, provide the product's details"
+            }), 403)
         valid = Validator_products(data)
         valid.validate_missing_data()
         valid.validate_data_types()
-        valid.validate_duplication()
         valid.validate_negations()
-        title = data["title"]
-        category = data["category"]
-        price = data["price"]
-        quantity = data["quantity"]
-        minimum_stock = data["minimum_stock"]
-        description = data["description"]
+        valid.validate_duplication()
         product = Product_Model(data)
-        valid.validate_product_description()
         product.save()
         return make_response(jsonify({
             "Message": "Successfully added",
@@ -244,22 +243,16 @@ class OneProduct(Resource):
             return make_response(jsonify({
                 "Message": "You must be an admin"
             }), 403)
-        data = request.get_json()
-        if not data:
+        try:
+            data = request.get_json()
+        except:
             return make_response(jsonify({
-                    "Message": "Please, provide your credentials"
-                        }), 403)
+                "Message": "Please, provide the product's details"
+            }), 403)
         valid = Validator_products(data)
         valid.validate_missing_data()
         valid.validate_data_types()
         valid.validate_negations()
-        title = data["title"]
-        category = data["category"]
-        price = data["price"]
-        quantity = data["quantity"]
-        minimum_stock = data["minimum_stock"]
-        description = data["description"]
-        valid.validate_product_description()
         product = Product_Model(data)
         products = product.get()
         if len(products) == 0:
@@ -298,7 +291,12 @@ class Sale(Resource):
     @token_required
     def post(current_user, self):
         '''Create an endpoint for attendants to make sales'''
-        data = request.get_json()
+        try:
+            data = request.get_json()
+        except:
+            return make_response(jsonify({
+                "Message": "Please, provide the product's details"
+            }), 403)
         if current_user and current_user["role"] == "Attendant":
             valid = Validator_sales(data)
             valid.validate_missing_data()
@@ -352,7 +350,8 @@ class Sale(Resource):
         if current_user and current_user["role"] == "Admin":
             sale_obj = Sales_Model()
             sales = sale_obj.get()
-            if len(sales) > 0:
+            len_Sales = sale_obj.checkSales()
+            if len_Sales:
                 response = make_response(jsonify({
                     "Message": "Success",
                     "Sales": sale_obj.get()
@@ -374,7 +373,8 @@ class OneSale(Resource):
         '''Gets one sale using its sale Id'''
         sale = Sales_Model()
         sales = sale.get()
-        if len(sales) == 0:
+        len_Sales = sale.checkSales()
+        if not len_Sales:
             response = make_response(jsonify({
                 "Message": "No sales at all"
             }), 404)

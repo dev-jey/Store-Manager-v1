@@ -36,12 +36,17 @@ class Sales_Model():
         sales = cursor.fetchall()
         allsales = []
         for sale in sales:
-            list_of_items = list(sale)
+            list_of_sales = list(sale)
             onesale = {}
-            onesale["id"] = list_of_items[0]
-            onesale["userId"] = list_of_items[1]
-            onesale["productId"] = list_of_items[2]
-            onesale["date"] = list_of_items[3]
+            onesale["id"] = list_of_sales[0]
+            onesale["userId"] = list_of_sales[1]
+            onesale["productId"] = list_of_sales[2]
+            onesale["date"] = list_of_sales[3]
             allsales.append(onesale)
         self.conn.commit()
         return allsales
+    
+    def checkSales(self):
+        sale1 = Sales_Model()
+        sales = sale1.get()
+        return len(sales)
