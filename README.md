@@ -26,7 +26,9 @@ To run this project you should follow the following steps: \
 `$ export DB_NAME="storemanager"` \
 `$ export DB_HOST="fill in your localhost"` \
 `$ export DB_USER="fill in the db user"` \
-`$ export DB_PASSWORD="fill in your db user password"`
+`$ export DB_PASSWORD="fill in your db user password"` \
+`$ export SECRET_KEY="<your key>"` \
+`$ export FLASK_APP=run.py` \
 
 6. create the dev database \
 `createdb storemanager`
@@ -45,18 +47,15 @@ now we are ready to run.
 7. for tests on v1 run
 `$ pytest -v`
 8. for tests on v2 change to run \
-Switch to the latest branch \
-`bg-heroku-deployment-v2-161493704 ` \
 Run \
 `export APP_SETTINGS="testing"` \
 `pytest app/test/v2 -v --cov=app/test/v2`
 
 9. for the application run \
-(To run v2, you have to signup an admin using the `/users` route) \
-`$ export SECRET_KEY="<your key>"`\
+
 `export APP_SETTINGS="development"` \
-`$ export FLASK_APP=run.py`\
 `$ flask run` \
+
 If you ran the aplication you can test the various api endpoints using postman.
 
 The api endpoints are
