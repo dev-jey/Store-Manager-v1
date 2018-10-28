@@ -161,6 +161,8 @@ class Validator_products(object):
             abort(400, Message)
         try:
             self.data["price"] = float(self.data["price"])
+            self.data["quantity"] = int(self.data["quantity"])
+            self.data["minimum_stock"] = int(self.data["minimum_stock"])
         except:
             pass
         if type(self.data["title"]) is not str:

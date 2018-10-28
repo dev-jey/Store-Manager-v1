@@ -44,7 +44,7 @@ class Db(object):
                  category varchar NOT NULL,
                   price float(45) NOT NULL,
                   quantity int NOT NULL,
-                  minimum_stock varchar(255) NOT NULL,
+                  minimum_stock int NOT NULL,
                   description varchar(255) NOT NULL,
                   date varchar(255) NOT NULL)
                   """,
