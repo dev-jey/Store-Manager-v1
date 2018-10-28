@@ -277,13 +277,25 @@ class Validator_sales(object):
         if "productId" not in self.data:
             Message = "Must enter the product Id key well"
             abort(400, Message)
+        
+        if "quantity" not in self.data:
+            Message = "Must enter the quantity key well"
+            abort(400, Message)
 
     def validate_data_types(self):
         '''validates datatype of the product id passed'''
-        if len(self.data) > 1:
-            Message = "Too many fields provided, only the productId is required"
+        if len(self.data) > 2:
+            Message = "Too many fields provided, only the productId and quantity is required"
             abort(400, Message)
 
         if type(self.data["productId"]) is not int:
             Message = "Product Id must be an integer"
+            abort(400, Message)
+        
+        if type(self.data["quantity"]) is not int:
+            Message = "Quantity must be an integer"
+            abort(400, Message)
+        
+        if self.data["quantity"] <= 0:
+            Message = "Quantity must be more than 0"
             abort(400, Message)

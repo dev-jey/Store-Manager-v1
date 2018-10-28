@@ -69,7 +69,8 @@ class TestsForApi(unittest.TestCase):
                 "description": "great smartphone to have"
             })
         self.sale = json.dumps({
-            "productId": 1
+            "productId": 1,
+            "quantity": 1
         })
         self.test_client.post("/api/v2/products", data=self.product,
                               headers={

@@ -45,23 +45,23 @@ class SignUp(Resource):
     @token_required
     def post(current_user, self):
         '''Method to create a new user'''
-        try:
-            data = request.get_json()
-        except:
-            return make_response(jsonify({
-                "Message": "Please, provide your credentials"
-            }), 403)
-        valid = User_validator(data)
-        valid.validate_missing_keys_signup()
-        valid.validate_data_types_signup()
-        valid.validate_missing_data_signup()
-        valid.validate_signup_password()
-        valid.validate_user_exists()
-        email = data["email"]
-        password = generate_password_hash(data["password"], method='sha256')
-        role = data["role"]
-        user = User_Model(email, password, role)
         if current_user["role"] == "Admin" or current_user["role"] == "admin":
+            try:
+                data = request.get_json()
+            except:
+                return make_response(jsonify({
+                    "Message": "Please, provide your credentials"
+                }), 403)
+            valid = User_validator(data)
+            valid.validate_missing_keys_signup()
+            valid.validate_data_types_signup()
+            valid.validate_missing_data_signup()
+            valid.validate_signup_password()
+            valid.validate_user_exists()
+            email = data["email"]
+            password = generate_password_hash(data["password"], method='sha256')
+            role = data["role"]
+            user = User_Model(email, password, role)
             user.save()
             return make_response(jsonify({
                 "Message": "User registered",
@@ -288,6 +288,7 @@ class OneProduct(Resource):
 
 
 class Sale(Resource):
+
     @token_required
     def post(current_user, self):
         '''Create an endpoint for attendants to make sales'''
@@ -305,12 +306,16 @@ class Sale(Resource):
             item = Product_Model(data)
             products = item.get()
             for product in products:
-                total_price = 0
                 if product["id"] == productId:
+                    price = int(product["price"]) * data["quantity"]
                     userId = current_user["id"]
                     sale_obj = Sales_Model(userId, product)
-                    if product["quantity"] > 0:
-                        product["quantity"] = product["quantity"]-1
+                    if data["quantity"] > product["quantity"] and product["quantity"] != 0:
+                        return make_response(jsonify({
+                            "Message": "Attempting to sell more than there is in stock"
+                        }), 404)
+                    elif product["quantity"] > 0:
+                        product["quantity"] = product["quantity"] - data["quantity"]
                     else:
                         return make_response(jsonify({
                             "Message": "Products sold up"
@@ -318,23 +323,15 @@ class Sale(Resource):
 
                     sale_obj.save()
                     item.updateQuanitity(product["quantity"], productId)
-                    sales = sale_obj.get()
-                    for sale in sales:
-                        if product["id"] in sale.values():
-                            price = int(product["price"])
-                            total_price = total_price+price
-
                     if product["quantity"] < int(product["minimum_stock"]):
                         response = make_response(jsonify({
                             "Message": "Minimum stock reached",
-                            "Sales made": products,
-                            "total price": total_price
+                            "Sales made": product
                         }), 201)
                     else:
                         response = make_response(jsonify({
                             "message": "successfully sold",
-                            "Sales made": products,
-                            "total price": total_price
+                            "Sales made": product
                         }), 201)
                     return response
             return make_response(jsonify({
