@@ -317,8 +317,7 @@ class Sale(Resource):
                         }), 404)
 
                     sale_obj.save()
-                    prod = Product_Model(data)
-                    prod.updateQuanitity(product["quantity"], productId)
+                    item.updateQuanitity(product["quantity"], productId)
                     sales = sale_obj.get()
                     for sale in sales:
                         if product["id"] in sale.values():
