@@ -309,7 +309,13 @@ class Sale(Resource):
                 if product["id"] == productId:
                     userId = current_user["id"]
                     sale_obj = Sales_Model(userId, product)
-                    product["quantity"] = product["quantity"]-1
+                    if product["quantity"] > 0:
+                        product["quantity"] = product["quantity"]-1
+                    else:
+                        return make_response(jsonify({
+                            "Message": "Products sold up"
+                        }), 404)
+
                     sale_obj.save()
                     prod = Product_Model(data)
                     prod.updateQuanitity(product["quantity"], productId)
@@ -319,11 +325,7 @@ class Sale(Resource):
                             price = int(product["price"])
                             total_price = total_price+price
 
-                    if product["quantity"] <= 0:
-                        response = make_response(jsonify({
-                            "Message": "Products sold up"
-                        }), 404)
-                    elif product["quantity"] < int(product["minimum_stock"]):
+                    if product["quantity"] < int(product["minimum_stock"]):
                         response = make_response(jsonify({
                             "Message": "Minimum stock reached",
                             "Sales made": products,
