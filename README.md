@@ -1,7 +1,7 @@
 # Store-Manager-v1
 This is a simple store management application\
 [![Build Status](https://travis-ci.org/codeMarble254/Store-Manager-v1.svg?branch=bg-fix-heroku-deployment-161331066)](https://travis-ci.org/codeMarble254/Store-Manager-v1&service=github)
-[![Coverage Status](https://coveralls.io/repos/github/codeMarble254/Store-Manager-v1/badge.svg?branch=bg-heroku-deployment-v2-161493704)](https://coveralls.io/github/codeMarble254/Store-Manager-v1?branch=bg-heroku-deployment-v2-161493704&service=github)
+[![Coverage Status](https://coveralls.io/repos/github/codeMarble254/Store-Manager-v1/badge.svg?branch=develop)](https://coveralls.io/github/codeMarble254/Store-Manager-v1?branch=develop&service=github)
 [![Maintainability](https://api.codeclimate.com/v1/badges/66cf3a604295b849139d/maintainability)](https://codeclimate.com/github/codeMarble254/Store-Manager-v1/maintainability&service=github)\
 To run this project you should follow the following steps: \
 **Find the web UI here**https://codemarble254.github.io/Store-Manager/UI/ 
@@ -36,8 +36,8 @@ To run this project you should follow the following steps: \
 6. create the testing database \
 `$ createdb test_db`
 
-5. Switch to ` ft-signup-v2-161420591` branch \
-`$ git checkout ft-signup-v2-161420591`
+5. Switch to `develop` branch \
+`$ git checkout develop`
 
 6. install requirements \
 `$ pip install -r requirements.txt`
@@ -49,7 +49,7 @@ now we are ready to run.
 8. for tests on v2 change to run \
 Run \
 `export APP_SETTINGS="testing"` \
-`pytest app/test/v2 -v --cov=app/test/v2`
+`pytest -v`
 
 9. for the application run  
 
