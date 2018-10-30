@@ -8,40 +8,226 @@ class TestProducts(TestsForApi):
         resp = self.test_client.post("/api/v2/products",
                                      data=json.dumps({
                                          "title": "",
-                                         "category": "",
-                                         "price": "",
-                                         "quantity": "",
-                                         "minimum_stock": "",
-                                         "description": "great products to have"
+                                         "category": "Phones",
+                                         "price": 40000,
+                                         "quantity": 10,
+                                         "minimum_stock": 1,
+                                         "description": "great products to have while at home"
                                      }),
                                      headers={
                                          'content-type': 'application/json',
                                          'x-access-token': self.admin_token
                                      })
         response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Wrong data types given")
+        self.assertEqual(response["message"], "Product title is missing")
+        self.assertEqual(resp.status_code, 400)
+
+        '''Tests for an empty product registration'''
+        resp = self.test_client.post("/api/v2/products",
+                                     data=json.dumps({
+                                         "title": "Royce1",
+                                         "category": "",
+                                         "price": 40000,
+                                         "quantity": 10,
+                                         "minimum_stock": 1,
+                                         "description": "great products to have while at home"
+                                     }),
+                                     headers={
+                                         'content-type': 'application/json',
+                                         'x-access-token': self.admin_token
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(response["message"], "Product category is missing")
+        self.assertEqual(resp.status_code, 400)
+
+        '''Tests for an empty product registration'''
+        resp = self.test_client.post("/api/v2/products",
+                                     data=json.dumps({
+                                         "title": "Royce2",
+                                         "category": "Food",
+                                         "price": "",
+                                         "quantity": 10,
+                                         "minimum_stock": 1,
+                                         "description": "great products to have while at home"
+                                     }),
+                                     headers={
+                                         'content-type': 'application/json',
+                                         'x-access-token': self.admin_token
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(response["message"], "Product price is missing")
+        self.assertEqual(resp.status_code, 400)
+
+        '''Tests for an empty product registration'''
+        resp = self.test_client.post("/api/v2/products",
+                                     data=json.dumps({
+                                         "title": "Royce3",
+                                         "category": "Food",
+                                         "price": 200,
+                                         "quantity": "",
+                                         "minimum_stock": 1,
+                                         "description": "great products to have while at home"
+                                     }),
+                                     headers={
+                                         'content-type': 'application/json',
+                                         'x-access-token': self.admin_token
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(response["message"], "Product quantity is missing")
+        self.assertEqual(resp.status_code, 400)
+
+        '''Tests for an empty product registration'''
+        resp = self.test_client.post("/api/v2/products",
+                                     data=json.dumps({
+                                         "title": "Royce4",
+                                         "category": "Food",
+                                         "price": 200,
+                                         "quantity": 55,
+                                         "minimum_stock": "",
+                                         "description": "great products to have while at home"
+                                     }),
+                                     headers={
+                                         'content-type': 'application/json',
+                                         'x-access-token': self.admin_token
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(response["message"],
+                         "Product minimum_stock is missing")
+        self.assertEqual(resp.status_code, 400)
+
+        '''Tests for an empty product registration'''
+        resp = self.test_client.post("/api/v2/products",
+                                     data=json.dumps({
+                                         "title": "Royce5",
+                                         "category": "Food",
+                                         "price": 200,
+                                         "quantity": 12,
+                                         "minimum_stock": 1,
+                                         "description": ""
+                                     }),
+                                     headers={
+                                         'content-type': 'application/json',
+                                         'x-access-token': self.admin_token
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(response["message"], "Product description is missing")
         self.assertEqual(resp.status_code, 400)
 
     def test_for_empty_keys_product_registration(self):
         '''Tests for an empty product registration'''
         resp = self.test_client.post("/api/v2/products",
                                      data=json.dumps({
-                                         "": "infinix",
-                                         "": "phones",
-                                         "": 536,
-                                         "": 5,
-                                         "": 2,
-                                         "": "great products to have"
+                                         "": "infinix1",
+                                         "category": "phones",
+                                         "price": 536,
+                                         "quantity": 5,
+                                         "Minimum_stock": 2,
+                                         "description": "great products to have at home while sleeping"
                                      }),
                                      headers={
                                          'content-type': 'application/json',
                                          'x-access-token': self.admin_token
                                      })
         response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Must enter all product details")
+        self.assertEqual(response["message"],
+                         "Product title key/field missing or mistyped")
         self.assertEqual(resp.status_code, 400)
 
-    def test_validate_duplication(self):
+        '''Tests for an empty product registration'''
+        resp = self.test_client.post("/api/v2/products",
+                                     data=json.dumps({
+                                         "title": "infinix2",
+                                         "": "phones",
+                                         "price": 536,
+                                         "quantity": 5,
+                                         "Minimum_stock": 2,
+                                         "description": "great products to have at home while sleeping"
+                                     }),
+                                     headers={
+                                         'content-type': 'application/json',
+                                         'x-access-token': self.admin_token
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(
+            response["message"], "Product category key/field missing or mistyped")
+        self.assertEqual(resp.status_code, 400)
+
+        '''Tests for an empty product registration'''
+        resp = self.test_client.post("/api/v2/products",
+                                     data=json.dumps({
+                                         "title": "infinix3",
+                                         "category": "phones",
+                                         "": 536,
+                                         "quantity": 5,
+                                         "Minimum_stock": 2,
+                                         "description": "great products to have at home while sleeping"
+                                     }),
+                                     headers={
+                                         'content-type': 'application/json',
+                                         'x-access-token': self.admin_token
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(response["message"],
+                         "Product price key/field missing or mistyped")
+        self.assertEqual(resp.status_code, 400)
+
+        '''Tests for an empty product registration'''
+        resp = self.test_client.post("/api/v2/products",
+                                     data=json.dumps({
+                                         "title": "infinix4",
+                                         "category": "phones",
+                                         "price": 536,
+                                         "": 5,
+                                         "Minimum_stock": 2,
+                                         "description": "great products to have at home while sleeping"
+                                     }),
+                                     headers={
+                                         'content-type': 'application/json',
+                                         'x-access-token': self.admin_token
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(
+            response["message"], "Product quantity key/field missing or mistyped")
+        self.assertEqual(resp.status_code, 400)
+
+        '''Tests for an empty product registration'''
+        resp = self.test_client.post("/api/v2/products",
+                                     data=json.dumps({
+                                         "title": "infinix5",
+                                         "category": "phones",
+                                         "price": 536,
+                                         "quantity": 5,
+                                         "": 2,
+                                         "description": "great products to have at home while sleeping"
+                                     }),
+                                     headers={
+                                         'content-type': 'application/json',
+                                         'x-access-token': self.admin_token
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(
+            response["message"], "Product minimum stock key/field missing or mistyped")
+        self.assertEqual(resp.status_code, 400)
+
+        '''Tests for an empty product registration'''
+        resp = self.test_client.post("/api/v2/products",
+                                     data=json.dumps({
+                                         "title": "infinix6",
+                                         "category": "phones",
+                                         "price": 536,
+                                         "quantity": 5,
+                                         "minimum_stock": 2,
+                                         "": "great products to have at home while sleeping"
+                                     }),
+                                     headers={
+                                         'content-type': 'application/json',
+                                         'x-access-token': self.admin_token
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(
+            response["message"], "Product description key/field missing or mistyped")
+        self.assertEqual(resp.status_code, 400)
+
         '''Test for duplicate product registration'''
         resp = self.test_client.post("/api/v2/products",
                                      data=self.product,
@@ -57,12 +243,12 @@ class TestProducts(TestsForApi):
         '''Test for minimum stock more than quantity'''
         resp = self.test_client.post("/api/v2/products",
                                      data=json.dumps({
-                                         "title": "infinix",
+                                         "title": "infinix7",
                                          "category": "phones",
                                          "price": 3000,
                                          "quantity": 1,
                                          "minimum_stock": 5,
-                                         "description": "great"
+                                         "description": "great phone to have at home daily"
                                      }),
                                      headers={
                                          'content-type': 'application/json',
@@ -73,16 +259,37 @@ class TestProducts(TestsForApi):
                          "Minmum stock cant be more than quantity")
         self.assertEqual(resp.status_code, 400)
 
+    def test_product_more_than_six_attributes(self):
+        '''Test for many attributes'''
+        resp = self.test_client.post("/api/v2/products",
+                                     data=json.dumps({
+                                         "title": "infinix8",
+                                         "category": "phones",
+                                         "price": 3000,
+                                         "quantity": 1,
+                                         "minimum_stock": 5,
+                                         "description": "great phone to have at home daily",
+                                         "date": 12
+                                     }),
+                                     headers={
+                                         'content-type': 'application/json',
+                                         'x-access-token': self.admin_token
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(response["message"],
+                         "Error, Excess fields given")
+        self.assertEqual(resp.status_code, 400)
+
     def test_product_details_negative(self):
         '''Test for product price, quantity, and minimum stock negation'''
         resp = self.test_client.post("/api/v2/products",
                                      data=json.dumps({
-                                         "title": "infinix",
+                                         "title": "infinix9",
                                          "category": "phones",
                                          "price": -3000,
                                          "quantity": -1,
                                          "minimum_stock": -5,
-                                         "description": "great"
+                                         "description": "great phone to have at home in any situation"
                                      }),
                                      headers={
                                          'content-type': 'application/json',
@@ -97,7 +304,7 @@ class TestProducts(TestsForApi):
         '''Test for short product descriptions'''
         resp = self.test_client.post("/api/v2/products",
                                      data=json.dumps({
-                                         "title": "infinix",
+                                         "title": "infinixa",
                                          "category": "phones",
                                          "price": 3000,
                                          "quantity": 10,
@@ -122,26 +329,7 @@ class TestProducts(TestsForApi):
                                          'x-access-token': self.admin_token
                                      })
         response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Must enter all product details")
-        self.assertEqual(resp.status_code, 400)
-
-    def test_for_product_creation_data_types(self):
-        '''Test for product creation using wrong data types'''
-        resp = self.test_client.post("/api/v2/products",
-                                     data=json.dumps({
-                                         "title": 1212,
-                                         "category": 1212,
-                                         "price": "ds",
-                                         "quantity": "qw",
-                                         "minimum_stock": 12,
-                                         "description": 2232
-                                     }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Wrong data types given")
+        self.assertEqual(response["message"], "No product details given yet")
         self.assertEqual(resp.status_code, 400)
 
     def test_if_price_is_converted_to_a_float(self):
@@ -163,11 +351,10 @@ class TestProducts(TestsForApi):
         self.assertEqual(response["Message"], "Successfully added")
         self.assertEqual(resp.status_code, 201)
 
-    def test_for_successful_product_registration(self):
         '''Tests for a successful product registration'''
         resp = self.test_client.post("/api/v2/products",
                                      data=json.dumps({
-                                         "title": "infinix",
+                                         "title": "infinixq",
                                          "category": "phones",
                                          "price": 3000,
                                          "quantity": 10,
@@ -186,7 +373,7 @@ class TestProducts(TestsForApi):
         '''Tests for a product registration by a sales attendant'''
         resp = self.test_client.post("/api/v2/products",
                                      data=json.dumps({
-                                         "title": "infinix",
+                                         "title": "infinixw",
                                          "category": "phones",
                                          "price": 3000,
                                          "quantity": 10,
@@ -201,11 +388,10 @@ class TestProducts(TestsForApi):
         self.assertEqual(response["Message"], "You must be an admin")
         self.assertEqual(resp.status_code, 403)
 
-    def test_for_token_authentication(self):
         '''Test for the functionality of token based authentication'''
         resp = self.test_client.post("/api/v2/products",
                                      data=json.dumps({
-                                         "title": "infinix",
+                                         "title": "infinixe",
                                          "category": "phones",
                                          "price": 3000,
                                          "quantity": 10,
@@ -228,7 +414,6 @@ class TestProducts(TestsForApi):
                                     })
         self.assertEqual(resp.status_code, 200)
 
-    def test_getting_one_product(self):
         '''Test for getting one product'''
         resp = self.test_client.get("/api/v2/products/1",
                                     headers={
@@ -236,7 +421,6 @@ class TestProducts(TestsForApi):
                                     })
         self.assertEqual(resp.status_code, 200)
 
-    def test_getting_one_product_using_wrong_productId(self):
         '''Test for getting one product using wrong id'''
         resp = self.test_client.get("/api/v2/products/5",
                                     headers={
@@ -248,7 +432,7 @@ class TestProducts(TestsForApi):
         '''Tests for a successful product updating'''
         resp = self.test_client.put("/api/v2/products/1",
                                     data=json.dumps({
-                                        "title": "infinix",
+                                        "title": "infinixd",
                                         "category": "phones",
                                         "price": 2000,
                                         "quantity": 10,
@@ -274,3 +458,100 @@ class TestProducts(TestsForApi):
         self.assertEqual(
             response["Message"], "Attempting to delete a product that doesn't exist")
         self.assertEqual(resp.status_code, 404)
+
+    def test_for_product_creation_data_types(self):
+        '''Test for product creation using wrong data types'''
+        resp = self.test_client.post("/api/v2/products",
+                                     data=json.dumps({
+                                         "title": 1212,
+                                         "category": "phones",
+                                         "price": 10000,
+                                         "quantity": 100,
+                                         "minimum_stock": 12,
+                                         "description": "This is a great product to have while in camping sites"
+                                     }),
+                                     headers={
+                                         'content-type': 'application/json',
+                                         'x-access-token': self.admin_token
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(response["message"],
+                         "Title field only accepts a string")
+        self.assertEqual(resp.status_code, 400)
+
+        '''Test for product creation using wrong data types'''
+        resp = self.test_client.post("/api/v2/products",
+                                     data=json.dumps({
+                                         "title": "Reebok",
+                                         "category": 455,
+                                         "price": 10000,
+                                         "quantity": 100,
+                                         "minimum_stock": 12,
+                                         "description": "This is a great product to have while in camping sites"
+                                     }),
+                                     headers={
+                                         'content-type': 'application/json',
+                                         'x-access-token': self.admin_token
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(response["message"],
+                         "Category field only accepts a string")
+        self.assertEqual(resp.status_code, 400)
+
+        '''Test for product creation using wrong data types'''
+        resp = self.test_client.post("/api/v2/products",
+                                     data=json.dumps({
+                                         "title": "Reebok1",
+                                         "category": "food",
+                                         "price": "food",
+                                         "quantity": 100,
+                                         "minimum_stock": 12,
+                                         "description": "This is a great product to have while in camping sites"
+                                     }),
+                                     headers={
+                                         'content-type': 'application/json',
+                                         'x-access-token': self.admin_token
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(
+            response["message"], "Price field only accepts a float or an integer")
+        self.assertEqual(resp.status_code, 400)
+
+        '''Test for product creation using wrong data types'''
+        resp = self.test_client.post("/api/v2/products",
+                                     data=json.dumps({
+                                         "title": "Reebok2",
+                                         "category": "food",
+                                         "price": 1000,
+                                         "quantity": "ASas",
+                                         "minimum_stock": 12,
+                                         "description": "This is a great product to have while in camping sites"
+                                     }),
+                                     headers={
+                                         'content-type': 'application/json',
+                                         'x-access-token': self.admin_token
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(response["message"],
+                         "Quantity field only accepts an integer")
+        self.assertEqual(resp.status_code, 400)
+
+        '''Test for product creation using wrong data types'''
+        resp = self.test_client.post("/api/v2/products",
+                                     data=json.dumps({
+                                         "title": "Reebok3",
+                                         "category": "food",
+                                         "price": 10000,
+                                         "quantity": 10,
+                                         "minimum_stock": "jemo",
+                                         "description": "This is a great product to have while in camping sites"
+                                     }),
+                                     headers={
+                                         'content-type': 'application/json',
+                                         'x-access-token': self.admin_token
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(response["message"],
+                         "Minimum stock field only accepts an integer")
+        self.assertEqual(resp.status_code, 400)
+    

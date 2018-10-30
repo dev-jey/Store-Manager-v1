@@ -17,9 +17,11 @@ class Db(object):
         try:
             if Config.APP_SETTINGS == "testing":
                 self.conn = psycopg2.connect(database="test_db")
-            else:
+            elif Config.APP_SETTINGS == "development":
                 self.conn = psycopg2.connect(
                     database=self.db_name, host=self.db_host, password=self.db_password)
+            else:
+                self.conn = psycopg2.connect(os.environ['DATABASE_URL'], sslmode='require')
             return self.conn
 
         except:
@@ -42,7 +44,7 @@ class Db(object):
                  category varchar NOT NULL,
                   price float(45) NOT NULL,
                   quantity int NOT NULL,
-                  minimum_stock varchar(255) NOT NULL,
+                  minimum_stock int NOT NULL,
                   description varchar(255) NOT NULL,
                   date varchar(255) NOT NULL)
                   """,
@@ -66,9 +68,10 @@ class Db(object):
 
     def destroy_tables(self):
         cursor = self.createConnection().cursor()
-        sql = [" DROP TABLE IF EXISTS users CASCADE",
+        sql = [
+               " DROP TABLE IF EXISTS sales CASCADE",
                " DROP TABLE IF EXISTS products CASCADE",
-               " DROP TABLE IF EXISTS sales CASCADE"
+               " DROP TABLE IF EXISTS users CASCADE",
                ]
         for string in sql:
             cursor.execute(string)

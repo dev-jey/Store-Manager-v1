@@ -1,7 +1,7 @@
 import unittest
 import json
-
 from app import create_app
+
 from instance.config import Config
 from app.api.v2.models.db_models import Db
 from app.api.v2.models.user_model import User_Model
@@ -13,29 +13,37 @@ class TestsForApi(unittest.TestCase):
 
     def setUp(self):
         self.db = Db()
+        self.db.destroy_tables()
         self.db.createTables()
-        self.app = create_app(config_name=Config.APP_SETTINGS)
+        self.app = create_app(config_name="testing")
         self.test_client = self.app.test_client()
-        user = User_Model()
-        user.saveAdmin()
         self.admin_login_details = json.dumps({
-            "email": "maria@gmail.com",
+            "email": "james@gmail.com",
             "password": "as@dsDdz2a"
         })
+        self.admin_details = json.dumps({
+            "email": "james@gmail.com",
+            "password": "as@dsDdz2a",
+            "role": "Admin"
+        })
+        admin_signup = self.test_client.post("/api/v2/users",
+                                                 data=self.admin_details,
+                                                 headers={
+                                                     'content-type': 'application/json'
+                                                 })
         admin_login = self.test_client.post("/api/v2/auth/login",
                                             data=self.admin_login_details,
                                             headers={
                                                 'content-type': 'application/json'
                                             })
-        print(json.loads(admin_login.data.decode()))
         self.admin_token = json.loads(admin_login.data.decode())["token"]
         self.attendant = json.dumps({
-            "email": "james@gmail.com",
+            "email": "james2@gmail.com",
             "password": "as@dsDdz2a",
             "role": "Attendant"
         })
         self.attendant_login_details = json.dumps({
-            "email": "james@gmail.com",
+            "email": "james2@gmail.com",
             "password": "as@dsDdz2a"
         })
         signup_attendant = self.test_client.post("/api/v2/auth/signup",
@@ -62,7 +70,8 @@ class TestsForApi(unittest.TestCase):
                 "description": "great smartphone to have"
             })
         self.sale = json.dumps({
-            "productId": 1
+            "productId": 1,
+            "quantity": 1
         })
         self.test_client.post("/api/v2/products", data=self.product,
                               headers={

@@ -1,5 +1,5 @@
 import psycopg2
-from flask import jsonify
+from flask import jsonify, abort
 import datetime
 
 from .db_models import Db
@@ -20,7 +20,7 @@ class Product_Model(Db):
         products table'''
         cursor = self.conn.cursor()
         cursor.execute(
-            "INSERT INTO products(title,category,price,quantity,minimum_stock,description, date) VALUES(%s,%s,%s,%s,%s,%s,%s)", 
+            "INSERT INTO products(title,category,price,quantity,minimum_stock,description, date) VALUES(%s,%s,%s,%s,%s,%s,%s)",
             (self.data["title"], self.data["category"], self.data["price"], self.data["quantity"],
              self.data["minimum_stock"], self.data["description"], self.date),
         )
@@ -39,13 +39,21 @@ class Product_Model(Db):
         self.conn = db.createConnection()
         db.createTables()
         cursor = self.conn.cursor()
-        cursor.execute(
-            """UPDATE products SET title = %s, category = %s, 
-            price = %s, quantity = %s, minimum_stock = %s, description = %s,
-             date = %s WHERE id = %s""", (self.data["title"], self.data["category"], self.data["price"],
-                            self.data["quantity"], self.data["minimum_stock"], 
-                            self.data["description"], self.date, self.productId),
-                            )
+        cursor.execute("SELECT id FROM products WHERE title = %s",
+                       (self.data["title"],))
+        row = cursor.fetchone()
+        if not row or row[0] == productId:
+            cursor.execute(
+                """UPDATE products SET title = %s, category = %s, 
+                        price = %s, quantity = %s, minimum_stock = %s,
+                         description = %s, date = %s WHERE id = %s""",
+                          (self.data["title"], self.data["category"], self.data["price"],
+                           self.data["quantity"], self.data["minimum_stock"],
+                           self.data["description"], self.date, self.productId),
+            )
+        else:
+            abort(403, "Product title already exists, try another one")
+
         self.conn.commit()
         self.conn.close()
 
@@ -91,7 +99,8 @@ class Product_Model(Db):
         self.quantity = quantity
         cursor = self.conn.cursor()
         cursor.execute(
-            """UPDATE products SET quantity = %s Where id = %s""", (self.quantity, productId,)
+            """UPDATE products SET quantity = %s Where id = %s""", (
+                self.quantity, productId,)
         )
         self.conn.commit()
         self.conn.close()
