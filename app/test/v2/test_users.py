@@ -7,13 +7,14 @@ class TestUsers(TestsForApi):
     def test_successful_signup(self):
         '''Tests for a successful signup'''
         data = json.dumps({
-            "email": "mary@gmail.com",
+            "email": "marys@gmail.com",
             "password": "mardsd2@Qss",
-                        "role": "Admin"
+                        "role": "Attendant"
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
                                     headers={
+                                        'x-access-token': self.admin_token,
                                         'content-type': 'application/json'
                                     })
         response = json.loads(res.data)
@@ -28,6 +29,7 @@ class TestUsers(TestsForApi):
                                          "password": "ssdsdD2@ja",
                                          "role": "Admin"}),
                                      headers={
+                                         'x-access-token': self.admin_token,
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
@@ -43,6 +45,7 @@ class TestUsers(TestsForApi):
                                          "role": "Admin"
                                      }),
                                      headers={
+                                         'x-access-token': self.admin_token,
                                          'content-type': 'application/json'
                                      })
         resp = self.test_client.post("/api/v2/auth/signup",
@@ -52,6 +55,7 @@ class TestUsers(TestsForApi):
                                          "role": "Admin"
                                      }),
                                      headers={
+                                         'x-access-token': self.admin_token,
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
@@ -67,6 +71,7 @@ class TestUsers(TestsForApi):
                                          "role": "Admin"
                                      }),
                                      headers={
+                                         'x-access-token': self.admin_token,
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
@@ -83,6 +88,7 @@ class TestUsers(TestsForApi):
                                          "role": "Admin"
                                      }),
                                      headers={
+                                         'x-access-token': self.admin_token,
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
@@ -98,6 +104,7 @@ class TestUsers(TestsForApi):
                                          "password": "dhsdsdsdssdhjh3#dDd",
                                          "role": "Admin"}),
                                      headers={
+                                         'x-access-token': self.admin_token,
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
@@ -113,6 +120,7 @@ class TestUsers(TestsForApi):
                                          "password": "ssrrdjD@",
                                          "role": "Admin"}),
                                      headers={
+                                         'x-access-token': self.admin_token,
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
@@ -127,6 +135,7 @@ class TestUsers(TestsForApi):
                                          "password": "dddsdsd2@",
                                          "role": "Admin"}),
                                      headers={
+                                         'x-access-token': self.admin_token,
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
@@ -142,6 +151,7 @@ class TestUsers(TestsForApi):
                                          "password": "DHDHDDHD2@",
                                          "role": "Admin"}),
                                      headers={
+                                         'x-access-token': self.admin_token,
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
@@ -157,6 +167,7 @@ class TestUsers(TestsForApi):
                                          "password": "ddddssd2D",
                                          "role": "Admin"}),
                                      headers={
+                                         'x-access-token': self.admin_token,
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
@@ -173,6 +184,7 @@ class TestUsers(TestsForApi):
                                          "role": 3232
                                      }),
                                      headers={
+                                         'x-access-token': self.admin_token,
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)

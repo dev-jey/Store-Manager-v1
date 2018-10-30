@@ -4,6 +4,7 @@ import json
 from app import create_app
 from instance.config import Config
 from app.api.v2.models.db_models import Db
+from app.api.v2.models.user_model import User_Model
 
 
 class TestsForApi(unittest.TestCase):
@@ -15,30 +16,23 @@ class TestsForApi(unittest.TestCase):
         self.db.createTables()
         self.app = create_app(config_name=Config.APP_SETTINGS)
         self.test_client = self.app.test_client()
-        self.admin_info = json.dumps({
-            "email": "maria@gmail.com",
-            "password": "as@dsDdz2a",
-            "role": "Admin"
-        })
+        user = User_Model()
+        user.saveAdmin()
         self.admin_login_details = json.dumps({
             "email": "maria@gmail.com",
             "password": "as@dsDdz2a"
         })
-        signup_admin = self.test_client.post("/api/v2/auth/signup",
-                                             data=self.admin_info,
-                                             headers={
-                                                 'content-type': 'application/json'
-                                             })
         admin_login = self.test_client.post("/api/v2/auth/login",
                                             data=self.admin_login_details,
                                             headers={
                                                 'content-type': 'application/json'
                                             })
+        print(json.loads(admin_login.data.decode()))
         self.admin_token = json.loads(admin_login.data.decode())["token"]
         self.attendant = json.dumps({
             "email": "james@gmail.com",
             "password": "as@dsDdz2a",
-                        "role": "Attendant"
+            "role": "Attendant"
         })
         self.attendant_login_details = json.dumps({
             "email": "james@gmail.com",
@@ -47,6 +41,7 @@ class TestsForApi(unittest.TestCase):
         signup_attendant = self.test_client.post("/api/v2/auth/signup",
                                                  data=self.attendant,
                                                  headers={
+                                                     'x-access-token': self.admin_token,
                                                      'content-type': 'application/json'
                                                  })
 
@@ -74,11 +69,11 @@ class TestsForApi(unittest.TestCase):
                                   'content-type': 'application/json',
                                   'x-access-token': self.admin_token
                               })
-        self.test_client.post("/api/v2/sales", data=self.sale,
-                              headers={
-                                  'content-type': 'application/json',
-                                  'x-access-token': self.attendant_token
-                              })
+        x = self.test_client.post("/api/v2/sales", data=self.sale,
+                                  headers={
+                                      'content-type': 'application/json',
+                                      'x-access-token': self.attendant_token
+                                  })
         self.context = self.app.app_context()
         self.context.push()
 
