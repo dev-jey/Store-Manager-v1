@@ -153,3 +153,40 @@ class OneProduct(Resource):
         return make_response(jsonify({
                                 "Message": "Product non-existent"
                                 }), 404)
+    
+    @token_required
+    def put(current_user, self, productId):
+        '''Updates a product details'''
+        if current_user and current_user["role"] != "Admin":
+            return make_response(jsonify({
+                                    "Message": "You must be an admin"
+                                    }), 403)
+        data = request.get_json()
+        Validator_products.validate_missing_data(self, data)
+        Validator_products.validate_data_types(self, data)
+        Validator_products.validate_negations(self, data)
+        title = data["title"]
+        category = data["category"]
+        price = data["price"]
+        quantity = data["quantity"]
+        minimum_stock = data["minimum_stock"]
+        description = data["description"]
+        product = Product_Model(data)
+        Validator_products.validate_product_description(self, data)
+        product = Product_Model(data)
+        products = product.get()
+        if len(products) == 0:
+            return make_response(jsonify({
+                            "Message": "No products yet"
+                            }), 404)
+        for item in products:
+            if int(productId) == item["id"]:
+                product.update(productId)
+                return make_response(jsonify({
+                                "Message": "Successfully updated",
+                                "Products": product.get()
+                                }), 200)
+        return make_response(jsonify({
+                                "Message": "Product non-existent"
+                                }), 404)
+        

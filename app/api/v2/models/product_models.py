@@ -28,6 +28,21 @@ class Product_Model(Db):
         self.id = row[0]
         self.conn.commit()
         self.conn.close()
+    
+    def update(self, productId):
+        '''Method is meant to update a product by editing its details in the
+        products table'''
+        db = Db()
+        self.conn = db.createConnection()
+        db.createTables()
+        cursor = self.conn.cursor()
+        cursor.execute(
+            """UPDATE products SET title = %s, category = %s, 
+            price = %s, quantity = %s, minimum_stock = %s, description = %s,
+             date = %s""", (self.data["title"], self.data["category"], self.data["price"],
+              self.data["quantity"], self.data["minimum_stock"], self.data["description"], self.date,))
+        self.conn.commit()
+        self.conn.close()
 
     def get(self):
         db = Db()
