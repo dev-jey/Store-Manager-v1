@@ -21,10 +21,11 @@ def token_required(fnc):
             token = request.headers['x-access-token']
         if not token:
             return make_response(jsonify({
-                        "message": "Token Missing, Login to get one"
-                                        }), 401)
+                "message": "Token Missing, Login to get one"
+            }), 401)
         try:
-            data = jwt.decode(token, app_config["development"].SECRET_KEY, algorithms=['HS256'])
+            data = jwt.decode(
+                token, app_config["development"].SECRET_KEY, algorithms=['HS256'])
             model = User_Model()
             users = model.get()
             for user in users:
@@ -40,6 +41,7 @@ def token_required(fnc):
 
 class SignUp(Resource):
     '''Signup endpont'''
+
     def post(self):
         '''Method to create a new user'''
         data = request.get_json()
@@ -52,14 +54,15 @@ class SignUp(Resource):
         user = User_Model(email, password, role)
         user.save()
         return make_response(jsonify({
-                                    "Message": "User registered",
-                                    "Email": email,
-                                    "Role": role
-                                    }), 201)
+            "Message": "User registered",
+            "Email": email,
+            "Role": role
+        }), 201)
 
 
 class Login(Resource):
     '''Login endpoint'''
+
     def post(self):
         '''Method to login a user and create a unique JWT token'''
         data = request.get_json()
@@ -76,12 +79,12 @@ class Login(Resource):
                                     datetime.timedelta(minutes=30)},
                                    app_config["development"].SECRET_KEY, algorithm='HS256')
                 return make_response(jsonify({
-                                "message": "Login success",
-                                "token": token.decode("UTF-8"
-                                                      )}), 200)
+                    "message": "Login success",
+                    "token": token.decode("UTF-8"
+                                          )}), 200)
         return make_response(jsonify({
-                        "Message": "Login failed, check credentials"
-                        }), 403)
+            "Message": "Login failed, check credentials"
+        }), 403)
 
 
 class Product(Resource):
@@ -90,8 +93,8 @@ class Product(Resource):
         '''Post product endpoint that creates a new product'''
         if current_user and current_user["role"] != "Admin":
             return make_response(jsonify({
-                                    "Message": "You must be an admin"
-                                    }), 403)
+                "Message": "You must be an admin"
+            }), 403)
         data = request.get_json()
         Validator_products.validate_missing_data(self, data)
         Validator_products.validate_data_types(self, data)
@@ -107,9 +110,9 @@ class Product(Resource):
         Validator_products.validate_product_description(self, data)
         product.save()
         return make_response(jsonify({
-                                    "Message": "Successfully added",
-                                    "Products": product.get()
-                                    }), 201)
+            "Message": "Successfully added",
+            "Products": product.get()
+        }), 201)
 
     @token_required
     def get(current_user, self):
@@ -120,17 +123,17 @@ class Product(Resource):
             products = product.get()
             if len(products) > 0:
                 response = make_response(jsonify({
-                                        "products": products
-                                        }), 200)
+                    "products": products
+                }), 200)
             else:
                 response = make_response(jsonify({
                     "Message": "No products found"
-                                                 }), 404)
+                }), 404)
             return response
         else:
             return make_response(jsonify({
-                                        "message": "Must be logged in"
-                                        }), 401)
+                "message": "Must be logged in"
+            }), 401)
 
 
 class OneProduct(Resource):
@@ -141,26 +144,26 @@ class OneProduct(Resource):
         products = product.get()
         if len(products) == 0:
             response = make_response(jsonify({
-                            "Message": "No products yet"
-                            }), 404)
+                "Message": "No products yet"
+            }), 404)
         if current_user:
             for product in products:
                 if int(productId) == product["id"]:
                     return make_response(jsonify({
-                                                "Message": "Success",
-                                                "Product": product
-                                                }), 200)
+                        "Message": "Success",
+                        "Product": product
+                    }), 200)
         return make_response(jsonify({
-                                "Message": "Product non-existent"
-                                }), 404)
-    
+            "Message": "Product non-existent"
+        }), 404)
+
     @token_required
     def put(current_user, self, productId):
         '''Updates a product details'''
         if current_user and current_user["role"] != "Admin":
             return make_response(jsonify({
-                                    "Message": "You must be an admin"
-                                    }), 403)
+                "Message": "You must be an admin"
+            }), 403)
         data = request.get_json()
         Validator_products.validate_missing_data(self, data)
         Validator_products.validate_data_types(self, data)
@@ -171,22 +174,36 @@ class OneProduct(Resource):
         quantity = data["quantity"]
         minimum_stock = data["minimum_stock"]
         description = data["description"]
-        product = Product_Model(data)
         Validator_products.validate_product_description(self, data)
         product = Product_Model(data)
         products = product.get()
         if len(products) == 0:
             return make_response(jsonify({
-                            "Message": "No products yet"
-                            }), 404)
+                "Message": "No products yet"
+            }), 404)
         for item in products:
             if int(productId) == item["id"]:
                 product.update(productId)
                 return make_response(jsonify({
-                                "Message": "Successfully updated",
-                                "Products": product.get()
-                                }), 200)
+                    "Message": "Successfully updated",
+                    "Products": product.get()
+                }), 200)
         return make_response(jsonify({
-                                "Message": "Product non-existent"
-                                }), 404)
-        
+            "Message": "Product non-existent"
+        }), 404)
+
+    @token_required
+    def delete(current_user, self, productId):
+        '''deletes product'''
+        product = Product_Model()
+        products = product.get()
+        if current_user["role"] == "Admin":
+            for item in products:
+                if productId == item["id"]:
+                    product.delete(productId)
+                    response = make_response(jsonify({
+                        "message": "Deleted successfully"}), 200)
+                    return response
+        response = make_response(jsonify(
+            {"Message": "Attempting to delete a product that doesn't exist"}), 404)
+        return response

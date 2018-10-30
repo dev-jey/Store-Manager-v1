@@ -219,7 +219,7 @@ class TestProducts(TestsForApi):
         self.assertEqual(response["message"],
                          "Token Missing, Login to get one")
         self.assertEqual(resp.status_code, 401)
-    
+
     def test_getting_all_products(self):
         '''Test for getting all products'''
         resp = self.test_client.get("/api/v2/products",
@@ -227,7 +227,7 @@ class TestProducts(TestsForApi):
                                         'x-access-token': self.admin_token
                                     })
         self.assertEqual(resp.status_code, 200)
-    
+
     def test_getting_one_product(self):
         '''Test for getting one product'''
         resp = self.test_client.get("/api/v2/products/1",
@@ -247,18 +247,41 @@ class TestProducts(TestsForApi):
     def test_for_successful_product_update(self):
         '''Tests for a successful product updating'''
         resp = self.test_client.put("/api/v2/products/1",
-                                     data=json.dumps({
-                                         "title": "infinix",
-                                         "category": "phones",
-                                         "price": 2000,
-                                         "quantity": 10,
-                                         "minimum_stock": 5,
-                                         "description": "great products to have at hoome"
-                                     }),
-                                     headers={
-                                         'x-access-token': self.admin_token,
-                                         'content-type': 'application/json'
-                                     })
+                                    data=json.dumps({
+                                        "title": "infinix",
+                                        "category": "phones",
+                                        "price": 2000,
+                                        "quantity": 10,
+                                        "minimum_stock": 5,
+                                        "description": "great products to have at hoome"
+                                    }),
+                                    headers={
+                                        'x-access-token': self.admin_token,
+                                        'content-type': 'application/json'
+                                    })
         response = json.loads(resp.data)
         self.assertEqual(response["Message"], "Successfully updated")
         self.assertEqual(resp.status_code, 200)
+
+    def test_for_successful_product_delete(self):
+        '''Tests for a successful product deleting'''
+        resp = self.test_client.delete("/api/v2/products/1",
+                                       headers={
+                                           'x-access-token': self.admin_token,
+                                           'content-type': 'application/json'
+                                       })
+        response = json.loads(resp.data)
+        self.assertEqual(response["message"], "Deleted successfully")
+        self.assertEqual(resp.status_code, 200)
+
+    def test_for_wrong_product_delete(self):
+        '''Tests for a successful product deleting'''
+        resp = self.test_client.delete("/api/v2/products/10",
+                                       headers={
+                                           'x-access-token': self.admin_token,
+                                           'content-type': 'application/json'
+                                       })
+        response = json.loads(resp.data)
+        self.assertEqual(
+            response["Message"], "Attempting to delete a product that doesn't exist")
+        self.assertEqual(resp.status_code, 404)
