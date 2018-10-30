@@ -64,6 +64,12 @@ class User_Model(Db):
             oneuser["password"] = list_of_items[2]
             oneuser["role"] = list_of_items[3]
             allusers.append(oneuser)
-        cursor.close()
-        self.conn.close()
         return allusers
+
+    def update(self, userId):
+        cursor = self.conn.cursor()
+        cursor.execute(
+            "UPDATE users SET role = 'Admin' WHERE id = %s", (userId,)
+        )
+        self.conn.commit()
+        self.conn.close()
