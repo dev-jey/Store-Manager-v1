@@ -44,10 +44,7 @@ To run this project you should follow the following steps: \
 
 now we are ready to run.
 
-7. for tests on v1 run
-`$ pytest -v`
-8. for tests on v2 change to run \
-Run \
+7. for tests run
 `export APP_SETTINGS="testing"` \
 `pytest -v`
 
