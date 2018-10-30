@@ -24,13 +24,13 @@ class User_Model(Db):
         cursor.execute("SELECT id FROM users WHERE email = %s", (self.email,))
         row = cursor.fetchone()
         self.id = row[0]
-        print(self.id)
         self.conn.commit()
         self.conn.close()
 
     def get(self):
         db = Db()
         self.conn = db.createConnection()
+        db.createTables()
         cursor = self.conn.cursor()
         sql = "SELECT * FROM users"
         cursor.execute(sql)

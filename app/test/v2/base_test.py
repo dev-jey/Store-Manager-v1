@@ -14,6 +14,48 @@ class TestsForApi(unittest.TestCase):
         self.db.createTables()
         self.app = create_app(config_name=Config.APP_SETTINGS)
         self.test_client = self.app.test_client()
+        self.admin_info = json.dumps({
+            "email": "maria@gmail.com",
+            "password": "as@dsDdz2a",
+            "role": "Admin"
+        })
+        self.admin_login_details = json.dumps({
+            "email": "maria@gmail.com",
+            "password": "as@dsDdz2a"
+        })
+        signup_admin = self.test_client.post("/api/v2/auth/signup",
+                                             data=self.admin_info,
+                                             headers={
+                                                 'content-type': 'application/json'
+                                             })
+        admin_login = self.test_client.post("/api/v2/auth/login",
+                                            data=self.admin_login_details,
+                                            headers={
+                                                'content-type': 'application/json'
+                                            })
+        self.admin_token = json.loads(admin_login.data.decode())["token"]
+        self.attendant = json.dumps({
+            "email": "james@gmail.com",
+            "password": "as@dsDdz2a",
+                        "role": "Attendant"
+        })
+        self.attendant_login_details = json.dumps({
+            "email": "james@gmail.com",
+            "password": "as@dsDdz2a"
+        })
+        signup_attendant = self.test_client.post("/api/v2/auth/signup",
+                                                 data=self.attendant,
+                                                 headers={
+                                                     'content-type': 'application/json'
+                                                 })
+
+        login_attendant = self.test_client.post("/api/v2/auth/login",
+                                                data=self.attendant_login_details,
+                                                headers={
+                                                    'content-type': 'application/json'
+                                                })
+        self.data = json.loads(login_attendant.data.decode())
+        self.attendant_token = self.data["token"]
         self.context = self.app.app_context()
         self.context.push()
 

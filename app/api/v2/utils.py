@@ -35,6 +35,9 @@ class User_validator(object):
         elif not re.search("^.*(?=.*[@#$%^&+=]).*$", data["password"]):
             Message = "Password must have a special charater"
             abort(400, Message)
+        elif "email" not in data or "password" not in data or "role" not in data:
+            Message = "Must enter all credentials"
+            abort(400, Message)
 
     def validate_missing_data(self, data):
         '''Validates if the data keys are not entered'''
