@@ -263,17 +263,6 @@ class TestProducts(TestsForApi):
         self.assertEqual(response["Message"], "Successfully updated")
         self.assertEqual(resp.status_code, 200)
 
-    def test_for_successful_product_delete(self):
-        '''Tests for a successful product deleting'''
-        resp = self.test_client.delete("/api/v2/products/1",
-                                       headers={
-                                           'x-access-token': self.admin_token,
-                                           'content-type': 'application/json'
-                                       })
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Deleted successfully")
-        self.assertEqual(resp.status_code, 200)
-
     def test_for_wrong_product_delete(self):
         '''Tests for a successful product deleting'''
         resp = self.test_client.delete("/api/v2/products/10",

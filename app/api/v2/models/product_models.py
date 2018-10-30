@@ -20,8 +20,9 @@ class Product_Model(Db):
         products table'''
         cursor = self.conn.cursor()
         cursor.execute(
-            "INSERT INTO products(title,category,price,quantity,minimum_stock,description, date) VALUES(%s,%s,%s,%s,%s,%s,%s)", (self.data["title"], self.data["category"], self.data["price"], self.data["quantity"],
-                                                                                                                                 self.data["minimum_stock"], self.data["description"], self.date),
+            "INSERT INTO products(title,category,price,quantity,minimum_stock,description, date) VALUES(%s,%s,%s,%s,%s,%s,%s)", 
+            (self.data["title"], self.data["category"], self.data["price"], self.data["quantity"],
+             self.data["minimum_stock"], self.data["description"], self.date),
         )
         cursor.execute("SELECT id FROM products WHERE title = %s",
                        (self.data["title"],))
@@ -74,6 +75,20 @@ class Product_Model(Db):
         cursor.execute(
             "DELETE from products where id = %s",
             (self.productId,)
+        )
+        self.conn.commit()
+        self.conn.close()
+
+    def updateQuanitity(self, quantity, productId):
+        '''Method is meant to update a product by editing its details in the
+        products table'''
+        db = Db()
+        self.conn = db.createConnection()
+        db.createTables()
+        self.quantity = quantity
+        cursor = self.conn.cursor()
+        cursor.execute(
+            """UPDATE products SET quantity = %s Where id = %s""", (self.quantity, productId,)
         )
         self.conn.commit()
         self.conn.close()

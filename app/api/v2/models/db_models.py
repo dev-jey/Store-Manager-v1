@@ -50,7 +50,8 @@ class Db(object):
             CREATE TABLE IF NOT EXISTS sales(
                 id serial PRIMARY KEY,
                 userId int REFERENCES users(id) NOT NULL,
-                productId int REFERENCES products(id))
+                productId int REFERENCES products(id),
+                date varchar(255) NOT NULL)
             """
         ]
         try:
