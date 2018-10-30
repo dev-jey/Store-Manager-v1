@@ -56,6 +56,28 @@ class TestsForApi(unittest.TestCase):
                                                 })
         self.data = json.loads(login_attendant.data.decode())
         self.attendant_token = self.data["token"]
+        self.product = json.dumps(
+            {
+                "title": "tecno",
+                "category": "phones",
+                "price": 3000,
+                "quantity": 10,
+                "minimum_stock": 5,
+                "description": "great smartphone to have"
+            })
+        self.sale = json.dumps({
+            "productId": 1
+        })
+        self.test_client.post("/api/v2/products", data=self.product,
+                              headers={
+                                  'content-type': 'application/json',
+                                  'x-access-token': self.admin_token
+                              })
+        self.test_client.post("/api/v2/sales", data=self.sale,
+                              headers={
+                                  'content-type': 'application/json',
+                                  'x-access-token': self.attendant_token
+                              })
         self.context = self.app.app_context()
         self.context.push()
 

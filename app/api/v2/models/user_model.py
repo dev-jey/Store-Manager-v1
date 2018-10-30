@@ -7,7 +7,7 @@ from .db_models import Db
 class User_Model(Db):
     
     '''Initializes a new user object'''
-    def __init__(self, email, password, role):
+    def __init__(self, email=None, password=None, role=None):
         self.email = email
         self.password = password
         self.role = role

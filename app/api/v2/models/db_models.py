@@ -37,11 +37,13 @@ class Db(object):
 
             """CREATE TABLE IF NOT EXISTS products(
                 id serial PRIMARY KEY,
-                 title varchar(10) NOT NULL,
-                  price float(50) NOT NULL,
+                 title varchar(250) NOT NULL,
+                 category varchar NOT NULL,
+                  price float(45) NOT NULL,
                   quantity int NOT NULL,
-                  minimum_stock varchar(10) NOT NULL,
-                  description varchar(20) NOT NULL)
+                  minimum_stock varchar(255) NOT NULL,
+                  description varchar(255) NOT NULL,
+                  date varchar(255) NOT NULL)
                   """,
 
             """

@@ -1,5 +1,5 @@
 from .models.user_model import User_Model
-
+from .models.product_models import Product_Model
 from flask import make_response, jsonify, abort
 from validate_email import validate_email
 import re
@@ -56,3 +56,47 @@ class User_validator(object):
         if type(data["email"]) is not str or type(data["password"]) is not str:
             Message = "Details must be strings characters"
             abort(401, Message)
+
+
+class Validator_products(object):
+    def validate_product_description(self, data):
+        '''Product descriptions validated here'''
+        if len(data["description"]) < 20:
+            Message = "Product description cant be less than 20 characters"
+            abort(400, Message)
+        if data["title"] == "" or data["category"] == "" or data["price"] == "" or data["quantity"] == "" or data["minimum_stock"] == "":
+            Message = "All Product details ought to be filled up"
+            abort(400, Message)
+
+    def validate_missing_data(self, data):
+        '''Checks for missing data keys in data passed during product registration'''
+        if "title" not in data or "category" not in data or "price" not in data or "quantity" not in data or "minimum_stock" not in data or "description" not in data:
+            Message = "Must enter all product details"
+            abort(400, Message)
+
+    def validate_data_types(self, data):
+        '''Verifies data types of product details'''
+        try:
+            data["price"] = float(data["price"])
+        except:
+            pass
+        if type(data["title"]) is not str or type(data["category"]) is not str or type(data["price"]) is not float or type(data["quantity"]) is not int or type(data["minimum_stock"]) is not int or type(data["description"]) is not str:
+            Message = "Wrong data types given"
+            abort(400, Message)
+
+    def validate_duplication(self, data):
+        model = Product_Model()
+        products = model.get()
+        for product in products:
+            if data["title"] == product["title"]:
+                Message = "Product already exists"
+                abort(400, Message)
+
+    def validate_negations(self, data):
+        if data["price"] < 1 or data["quantity"] < 1 or data["minimum_stock"] < 0:
+            Message = "Price, quantity or minmum stock cant be negative"
+            abort(400, Message)
+
+        if data["quantity"] < data["minimum_stock"]:
+            Message = "Minmum stock cant be more than quantity"
+            abort(400, Message)
