@@ -41,6 +41,7 @@ class Product_Model(Db):
         for product in products:
             list_of_items = list(product)
             oneproduct = {}
+            oneproduct["id"] = list_of_items[0]
             oneproduct["title"] = list_of_items[1]
             oneproduct["category"] = list_of_items[2]
             oneproduct["price"] = list_of_items[3]
