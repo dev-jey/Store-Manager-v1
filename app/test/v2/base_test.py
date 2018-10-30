@@ -13,6 +13,7 @@ class TestsForApi(unittest.TestCase):
 
     def setUp(self):
         self.db = Db()
+        self.db.destroy_tables()
         self.db.createTables()
         self.app = create_app(config_name="testing")
         self.test_client = self.app.test_client()

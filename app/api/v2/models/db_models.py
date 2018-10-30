@@ -68,9 +68,10 @@ class Db(object):
 
     def destroy_tables(self):
         cursor = self.createConnection().cursor()
-        sql = [" DROP TABLE IF EXISTS users CASCADE",
+        sql = [
+               " DROP TABLE IF EXISTS sales CASCADE",
                " DROP TABLE IF EXISTS products CASCADE",
-               " DROP TABLE IF EXISTS sales CASCADE"
+               " DROP TABLE IF EXISTS users CASCADE",
                ]
         for string in sql:
             cursor.execute(string)
