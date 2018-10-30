@@ -36,10 +36,10 @@ To run this project you should follow the following steps: \
 6. create the testing database \
 `$ createdb test_db`
 
-5. Switch to `develop` branch \
-`$ git checkout develop`
+5. Switch to ` ft-signup-v2-161420591` branch \
+`$ git checkout ft-signup-v2-161420591`
 
-6. install requirements
+6. install requirements \
 `$ pip install -r requirements.txt`
 
 now we are ready to run.
@@ -87,6 +87,3 @@ Postgres SQL
 **Acknowledgements**  
 1. I acknowledge Andela Kenya for giving the platform to develop this product  
 1. I also acknowledge my teammates for their collaboration
-
-
-
