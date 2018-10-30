@@ -8,7 +8,7 @@ class TestSales(TestsForApi):
         '''Test for posting a sale'''
         resp = self.test_client.post("/api/v2/sales",
                                      data=json.dumps({
-                                         "productId": 1, 
+                                         "productId": 1,
                                          "quantity": 1
                                      }),
                                      headers={
@@ -43,7 +43,8 @@ class TestSales(TestsForApi):
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Must enter the product Id key well")
+        self.assertEqual(response["message"],
+                         "Must enter the product Id key well")
         self.assertEqual(resp.status_code, 400)
 
         '''Test for posting a sale with no quantity'''
@@ -56,7 +57,8 @@ class TestSales(TestsForApi):
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Must enter the quantity key well")
+        self.assertEqual(response["message"],
+                         "Must enter the quantity key well")
         self.assertEqual(resp.status_code, 400)
 
         '''Test for posting a sale with no data given'''
@@ -68,7 +70,8 @@ class TestSales(TestsForApi):
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Must enter the product details in the body")
+        self.assertEqual(response["message"],
+                         "Must enter the product details in the body")
         self.assertEqual(resp.status_code, 400)
 
         '''Test to assert the correct datatype for product id when
@@ -100,7 +103,7 @@ class TestSales(TestsForApi):
         response = json.loads(resp.data)
         self.assertEqual(response["message"], "Quantity must be an integer")
         self.assertEqual(resp.status_code, 400)
-    
+
         '''Test to assert the result if many fields are given'''
         resp = self.test_client.post("/api/v2/sales",
                                      data=json.dumps({
@@ -113,7 +116,8 @@ class TestSales(TestsForApi):
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Too many fields provided, only the productId and quantity is required")
+        self.assertEqual(
+            response["message"], "Too many fields provided, only the productId and quantity is required")
         self.assertEqual(resp.status_code, 400)
 
         '''Test to assert the quantity less than zero'''
@@ -135,7 +139,7 @@ class TestSales(TestsForApi):
                                      data=json.dumps({
                                          "productId": 1,
                                          "quantity": 1
-                                         }),
+                                     }),
                                      headers={
                                          'x-access-token': self.admin_token,
                                          'content-type': 'application/json'

@@ -616,22 +616,6 @@ class TestsForApi(unittest.TestCase):
                              "Password must have a special charater")
             self.assertEqual(resp.status_code, 400)
 
-        def test_for_signup_details_data_types(self):
-            '''Test for signup details where wrong data types are given'''
-            resp = self.test_client.post("/api/v1/auth/signup",
-                                         data=json.dumps({
-                                             "email": 2014,
-                                             "password": 3.29,
-                                             "role": 3232
-                                         }),
-                                         headers={
-                                             'content-type': 'application/json'
-                                         })
-            response = json.loads(resp.data)
-            self.assertEqual(response["message"],
-                             "Details must be strings characters")
-        self.assertEqual(resp.status_code, 400)
-
     def test_success_login(self):
         '''Test for successful login'''
         resp = self.test_client.post("/api/v1/auth/login",

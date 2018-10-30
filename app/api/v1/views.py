@@ -24,7 +24,7 @@ def token_required(fnc):
                         "message": "Token Missing, Login to get one"
                                         }), 401)
         try:
-            data = jwt.decode(token, app_config["development"].SECRET_KEY)
+            data = jwt.decode(token, app_config["development"].SECRET_KEY, algorithms=['HS256'])
             for user in users:
                 if user["email"] == data["email"]:
                     current_user = user
@@ -70,7 +70,7 @@ class Login(Resource):
                 token = jwt.encode({"email": email, "password": password,
                                     'exp': datetime.datetime.utcnow() +
                                     datetime.timedelta(minutes=30)},
-                                   app_config["development"].SECRET_KEY)
+                                   app_config["development"].SECRET_KEY, algorithm='HS256')
                 return make_response(jsonify({
                                 "message": "Login success",
                                 "token": token.decode("UTF-8"
