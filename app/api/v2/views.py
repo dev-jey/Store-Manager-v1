@@ -283,4 +283,3 @@ class Sale(Resource):
                                         "Message": "Must be an admin"
                                         }), 401)
 
-
