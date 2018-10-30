@@ -460,164 +460,164 @@ class TestsForApi(unittest.TestCase):
                                             })
         self.assertEqual(resp.status_code, 404)
 
-    def test_successful_signup(self):
-        '''Tests for a successful signup'''
-        data = json.dumps({
-                           "email": "mary@gmail.com",
-                           "password": "mardsd2@Qss",
-                           "role": "Admin"
-                           })
-        res = self.test_client.post("/api/v1/auth/signup",
-                                    data=data,
-                                    headers={
-                                            'content-type': 'application/json'
-                                            })
-        response = json.loads(res.data)
-        self.assertEqual(response["Message"], "User registered")
-        self.assertEqual(res.status_code, 201)
+        def test_successful_signup(self):
+            '''Tests for a successful signup'''
+            data = json.dumps({
+                            "email": "mary@gmail.com",
+                            "password": "mardsd2@Qss",
+                            "role": "Admin"
+                            })
+            res = self.test_client.post("/api/v1/auth/signup",
+                                        data=data,
+                                        headers={
+                                                'content-type': 'application/json'
+                                                })
+            response = json.loads(res.data)
+            self.assertEqual(response["Message"], "User registered")
+            self.assertEqual(res.status_code, 201)
 
-    def test_wrong_email_signup(self):
-        '''Test for a signup with wrong email format given'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                                    "email": "emailcom",
-                                                    "password": "ssdsdD2@ja",
-                                                    "role": "Admin"}),
-                                     headers={
-                                             'content-type': 'application/json'
-                                             })
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Invalid email")
-        self.assertEqual(resp.status_code, 400)
+        def test_wrong_email_signup(self):
+            '''Test for a signup with wrong email format given'''
+            resp = self.test_client.post("/api/v1/auth/signup",
+                                        data=json.dumps({
+                                                        "email": "emailcom",
+                                                        "password": "ssdsdD2@ja",
+                                                        "role": "Admin"}),
+                                        headers={
+                                                'content-type': 'application/json'
+                                                })
+            response = json.loads(resp.data)
+            self.assertEqual(response["message"], "Invalid email")
+            self.assertEqual(resp.status_code, 400)
 
-    def test_email_already_exists(self):
-        '''Test for signing up with an already existing email'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                                    "email": "maria@gmail.com",
-                                                    "password": "ssdsdD2@ja",
-                                                    "role": "Admin"
-                                                    }),
-                                     headers={
-                                             'content-type': 'application/json'
-                                            })
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"], "User already exists")
-        self.assertEqual(resp.status_code, 406)
+        def test_email_already_exists(self):
+            '''Test for signing up with an already existing email'''
+            resp = self.test_client.post("/api/v1/auth/signup",
+                                        data=json.dumps({
+                                                        "email": "maria@gmail.com",
+                                                        "password": "ssdsdD2@ja",
+                                                        "role": "Admin"
+                                                        }),
+                                        headers={
+                                                'content-type': 'application/json'
+                                                })
+            response = json.loads(resp.data)
+            self.assertEqual(response["message"], "User already exists")
+            self.assertEqual(resp.status_code, 406)
 
-    def test_signup_with_details_missing(self):
-        '''Tests for signup with no details'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                                    "email": "",
-                                                    "password": "dsdE@sdD3",
-                                                    "role": "Admin"
-                                                    }),
-                                     headers={
-                                             'content-type': 'application/json'
-                                             })
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Kindly enter your full credentials")
-        self.assertEqual(resp.status_code, 400)
+        def test_signup_with_details_missing(self):
+            '''Tests for signup with no details'''
+            resp = self.test_client.post("/api/v1/auth/signup",
+                                        data=json.dumps({
+                                                        "email": "",
+                                                        "password": "dsdE@sdD3",
+                                                        "role": "Admin"
+                                                        }),
+                                        headers={
+                                                'content-type': 'application/json'
+                                                })
+            response = json.loads(resp.data)
+            self.assertEqual(response["message"], "Kindly enter your full credentials")
+            self.assertEqual(resp.status_code, 400)
 
-    def test_short_password(self):
-        '''Test for a signup with a short password'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                                    "email": "jame@gmail.com",
-                                                    "password": "dS#e3",
-                                                    "role": "Admin"
-                                                    }),
-                                     headers={
-                                            'content-type': 'application/json'
-                                            })
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Password must be long than 6 characters or less than 12")
-        self.assertEqual(resp.status_code, 400)
+        def test_short_password(self):
+            '''Test for a signup with a short password'''
+            resp = self.test_client.post("/api/v1/auth/signup",
+                                        data=json.dumps({
+                                                        "email": "jame@gmail.com",
+                                                        "password": "dS#e3",
+                                                        "role": "Admin"
+                                                        }),
+                                        headers={
+                                                'content-type': 'application/json'
+                                                })
+            response = json.loads(resp.data)
+            self.assertEqual(response["message"], "Password must be long than 6 characters or less than 12")
+            self.assertEqual(resp.status_code, 400)
 
-    def test_long_password(self):
-        '''Test for a signup with a long password'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
+        def test_long_password(self):
+            '''Test for a signup with a long password'''
+            resp = self.test_client.post("/api/v1/auth/signup",
+                                        data=json.dumps({
+                                                "email": "jame@gmail.com",
+                                                "password": "dhsdsdsdssdhjh3#dDd",
+                                                "role": "Admin"}),
+                                        headers={
+                                                'content-type': 'application/json'
+                                                })
+            response = json.loads(resp.data)
+            self.assertEqual(response["message"], "Password must be long than 6 characters or less than 12")
+            self.assertEqual(resp.status_code, 400)
+
+        def test_password_lacks_digit(self):
+            '''Test for signup witha password that lacks a numerical digit'''
+            resp = self.test_client.post("/api/v1/auth/signup",
+                                        data=json.dumps({
                                             "email": "jame@gmail.com",
-                                            "password": "dhsdsdsdssdhjh3#dDd",
+                                            "password": "ssrrdjD@",
                                             "role": "Admin"}),
-                                     headers={
-                                             'content-type': 'application/json'
-                                            })
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Password must be long than 6 characters or less than 12")
-        self.assertEqual(resp.status_code, 400)
+                                        headers={
+                                            'content-type': 'application/json'
+                                                })
+            response = json.loads(resp.data)
+            self.assertEqual(response["message"], "Password must have a digit")
+            self.assertEqual(resp.status_code, 400)
 
-    def test_password_lacks_digit(self):
-        '''Test for signup witha password that lacks a numerical digit'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                        "email": "jame@gmail.com",
-                                        "password": "ssrrdjD@",
-                                        "role": "Admin"}),
-                                     headers={
-                                        'content-type': 'application/json'
-                                            })
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Password must have a digit")
-        self.assertEqual(resp.status_code, 400)
+        def test_password_lacks_upperCase(self):
+            '''Test for signup with a password with no uppercase character'''
+            resp = self.test_client.post("/api/v1/auth/signup",
+                                        data=json.dumps({
+                                            "email": "jame@gmail.com",
+                                            "password": "dddsdsd2@",
+                                            "role": "Admin"}),
+                                        headers={
+                                            'content-type': 'application/json'
+                                                })
+            response = json.loads(resp.data)
+            self.assertEqual(response["message"], "Password must have an upper case character")
+            self.assertEqual(resp.status_code, 400)
 
-    def test_password_lacks_upperCase(self):
-        '''Test for signup with a password with no uppercase character'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                        "email": "jame@gmail.com",
-                                        "password": "dddsdsd2@",
-                                        "role": "Admin"}),
-                                     headers={
-                                        'content-type': 'application/json'
-                                            })
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Password must have an upper case character")
-        self.assertEqual(resp.status_code, 400)
+        def test_password_lacks_lowerCase(self):
+            '''Test for signup with no lower case character'''
+            resp = self.test_client.post("/api/v1/auth/signup",
+                                        data=json.dumps({
+                                            "email": "jame@gmail.com",
+                                            "password": "DHDHDDHD2@",
+                                            "role": "Admin"}),
+                                        headers={
+                                            'content-type': 'application/json'
+                                                })
+            response = json.loads(resp.data)
+            self.assertEqual(response["message"], "Password must have a lower case character")
+            self.assertEqual(resp.status_code, 400)
 
-    def test_password_lacks_lowerCase(self):
-        '''Test for signup with no lower case character'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                        "email": "jame@gmail.com",
-                                        "password": "DHDHDDHD2@",
-                                        "role": "Admin"}),
-                                     headers={
-                                        'content-type': 'application/json'
-                                            })
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Password must have a lower case character")
-        self.assertEqual(resp.status_code, 400)
-
-    def test_password_lacks_specialChar(self):
-        '''Test for signup with a password that lacks a special character'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                        "email": "jame@gmail.com",
-                                        "password": "ddddssd2D",
-                                        "role": "Admin"}),
-                                     headers={
-                                        'content-type': 'application/json'
-                                            })
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Password must have a special charater")
-        self.assertEqual(resp.status_code, 400)
-    
-    def test_for_signup_details_data_types(self):
-        '''Test for signup details where wrong data types are given'''
-        resp = self.test_client.post("/api/v1/auth/signup",
-                                     data=json.dumps({
-                                         "email": 2014,
-                                         "password": 3.29,
-                                         "role": 3232
-                                     }),
-                                     headers={
-                                        'content-type': 'application/json'
-                                            })
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Details must be strings characters")
+        def test_password_lacks_specialChar(self):
+            '''Test for signup with a password that lacks a special character'''
+            resp = self.test_client.post("/api/v1/auth/signup",
+                                        data=json.dumps({
+                                            "email": "jame@gmail.com",
+                                            "password": "ddddssd2D",
+                                            "role": "Admin"}),
+                                        headers={
+                                            'content-type': 'application/json'
+                                                })
+            response = json.loads(resp.data)
+            self.assertEqual(response["message"], "Password must have a special charater")
+            self.assertEqual(resp.status_code, 400)
+        
+        def test_for_signup_details_data_types(self):
+            '''Test for signup details where wrong data types are given'''
+            resp = self.test_client.post("/api/v1/auth/signup",
+                                        data=json.dumps({
+                                            "email": 2014,
+                                            "password": 3.29,
+                                            "role": 3232
+                                        }),
+                                        headers={
+                                            'content-type': 'application/json'
+                                                })
+            response = json.loads(resp.data)
+            self.assertEqual(response["message"], "Details must be strings characters")
         self.assertEqual(resp.status_code, 400)
 
     def test_success_login(self):
