@@ -28,28 +28,48 @@ class Product_Model(Db):
                             (self.data["title"],))
         row = self.cursor.fetchone()
         self.id = row[0]
-        self.conn.commit()
 
     def update(self, productId):
         '''Method is meant to update a product by editing its details in the
         products table'''
         self.productId = productId
-        self.cursor.execute("SELECT id FROM products WHERE title = %s",
-                            (self.data["title"],))
+        if "title" in self.data:
+            self.cursor.execute("SELECT id FROM products WHERE title = %s",
+                                (self.data["title"],))
         row = self.cursor.fetchone()
         if not row or row[0] == productId:
-            self.cursor.execute(
-                """UPDATE products SET title = %s, category = %s, 
-                        price = %s, quantity = %s, minimum_stock = %s,
-                         description = %s, date = %s WHERE id = %s""",
-                (self.data["title"], self.data["category"], self.data["price"],
-                 self.data["quantity"], self.data["minimum_stock"],
-                 self.data["description"], self.date, self.productId),
-            )
+            if "title" in self.data:
+                self.cursor.execute(
+                    "UPDATE products SET title = %s",
+                    (self.data["title"],),
+                )
+            if "category" in self.data:
+                self.cursor.execute(
+                    "UPDATE products SET category = %s",
+                    (self.data["category"],),
+                )
+            if "price" in self.data:
+                self.cursor.execute(
+                    "UPDATE products SET price = %s",
+                    (self.data["price"],),
+                )
+            if "quantity" in self.data:
+                self.cursor.execute(
+                    "UPDATE products SET quantity = %s",
+                    (self.data["quantity"],),
+                )
+            if "minimum_stock" in self.data:
+                self.cursor.execute(
+                    "UPDATE products SET minimum_stock = %s",
+                    (self.data["minimum_stock"],),
+                )
+            if "description" in self.data:
+                self.cursor.execute(
+                    "UPDATE products SET description = %s",
+                    (self.data["description"],),
+                )
         else:
             abort(403, "Product title already exists, try another one")
-
-        self.conn.commit()
 
     def get(self):
         sql = "SELECT * FROM products"
@@ -75,7 +95,6 @@ class Product_Model(Db):
             "DELETE from products where id = %s",
             (self.productId,)
         )
-        self.conn.commit()
 
     def updateQuanitity(self, quantity, title):
         '''Method is meant to update a product by editing its details in the
@@ -85,4 +104,3 @@ class Product_Model(Db):
             """UPDATE products SET quantity = %s Where title = %s""", (
                 quantity, title,)
         )
-        self.conn.commit()

@@ -32,6 +32,10 @@ class User_validator(object):
         if type(self.data["password"]) is not str:
             Message = "Password must contain string characters only"
             abort(400, Message)
+        
+        if type(self.data["admin"]) is not str:
+            Message = "Admin role must contain string characters only"
+            abort(400, Message)
 
     def validate_signup_password(self):
         '''Validates legitimacy of a person's signup email and password'''
@@ -92,7 +96,7 @@ class User_validator(object):
             abort(400, Message)
 
         if self.data["admin"] == "":
-            Message = "Kindly enter your admin status format ('admin':'True/False')"
+            Message = "Kindly enter your admin status true/false"
             abort(400, Message)
 
     def validate_user_exists(self, data2):
@@ -282,6 +286,53 @@ class Validator_products(object):
             "description": description
         }
         return new_prod
+
+    def validate_exists_update(self):
+        if not self.data:
+            Message = "No product details given yet"
+            abort(400, Message)
+
+        if "title" not in self.data:
+            pass
+
+        if "category" not in self.data:
+            pass
+
+        if "price" not in self.data:
+            pass
+
+        if "quantity" not in self.data:
+            pass
+
+        if "minimum_stock" not in self.data:
+            pass
+
+        if "description" not in self.data:
+            pass
+
+        if "title" in self.data and self.data["title"] == "":
+            Message = "Product title is missing"
+            abort(400, Message)
+
+        if "category" in self.data and self.data["category"] == "":
+            Message = "Product category is missing"
+            abort(400, Message)
+
+        if "price" in self.data and self.data["price"] == "":
+            Message = "Product price is missing"
+            abort(400, Message)
+
+        if "quantity" in self.data and self.data["quantity"] == "":
+            Message = "Product quantity is missing"
+            abort(400, Message)
+
+        if "minimum_stock" in self.data and self.data["minimum_stock"] == "":
+            Message = "Product minimum_stock is missing"
+            abort(400, Message)
+
+        if "description" in self.data and self.data["description"] == "":
+            Message = "Product description is missing"
+            abort(400, Message)
 
 
 class Validator_sales(object):

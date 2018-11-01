@@ -14,21 +14,31 @@ class Db(object):
         self.db_password = Config.DB_PASSWORD
         self.conn = None
 
+    def get_db_url(self):
+        DB_URL = None
+        if Config.APP_SETTINGS == "testing":
+            DB_URL = "host= {} user={} dbname={} password={}".format(
+                self.db_host, self.db_user, "test_db", self.db_password)
+
+        elif Config.APP_SETTINGS == "development":
+            DB_URL = "host= {} user={} dbname={} password={}".format(
+                self.db_host, self.db_user, self.db_name, self.db_password)
+        else:
+            DB_URL = os.environ['DATABASE_URL'], sslmode = 'require'
+
+        return DB_URL
+
     def createConnection(self):
         '''Create connection to db'''
+        db1 = Db()
+        DB_URL = db1.get_db_url()
         try:
-            if Config.APP_SETTINGS == "testing":
-                self.conn = psycopg2.connect(database="test_db")
-            elif Config.APP_SETTINGS == "development":
-                self.conn = psycopg2.connect(
-                    database=self.db_name, host=self.db_host, password=self.db_password)
-            else:
-                self.conn = psycopg2.connect(os.environ['DATABASE_URL'], sslmode='require')
+            self.conn = psycopg2.connect(DB_URL)
+            self.conn.autocommit = True
             return self.conn
-
         except:
             return jsonify({"error": "failed to connect"})
-    
+
     def closeConnection(self):
         '''method to close connections'''
         return self.conn.close()
@@ -58,8 +68,8 @@ class Db(object):
             """
             CREATE TABLE IF NOT EXISTS sales(
                 id serial PRIMARY KEY,
-                userId int REFERENCES users(id) NOT NULL,
-                title varchar(255) REFERENCES products(title) ON DELETE RESTRICT,
+                email varchar(255) REFERENCES users(email) NOT NULL,
+                title varchar(255) REFERENCES products(title) ON UPDATE RESTRICT ON DELETE RESTRICT,
                 quantity int NOT NULL,
                 subtotals int NOT NULL,
                 date varchar(255) NOT NULL)
@@ -78,8 +88,8 @@ class Db(object):
                 cursor.execute(table)
                 cursor.execute(
                     """INSERT INTO users (email, password, admin) 
-                    VALUES('admin@gmail.com',%s ,%s) 
-                    ON CONFLICT(email) DO NOTHING;""", (password, True)
+                    VALUES('admin@gmail.com',%s ,%s) ON CONFLICT(email) DO NOTHING;""",
+                    (password, True)
                 )
         except Exception as e:
             print(e)
@@ -89,7 +99,7 @@ class Db(object):
     def destroy_tables(self):
         cursor = self.createConnection().cursor()
         cursor.execute(
-            "SELECT table_schema,table_name FROM information_schema.tables "\
+            "SELECT table_schema,table_name FROM information_schema.tables "
             " WHERE table_schema = 'public' ORDER BY table_schema,table_name"
         )
         rows = cursor.fetchall()

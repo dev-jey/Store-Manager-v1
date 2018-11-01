@@ -30,7 +30,7 @@ class TestsForApi(unittest.TestCase):
         self.attendant = json.dumps({
             "email": "james2@gmail.com",
             "password": "as@dsDdz2a",
-            "admin": "False"
+            "admin": "false"
         })
         self.attendant_login_details = json.dumps({
             "email": "james2@gmail.com",
@@ -43,7 +43,6 @@ class TestsForApi(unittest.TestCase):
                                                      'x-access-token': self.admin_token,
                                                      'content-type': 'application/json'
                                                  })
-
         login_attendant = self.test_client.post("/api/v2/auth/login",
                                                 data=self.attendant_login_details,
                                                 headers={
@@ -69,7 +68,7 @@ class TestsForApi(unittest.TestCase):
                                   'content-type': 'application/json',
                                   'x-access-token': self.admin_token
                               })
-        x = self.test_client.post("/api/v2/sales", data=self.sale,
+        self.test_client.post("/api/v2/sales", data=self.sale,
                                   headers={
                                       'content-type': 'application/json',
                                       'x-access-token': self.attendant_token

@@ -25,8 +25,6 @@ class User_Model(Db):
         self.cursor.execute("SELECT id FROM users WHERE email = %s", (self.email,))
         row = self.cursor.fetchone()
         self.id = row[0]
-        self.conn.commit()
-        self.conn.close()
 
     def get(self):
         sql = "SELECT * FROM users"
@@ -47,8 +45,6 @@ class User_Model(Db):
         self.cursor.execute(
             "UPDATE users SET admin = %s WHERE id = %s", (True, userId,)
         )
-        self.conn.commit()
-        self.conn.close()
     
     def logout(self, token, date):
         '''method to logout a user from the system'''
@@ -56,5 +52,6 @@ class User_Model(Db):
                 "INSERT INTO blacklist (token, date) VALUES (%s,%s)",
                 (token, date,)
         )
-        self.conn.commit()
-        self.conn.close()
+    
+    def __repr__(self):
+        return self.conn.close()

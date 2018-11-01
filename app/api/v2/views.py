@@ -71,7 +71,7 @@ class SignUp(Resource):
             email = data["email"].strip().lower()
             password = generate_password_hash(
                 data["password"], method='sha256').strip()
-            admin = data["admin"].lower()
+            admin = data["admin"]
             if admin not in ["true", "t", "false", "f"]:
                 return make_response(jsonify({
                     "message": "Admin can either be true/t or false/f"
@@ -255,9 +255,7 @@ class OneProduct(Resource):
                 "Message": "Please, provide the product's details"
             }), 403)
         valid = Validator_products(data)
-        valid.validate_missing_data()
-        valid.validate_data_types()
-        valid.validate_negations()
+        valid.validate_exists_update()
         product = Product_Model(data)
         products = product.get()
         if len(products) == 0:
@@ -313,9 +311,9 @@ class Sale(Resource):
             for product in products:
                 if product["title"] == title:
                     price = int(product["price"]) * data["quantity"]
-                    userId = current_user["id"]
+                    email = current_user["email"]
                     sale_obj = Sales_Model(
-                        userId, product, data["quantity"], price)
+                        email, product, data["quantity"], price)
                     if data["quantity"] > product["quantity"] and product["quantity"] != 0:
                         return make_response(jsonify({
                             "Message": "Attempting to sell more than there is in stock"
@@ -333,12 +331,14 @@ class Sale(Resource):
                     if product["quantity"] < int(product["minimum_stock"]):
                         response = make_response(jsonify({
                             "Message": "Minimum stock reached",
-                            "Sales made": product
+                            "Sales made": product,
+                            "Total": price
                         }), 201)
                     else:
                         response = make_response(jsonify({
                             "message": "successfully sold",
-                            "Sales made": product
+                            "Sales made": product,
+                            "Total": price
                         }), 201)
                     return response
             return make_response(jsonify({
@@ -391,7 +391,7 @@ class OneSale(Resource):
             else:
                 for item in sales:
                     if int(saleId) == item["id"]:
-                        if current_user["admin"] or current_user["id"] == item["userId"]:
+                        if current_user["admin"] or current_user["email"] == item["email"]:
                             resp = make_response(jsonify({
                                 "Message": "Success",
                                 "Sale": item

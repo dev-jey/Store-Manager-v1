@@ -3,14 +3,29 @@ from .base_test import *
 
 class TestUsers(TestsForApi):
 
-   
+    def test_successful_signup(self):
+        '''Tests for a successful signup'''
+        data = json.dumps({
+            "email": "marys@gmail.com",
+            "password": "mardsd2@Qss",
+                        "admin": "false"
+        })
+        res = self.test_client.post("/api/v2/auth/signup",
+                                    data=data,
+                                    headers={
+                                        'x-access-token': self.admin_token,
+                                        'content-type': 'application/json'
+                                    })
+        response = json.loads(res.data)
+        self.assertEqual(response["Message"], "User registered")
+        self.assertEqual(res.status_code, 201)
 
     def test_extra_field_signup(self):
         '''Tests for a signup with an extra field'''
         data = json.dumps({
             "email": "marys@gmail.com",
             "password": "mardsd2@Qss",
-                        "admin": False,
+                        "admin": "false",
                         "Address": "Kenya"
         })
         res = self.test_client.post("/api/v2/auth/signup",
@@ -29,7 +44,7 @@ class TestUsers(TestsForApi):
         data = json.dumps({
             "email": 12121,
             "password": "mardsd2@Qss",
-                        "admin": False
+                        "admin": "false"
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
@@ -47,7 +62,7 @@ class TestUsers(TestsForApi):
         data = json.dumps({
             "email": "e@e",
             "password": 1233234,
-            "admin": False
+            "admin": "false"
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
@@ -65,7 +80,7 @@ class TestUsers(TestsForApi):
         data = json.dumps({
             "email": "e@e",
             "password": "James@12",
-                        "role": 65454
+                        "admin": 65454
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
@@ -75,7 +90,7 @@ class TestUsers(TestsForApi):
                                     })
         response = json.loads(res.data)
         self.assertEqual(response["message"],
-                         "Must enter admin attribute precisely")
+                         "Admin role must contain string characters only")
         self.assertEqual(res.status_code, 400)
 
     def test_missing_email_key(self):
@@ -83,7 +98,7 @@ class TestUsers(TestsForApi):
         data = json.dumps({
             "": "e@e",
             "password": "James@12",
-                        "admin": False
+                        "admin": "false"
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
@@ -101,7 +116,7 @@ class TestUsers(TestsForApi):
         data = json.dumps({
             "email": "e@e",
             "": "James@12",
-            "admin": False
+            "admin": "false"
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
@@ -119,7 +134,7 @@ class TestUsers(TestsForApi):
         data = json.dumps({
             "email": "e@e",
             "password": "James@12",
-                        "": "Attendant"
+                        "": "true"
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
@@ -137,7 +152,7 @@ class TestUsers(TestsForApi):
         data = json.dumps({
             "email": "e@e  ",
             "password": "James@12",
-                        "admin": False
+                        "admin": "false"
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
@@ -154,7 +169,7 @@ class TestUsers(TestsForApi):
         data = json.dumps({
             "email": "e@e",
             "password": "   James@12",
-            "admin": False
+            "admin": "false"
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
@@ -171,7 +186,7 @@ class TestUsers(TestsForApi):
         data = json.dumps({
             "email": "",
             "password": "James@12",
-            "admin": False
+            "admin": "false"
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
@@ -183,13 +198,89 @@ class TestUsers(TestsForApi):
         self.assertEqual(response["message"], "Kindly enter your email")
         self.assertEqual(res.status_code, 400)
 
+    def test_empty_password(self):
+        '''Tests for a signup with an empty password'''
+        data = json.dumps({
+            "email": "s@s",
+            "password": "",
+            "admin": "false"
+        })
+        res = self.test_client.post("/api/v2/auth/signup",
+                                    data=data,
+                                    headers={
+                                        'x-access-token': self.admin_token,
+                                        'content-type': 'application/json'
+                                    })
+        response = json.loads(res.data)
+        self.assertEqual(response["message"], "Kindly enter your password")
+        self.assertEqual(res.status_code, 400)
+
+    def test_empty_role(self):
+        '''Tests for a signup with an empty role'''
+        data = json.dumps({
+            "email": "s@s",
+            "password": "James@12",
+            "admin": ""
+        })
+        res = self.test_client.post("/api/v2/auth/signup",
+                                    data=data,
+                                    headers={
+                                        'x-access-token': self.admin_token,
+                                        'content-type': 'application/json'
+                                    })
+        response = json.loads(res.data)
+        self.assertEqual(response["message"],
+                         "Kindly enter your admin status true/false")
+        self.assertEqual(res.status_code, 400)
+
+    def test_wrong_email_signup(self):
+        '''Test for a signup with wrong email format given'''
+        resp = self.test_client.post("/api/v2/auth/signup",
+                                     data=json.dumps({
+                                         "email": "emailcom",
+                                         "password": "ssdsdD2@ja",
+                                         "admin": "true"}),
+                                     headers={
+                                         'x-access-token': self.admin_token,
+                                         'content-type': 'application/json'
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(response["message"], "Invalid email")
+        self.assertEqual(resp.status_code, 400)
+
+    def test_email_already_exists(self):
+        '''Test for signing up with an already existing email'''
+        resp = self.test_client.post("/api/v2/auth/signup",
+                                     data=json.dumps({
+                                         "email": "maria@gmail.com",
+                                         "password": "ssdsdD2@ja",
+                                         "admin": "true"
+                                     }),
+                                     headers={
+                                         'x-access-token': self.admin_token,
+                                         'content-type': 'application/json'
+                                     })
+        resp = self.test_client.post("/api/v2/auth/signup",
+                                     data=json.dumps({
+                                         "email": "maria@gmail.com",
+                                         "password": "ssdsdD2@ja",
+                                         "admin": "true"
+                                     }),
+                                     headers={
+                                         'x-access-token': self.admin_token,
+                                         'content-type': 'application/json'
+                                     })
+        response = json.loads(resp.data)
+        self.assertEqual(response["message"], "User already exists")
+        self.assertEqual(resp.status_code, 406)
+
     def test_short_password(self):
         '''Test for a signup with a short password'''
         resp = self.test_client.post("/api/v2/auth/signup",
                                      data=json.dumps({
                                          "email": "jame@gmail.com",
                                          "password": "dS#e3",
-                                         "admin": True
+                                         "admin": "true"
                                      }),
                                      headers={
                                          'x-access-token': self.admin_token,
@@ -206,7 +297,7 @@ class TestUsers(TestsForApi):
                                      data=json.dumps({
                                          "email": "jame@gmail.com",
                                          "password": "dhsdsdsdssdhjh3#dDd",
-                                         "admin": True}),
+                                         "admin": "true"}),
                                      headers={
                                          'x-access-token': self.admin_token,
                                          'content-type': 'application/json'
@@ -222,7 +313,7 @@ class TestUsers(TestsForApi):
                                      data=json.dumps({
                                          "email": "jame@gmail.com",
                                          "password": "ssrrdjD@",
-                                         "admin": True}),
+                                         "admin": "true"}),
                                      headers={
                                          'x-access-token': self.admin_token,
                                          'content-type': 'application/json'
@@ -237,7 +328,7 @@ class TestUsers(TestsForApi):
                                      data=json.dumps({
                                          "email": "jame@gmail.com",
                                          "password": "dddsdsd2@",
-                                         "admin": True}),
+                                         "admin": "true"}),
                                      headers={
                                          'x-access-token': self.admin_token,
                                          'content-type': 'application/json'
@@ -253,7 +344,7 @@ class TestUsers(TestsForApi):
                                      data=json.dumps({
                                          "email": "jame@gmail.com",
                                          "password": "DHDHDDHD2@",
-                                         "admin": True}),
+                                         "admin": "true"}),
                                      headers={
                                          'x-access-token': self.admin_token,
                                          'content-type': 'application/json'
@@ -269,7 +360,7 @@ class TestUsers(TestsForApi):
                                      data=json.dumps({
                                          "email": "jame@gmail.com",
                                          "password": "ddddssd2D",
-                                         "admin": True}),
+                                         "admin": "true"}),
                                      headers={
                                          'x-access-token': self.admin_token,
                                          'content-type': 'application/json'
@@ -370,7 +461,7 @@ class TestUsers(TestsForApi):
                                      data=json.dumps({
                                          "email": "e@e",
                                          "password": "James@12",
-                                         "admin": True
+                                         "admin": "true"
                                      }),
                                      headers={
                                          'content-type': 'application/json'
