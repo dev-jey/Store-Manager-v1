@@ -78,7 +78,7 @@ class Db(object):
         try:
             cursor.execute(
                     """INSERT INTO users (email, password, admin) 
-                    VALUES('admin@gmail.com',%s ,%s) ON CONFLICT(email) DO NOTHING;""",
+                    VALUES('admin@gmail.com',%s ,%s);""",
                     (password, True)
                 )
         except:
