@@ -11,60 +11,54 @@ class Product_Model(Db):
     def __init__(self, data=None):
         self.data = data
         self.date = datetime.datetime.now()
-        db = Db()
-        db.createTables()
-        self.conn = db.createConnection()
+        self.db = Db()
+        self.conn = self.db.createConnection()
+        self.db.createTables()
+        self.cursor = self.conn.cursor()
 
     def save(self):
         '''Method to save a product by appending it to existing
         products table'''
-        cursor = self.conn.cursor()
-        cursor.execute(
+        self.cursor.execute(
             "INSERT INTO products(title,category,price,quantity,minimum_stock,description, date) VALUES(%s,%s,%s,%s,%s,%s,%s)",
             (self.data["title"], self.data["category"], self.data["price"], self.data["quantity"],
              self.data["minimum_stock"], self.data["description"], self.date),
         )
-        cursor.execute("SELECT id FROM products WHERE title = %s",
-                       (self.data["title"],))
-        row = cursor.fetchone()
+        self.cursor.execute("SELECT id FROM products WHERE title = %s",
+                            (self.data["title"],))
+        row = self.cursor.fetchone()
         self.id = row[0]
-        self.conn.commit()
-        self.conn.close()
 
-    def update(self, productId):
+    def update(self, productId, title, category, price, quantity, minimum_stock, description):
         '''Method is meant to update a product by editing its details in the
         products table'''
-        db = Db()
-        self.productId = productId
-        self.conn = db.createConnection()
-        db.createTables()
-        cursor = self.conn.cursor()
-        cursor.execute("SELECT id FROM products WHERE title = %s",
-                       (self.data["title"],))
-        row = cursor.fetchone()
+        self.db = Db()
+        self.conn = self.db.createConnection()
+        self.db.createTables()
+        self.cursor = self.conn.cursor()
+        self.cursor.execute("SELECT id FROM products WHERE title = %s",
+                            (title,))
+        row = self.cursor.fetchone()
+        self.date = datetime.datetime.now()
         if not row or row[0] == productId:
-            cursor.execute(
-                """UPDATE products SET title = %s, category = %s, 
-                        price = %s, quantity = %s, minimum_stock = %s,
-                         description = %s, date = %s WHERE id = %s""",
-                          (self.data["title"], self.data["category"], self.data["price"],
-                           self.data["quantity"], self.data["minimum_stock"],
-                           self.data["description"], self.date, self.productId),
-            )
+            try:
+                self.cursor.execute(
+                    """UPDATE products SET title = %s, category = %s, price = %s,
+                        quantity = %s, minimum_stock = %s, description = %s, date = %s
+                        where title = %s
+                        """,
+                    (title, category, price, quantity,
+                     minimum_stock, description, self.date, title)
+                )
+            except Exception as e:
+                print(e)
         else:
             abort(403, "Product title already exists, try another one")
 
-        self.conn.commit()
-        self.conn.close()
-
     def get(self):
-        db = Db()
-        self.conn = db.createConnection()
-        db.createTables()
-        cursor = self.conn.cursor()
         sql = "SELECT * FROM products"
-        cursor.execute(sql)
-        products = cursor.fetchall()
+        self.cursor.execute(sql)
+        products = self.cursor.fetchall()
         allproducts = []
         for product in products:
             list_of_items = list(product)
@@ -77,30 +71,20 @@ class Product_Model(Db):
             oneproduct["minimum_stock"] = list_of_items[5]
             oneproduct["description"] = list_of_items[6]
             allproducts.append(oneproduct)
-        self.conn.commit()
         return allproducts
 
     def delete(self, productId):
         self.productId = productId
-        cursor = self.conn.cursor()
-        cursor.execute(
+        self.cursor.execute(
             "DELETE from products where id = %s",
             (self.productId,)
         )
-        self.conn.commit()
-        self.conn.close()
 
-    def updateQuanitity(self, quantity, productId):
+    def updateQuanitity(self, quantity, title):
         '''Method is meant to update a product by editing its details in the
         products table'''
-        db = Db()
-        self.conn = db.createConnection()
-        db.createTables()
-        self.quantity = quantity
-        cursor = self.conn.cursor()
-        cursor.execute(
-            """UPDATE products SET quantity = %s Where id = %s""", (
-                self.quantity, productId,)
+        self.cursor = self.conn.cursor()
+        self.cursor.execute(
+            """UPDATE products SET quantity = %s Where title = %s""", (
+                quantity, title,)
         )
-        self.conn.commit()
-        self.conn.close()
