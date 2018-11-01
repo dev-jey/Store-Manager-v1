@@ -44,16 +44,14 @@ Store-Manager-v1
 
 6. export environment variables 
 ```
-$ export APP_SETTINGS="development" 
-$ export DB_NAME="storemanager"
-$ export DB_HOST="fill in your localhost"
-$ export DB_USER="fill in the db user"
-$ export DB_PASSWORD="fill in your db user password"
-$ export SECRET_KEY="<your key>"
+$ export DB_URL="storemanager"
+$ export TEST_DB_URL="test_db"
+$ export APP_SETTINGS="development"
+$ export SECRET_KEY="{your key}"
 $ export FLASK_APP=run.py
 ```
 
-7. create the dev database
+7. create the development database
 ```
 createdb storemanager
 ```
@@ -73,22 +71,18 @@ $ git checkout develop
 $ pip install -r requirements.txt
 ```
 
-# Now we are ready to run
+### Now we are ready to run
 
 11. for tests run
 ```
-export APP_SETTINGS="testing"
-pytest -v
+pytest -v --cov=app
 ```
 
 12. for the application run  
 ```
-export APP_SETTINGS="development"
-```
-```
 $ flask run
 ```
-# If you ran the aplication you can test the various api endpoints using postman.
+### If you ran the aplication you can test the various api endpoints using postman.
 
 The api endpoints are
 
@@ -104,11 +98,12 @@ The api endpoints are
 | POST /auth/signup | Signup a user |
 | POST /auth/login | Login a user |
 | PUT /users/userId | Update a user |
+| POST /auth/logout | Logout a user |
 | PUT /products/productId | Update a product |
 | DELETE /products/productId | Delete a product |
 
 
-# **Resources used** 
+## **Resources used** 
 
 https://travis-ci.org/ \
 https://apiary.io/ \
@@ -118,6 +113,6 @@ Python \
 Flask \
 Postgres SQL
 
-# **Acknowledgements**  
+## **Acknowledgements**  
 1. I acknowledge Andela Kenya for giving the platform to develop this product  
 1. I also acknowledge my teammates for their collaboration
