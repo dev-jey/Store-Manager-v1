@@ -73,13 +73,16 @@ class Db(object):
             password = str(generate_password_hash("admin", method='sha256'))
             for table in tables:
                 cursor.execute(table)
-                cursor.execute(
+        except Exception as e:
+            print(e)
+        try:
+            cursor.execute(
                     """INSERT INTO users (email, password, admin) 
                     VALUES('admin@gmail.com',%s ,%s) ON CONFLICT(email) DO NOTHING;""",
                     (password, True)
                 )
-        except Exception as e:
-            print(e)
+        except:
+            pass
         self.conn.commit()
         self.conn.close()
 
