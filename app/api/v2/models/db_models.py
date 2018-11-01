@@ -74,7 +74,7 @@ class Db(object):
             for table in tables:
                 cursor.execute(table)
         except Exception as e:
-            print(e)
+            pass
         try:
             cursor.execute(
                     """INSERT INTO users (email, password, admin) 
