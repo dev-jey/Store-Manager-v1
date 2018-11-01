@@ -16,7 +16,7 @@ class Db(object):
 
     def get_db_url(self):
         DB_URL = None
-        if Config.APP_SETTINGS == "testing":
+        if Config.APP_SETTINGS == "testing" or APP_SETTINGS == "testing":
             DB_URL = "host= {} user={} dbname={} password={}".format(
                 self.db_host, self.db_user, "test_db", self.db_password)
 
