@@ -287,53 +287,6 @@ class Validator_products(object):
         }
         return new_prod
 
-    def validate_exists_update(self):
-        if not self.data:
-            Message = "No product details given yet"
-            abort(400, Message)
-
-        if "title" not in self.data:
-            pass
-
-        if "category" not in self.data:
-            pass
-
-        if "price" not in self.data:
-            pass
-
-        if "quantity" not in self.data:
-            pass
-
-        if "minimum_stock" not in self.data:
-            pass
-
-        if "description" not in self.data:
-            pass
-
-        if "title" in self.data and self.data["title"] == "":
-            Message = "Product title is missing"
-            abort(400, Message)
-
-        if "category" in self.data and self.data["category"] == "":
-            Message = "Product category is missing"
-            abort(400, Message)
-
-        if "price" in self.data and self.data["price"] == "":
-            Message = "Product price is missing"
-            abort(400, Message)
-
-        if "quantity" in self.data and self.data["quantity"] == "":
-            Message = "Product quantity is missing"
-            abort(400, Message)
-
-        if "minimum_stock" in self.data and self.data["minimum_stock"] == "":
-            Message = "Product minimum_stock is missing"
-            abort(400, Message)
-
-        if "description" in self.data and self.data["description"] == "":
-            Message = "Product description is missing"
-            abort(400, Message)
-
 
 class Validator_sales(object):
     def __init__(self, data=None):

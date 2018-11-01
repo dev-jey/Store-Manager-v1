@@ -255,20 +255,33 @@ class OneProduct(Resource):
                 "Message": "Please, provide the product's details"
             }), 403)
         valid = Validator_products(data)
-        valid.validate_exists_update()
         product = Product_Model(data)
         products = product.get()
-        if len(products) == 0:
-            return make_response(jsonify({
-                "Message": "No products yet"
-            }), 404)
-        for item in products:
-            if int(productId) == item["id"]:
-                product.update(productId)
+        for product in products:
+            if len(products) == 0:
                 return make_response(jsonify({
-                    "Message": "Successfully updated",
-                    "Products": product.get()
-                }), 200)
+                    "Message": "No products yet"
+                }), 404)
+            if product["id"] == int(productId):
+                if "title" not in data:
+                    data["title"] = product["title"]
+                if "category" not in data:
+                    data["category"] = product["category"]
+                if "price" not in data:
+                    data["price"] = product["price"]
+                if "quantity" not in data:
+                    data["quantity"] = product["quantity"]
+                if "minimum_stock" not in data:
+                    data["minimum_stock"] = product["minimum_stock"]
+                if "description" not in data:
+                    data["description"] = product["description"]
+
+                product_obj = Product_Model.update(self, productId, data["title"], data["category"], data["price"],
+                                                   data["quantity"], data["minimum_stock"], data["description"])
+            return make_response(jsonify({
+                "Message": "Successfully updated",
+                "Products": product
+            }), 200)
         return make_response(jsonify({
             "Message": "Product non-existent"
         }), 404)

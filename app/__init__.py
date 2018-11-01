@@ -21,7 +21,7 @@ def create_app(config_name):
         }), 404)
 
     @app.errorhandler(500)
-    def internal_error(error):
+    def internal_error(e):
         '''Defining a custom message for internal server error'''
         return make_response(jsonify({
             "Message": "The system ran into a problem due to an internal server error \n Consider fixing"

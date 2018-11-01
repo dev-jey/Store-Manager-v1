@@ -4,40 +4,27 @@ from flask import jsonify
 from werkzeug.security import generate_password_hash
 
 from instance.config import Config
+from sys import modules
 
 
 class Db(object):
     def __init__(self):
-        self.db_name = Config.DB_NAME
-        self.db_host = Config.DB_HOST
-        self.db_user = Config.DB_USER
-        self.db_password = Config.DB_PASSWORD
         self.conn = None
 
-    def get_db_url(self):
-        DB_URL = None
-        if Config.APP_SETTINGS == "testing" or APP_SETTINGS == "testing":
-            DB_URL = "host= {} user={} dbname={} password={}".format(
-                self.db_host, self.db_user, "test_db", self.db_password)
-
-        elif Config.APP_SETTINGS == "development":
-            DB_URL = "host= {} user={} dbname={} password={}".format(
-                self.db_host, self.db_user, self.db_name, self.db_password)
-        else:
-            DB_URL = os.environ['DATABASE_URL'], sslmode = 'require'
-
-        return DB_URL
-
     def createConnection(self):
-        '''Create connection to db'''
-        db1 = Db()
-        DB_URL = db1.get_db_url()
         try:
-            self.conn = psycopg2.connect(DB_URL)
-            self.conn.autocommit = True
-            return self.conn
-        except:
-            return jsonify({"error": "failed to connect"})
+            if 'pytest' in modules:
+                URL = os.getenv("TEST_DB_URL")
+            elif os.getenv("APP_SETTINGS") == "development":
+                URL = os.getenv("DB_URL")
+            else:
+                URL = os.environ['DATABASE_URL'], sslmode = 'require'
+            print(URL)
+            self.conn = psycopg2.connect(database=URL)
+        except Exception as e:
+            print(e)
+        self.conn.autocommit = True
+        return self.conn
 
     def closeConnection(self):
         '''method to close connections'''

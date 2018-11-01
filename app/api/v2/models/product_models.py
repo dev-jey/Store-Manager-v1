@@ -29,45 +29,29 @@ class Product_Model(Db):
         row = self.cursor.fetchone()
         self.id = row[0]
 
-    def update(self, productId):
+    def update(self, productId, title, category, price, quantity, minimum_stock, description):
         '''Method is meant to update a product by editing its details in the
         products table'''
-        self.productId = productId
-        if "title" in self.data:
-            self.cursor.execute("SELECT id FROM products WHERE title = %s",
-                                (self.data["title"],))
+        self.db = Db()
+        self.conn = self.db.createConnection()
+        self.db.createTables()
+        self.cursor = self.conn.cursor()
+        self.cursor.execute("SELECT id FROM products WHERE title = %s",
+                            (title,))
         row = self.cursor.fetchone()
+        self.date = datetime.datetime.now()
         if not row or row[0] == productId:
-            if "title" in self.data:
+            try:
                 self.cursor.execute(
-                    "UPDATE products SET title = %s",
-                    (self.data["title"],),
+                    """UPDATE products SET title = %s, category = %s, price = %s,
+                        quantity = %s, minimum_stock = %s, description = %s, date = %s
+                        where title = %s
+                        """,
+                    (title, category, price, quantity,
+                     minimum_stock, description, self.date, title)
                 )
-            if "category" in self.data:
-                self.cursor.execute(
-                    "UPDATE products SET category = %s",
-                    (self.data["category"],),
-                )
-            if "price" in self.data:
-                self.cursor.execute(
-                    "UPDATE products SET price = %s",
-                    (self.data["price"],),
-                )
-            if "quantity" in self.data:
-                self.cursor.execute(
-                    "UPDATE products SET quantity = %s",
-                    (self.data["quantity"],),
-                )
-            if "minimum_stock" in self.data:
-                self.cursor.execute(
-                    "UPDATE products SET minimum_stock = %s",
-                    (self.data["minimum_stock"],),
-                )
-            if "description" in self.data:
-                self.cursor.execute(
-                    "UPDATE products SET description = %s",
-                    (self.data["description"],),
-                )
+            except Exception as e:
+                print(e)
         else:
             abort(403, "Product title already exists, try another one")
 
