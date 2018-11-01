@@ -8,34 +8,30 @@ class User_Model(Db):
 
     '''Initializes a new user object'''
 
-    def __init__(self, email=None, password=None, role=None):
+    def __init__(self, email=None, password=None, admin=False):
         self.email = email
         self.password = password
-        self.role = role
-        db = Db()
-        db.createTables()
-        self.conn = db.createConnection()
+        self.admin = admin
+        self.db = Db()
+        self.conn = self.db.createConnection()
+        self.db.createTables()
+        self.cursor = self.conn.cursor()
 
     def save(self):
-        cursor = self.conn.cursor()
-        cursor.execute(
-            "INSERT INTO users(email,password,role) VALUES(%s,%s,%s)", (
-                self.email, self.password, self.role,)
+        self.cursor.execute(
+            "INSERT INTO users(email,password,admin) VALUES(%s,%s,%s)", (
+                self.email, self.password, self.admin,)
         )
-        cursor.execute("SELECT id FROM users WHERE email = %s", (self.email,))
-        row = cursor.fetchone()
+        self.cursor.execute("SELECT id FROM users WHERE email = %s", (self.email,))
+        row = self.cursor.fetchone()
         self.id = row[0]
         self.conn.commit()
         self.conn.close()
 
     def get(self):
-        db = Db()
-        self.conn = db.createConnection()
-        db.createTables()
-        cursor = self.conn.cursor()
         sql = "SELECT * FROM users"
-        cursor.execute(sql)
-        users = cursor.fetchall()
+        self.cursor.execute(sql)
+        users = self.cursor.fetchall()
         allusers = []
         for user in users:
             list_of_users = list(user)
@@ -43,14 +39,22 @@ class User_Model(Db):
             oneuser["id"] = list_of_users[0]
             oneuser["email"] = list_of_users[1]
             oneuser["password"] = list_of_users[2]
-            oneuser["role"] = list_of_users[3]
+            oneuser["admin"] = list_of_users[3]
             allusers.append(oneuser)
         return allusers
 
     def update(self, userId):
-        cursor = self.conn.cursor()
-        cursor.execute(
-            "UPDATE users SET role = 'Admin' WHERE id = %s", (userId,)
+        self.cursor.execute(
+            "UPDATE users SET admin = %s WHERE id = %s", (True, userId,)
+        )
+        self.conn.commit()
+        self.conn.close()
+    
+    def logout(self, token, date):
+        '''method to logout a user from the system'''
+        self.cursor.execute(
+                "INSERT INTO blacklist (token, date) VALUES (%s,%s)",
+                (token, date,)
         )
         self.conn.commit()
         self.conn.close()

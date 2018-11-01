@@ -6,10 +6,17 @@ import re
 
 
 class User_validator(object):
-    def __init__(self, data):
+    def __init__(self, data=None):
         self.data = data
 
-    '''User validations undertaken here'''
+    def space_strip(self):
+        email = self.data["email"].strip().lower()
+        password = self.data["password"].strip()
+        new_person = {
+            "email": email,
+            "password": password
+        }
+        return new_person
 
     def validate_data_types_signup(self):
         '''Verifies the data types of different data items passed'''
@@ -24,10 +31,6 @@ class User_validator(object):
 
         if type(self.data["password"]) is not str:
             Message = "Password must contain string characters only"
-            abort(400, Message)
-
-        if type(self.data["role"]) is not str:
-            Message = "Role must contain string characters only"
             abort(400, Message)
 
     def validate_signup_password(self):
@@ -66,8 +69,8 @@ class User_validator(object):
             Message = "Must enter password attribute precisely"
             abort(400, Message)
 
-        if "role" not in self.data:
-            Message = "Must enter role attribute precisely"
+        if "admin" not in self.data:
+            Message = "Must enter admin attribute precisely"
             abort(400, Message)
 
     def validate_missing_data_signup(self):
@@ -88,16 +91,16 @@ class User_validator(object):
             Message = "Kindly enter your password"
             abort(400, Message)
 
-        if self.data["role"] == "":
-            Message = "Kindly enter your role (Admin/Attendant)"
+        if self.data["admin"] == "":
+            Message = "Kindly enter your admin status format ('admin':'True/False')"
             abort(400, Message)
 
-    def validate_user_exists(self):
+    def validate_user_exists(self, data2):
         '''Checks if the registration email already exists on the database'''
         item = User_Model()
         users = item.get()
         for user in users:
-            if self.data["email"] == user["email"]:
+            if data2["email"] == user["email"]:
                 Message = "User already exists"
                 abort(406, Message)
 
@@ -153,7 +156,7 @@ class User_validator(object):
 class Validator_products(object):
     def __init__(self, data):
         self.data = data
-
+        
     def validate_data_types(self):
         '''Verifies data types of product details'''
         if len(self.data) > 6:
@@ -244,12 +247,12 @@ class Validator_products(object):
             Message = "Product description is missing"
             abort(400, Message)
 
-    def validate_duplication(self):
+    def validate_duplication(self, data2):
         '''Checks if the product title to be registered already exists in database'''
         model = Product_Model()
         products = model.get()
         for product in products:
-            if self.data["title"] == product["title"]:
+            if data2["title"] == product["title"]:
                 Message = "Product already exists"
                 abort(400, Message)
 
@@ -262,11 +265,37 @@ class Validator_products(object):
         if self.data["quantity"] < self.data["minimum_stock"]:
             Message = "Minmum stock cant be more than quantity"
             abort(400, Message)
+    
+    def strip_spaces(self):
+        title = self.data["title"].strip().lower()
+        category = self.data["category"].strip().lower()
+        quantity = self.data["quantity"]
+        price = self.data["price"]
+        minimum_stock= self.data["minimum_stock"]
+        description = self.data["description"].strip().lower()
+        new_prod = {
+            "title": title,
+            "category": category,
+            "quantity": quantity,
+            "price": price,
+            "minimum_stock": minimum_stock,
+            "description": description
+        }
+        return new_prod
 
 
 class Validator_sales(object):
-    def __init__(self, data):
+    def __init__(self, data=None):
         self.data = data
+
+    def strip_spacing(self):
+        title = self.data["title"].strip().lower()
+        quantity = self.data["quantity"]
+        new_sale = {
+            "title": title,
+            "quantity": quantity
+        }
+        return new_sale
 
     def validate_missing_data(self):
         '''checks for missing data when making a sale'''
@@ -274,8 +303,8 @@ class Validator_sales(object):
             Message = "Must enter the product details in the body"
             abort(400, Message)
 
-        if "productId" not in self.data:
-            Message = "Must enter the product Id key well"
+        if "title" not in self.data:
+            Message = "Must enter the title key well"
             abort(400, Message)
         
         if "quantity" not in self.data:
@@ -283,13 +312,13 @@ class Validator_sales(object):
             abort(400, Message)
 
     def validate_data_types(self):
-        '''validates datatype of the product id passed'''
+        '''validates datatype of the title passed'''
         if len(self.data) > 2:
-            Message = "Too many fields provided, only the productId and quantity is required"
+            Message = "Too many fields provided, only the title and quantity is required"
             abort(400, Message)
 
-        if type(self.data["productId"]) is not int:
-            Message = "Product Id must be an integer"
+        if type(self.data["title"]) is not str:
+            Message = "title must be a string"
             abort(400, Message)
         
         if type(self.data["quantity"]) is not int:

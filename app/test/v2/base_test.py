@@ -13,24 +13,14 @@ class TestsForApi(unittest.TestCase):
 
     def setUp(self):
         self.db = Db()
-        self.db.destroy_tables()
+        self.db.createConnection()
         self.db.createTables()
         self.app = create_app(config_name="testing")
         self.test_client = self.app.test_client()
         self.admin_login_details = json.dumps({
-            "email": "james@gmail.com",
-            "password": "as@dsDdz2a"
+            "email": "admin@gmail.com",
+            "password": "admin"
         })
-        self.admin_details = json.dumps({
-            "email": "james@gmail.com",
-            "password": "as@dsDdz2a",
-            "role": "Admin"
-        })
-        admin_signup = self.test_client.post("/api/v2/users",
-                                                 data=self.admin_details,
-                                                 headers={
-                                                     'content-type': 'application/json'
-                                                 })
         admin_login = self.test_client.post("/api/v2/auth/login",
                                             data=self.admin_login_details,
                                             headers={
@@ -40,12 +30,13 @@ class TestsForApi(unittest.TestCase):
         self.attendant = json.dumps({
             "email": "james2@gmail.com",
             "password": "as@dsDdz2a",
-            "role": "Attendant"
+            "admin": "False"
         })
         self.attendant_login_details = json.dumps({
             "email": "james2@gmail.com",
             "password": "as@dsDdz2a"
         })
+
         signup_attendant = self.test_client.post("/api/v2/auth/signup",
                                                  data=self.attendant,
                                                  headers={
@@ -65,13 +56,13 @@ class TestsForApi(unittest.TestCase):
                 "title": "tecno",
                 "category": "phones",
                 "price": 3000,
-                "quantity": 10,
+                "quantity": 100,
                 "minimum_stock": 5,
                 "description": "great smartphone to have"
             })
         self.sale = json.dumps({
-            "productId": 1,
-            "quantity": 1
+            "title": "tecno",
+            "quantity": 10
         })
         self.test_client.post("/api/v2/products", data=self.product,
                               headers={
@@ -90,4 +81,5 @@ class TestsForApi(unittest.TestCase):
         '''Method to clear all tables
         before another test is undertaken'''
         self.db.destroy_tables()
+        self.db.closeConnection()
         self.context.pop()
