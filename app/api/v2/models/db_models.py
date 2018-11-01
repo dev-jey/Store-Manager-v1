@@ -18,10 +18,10 @@ class Db(object):
             elif os.getenv("APP_SETTINGS") == "development":
                 URL = os.getenv("DB_URL")
             else:
-                URL = os.environ['DATABASE_URL'], sslmode = 'require'
+                URL1 = os.environ['DATABASE_URL'], sslmode = 'require'
             self.conn = psycopg2.connect(database=URL)
         except Exception:
-            pass
+            self.conn = psycopg2.connect(URL1)
         self.conn.autocommit = True
         return self.conn
 
