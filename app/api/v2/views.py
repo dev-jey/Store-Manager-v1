@@ -87,7 +87,7 @@ class SignUp(Resource):
             }), 201)
 
         return make_response(jsonify({
-            "Message": "Permission denied, must be admin"
+            "Message": "Must be admin"
         }), 201)
 
 
@@ -132,7 +132,7 @@ class UpdateUser(Resource):
                     return response
             return make_response(jsonify({"message":  "User non-existent"}), 404)
         return make_response(jsonify({
-            "Message": "Permission denied, must be admin"
+            "Message": "Must be admin"
         }), 401)
 
 

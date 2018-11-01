@@ -32,15 +32,14 @@ class User_validator(object):
         if type(self.data["password"]) is not str:
             Message = "Password must contain string characters only"
             abort(400, Message)
-        
+
         if type(self.data["admin"]) is not str:
             Message = "Admin role must contain string characters only"
             abort(400, Message)
 
     def validate_signup_password(self):
         '''Validates legitimacy of a person's signup email and password'''
-        valid_email = validate_email(self.data["email"])
-        if not valid_email:
+        if not re.match(r"(^[a-zA-Z0-9_.]+@[a-zA-Z0-9-]+\.[a-z]+$)", self.data["email"]):
             Message = "Invalid email"
             abort(400, Message)
         elif len(self.data["password"]) < 6 or len(self.data["password"]) > 12:
@@ -122,7 +121,7 @@ class User_validator(object):
         if "password" not in self.data:
             Message = "Password field must be filled precisely"
             abort(400, Message)
-    
+
     def validate_empty_items_login(self):
         '''Checks if empty values are entered'''
         if self.data["email"] == "":
@@ -160,7 +159,7 @@ class User_validator(object):
 class Validator_products(object):
     def __init__(self, data):
         self.data = data
-        
+
     def validate_data_types(self):
         '''Verifies data types of product details'''
         if len(self.data) > 6:
@@ -269,13 +268,13 @@ class Validator_products(object):
         if self.data["quantity"] < self.data["minimum_stock"]:
             Message = "Minmum stock cant be more than quantity"
             abort(400, Message)
-    
+
     def strip_spaces(self):
         title = self.data["title"].strip().lower()
         category = self.data["category"].strip().lower()
         quantity = self.data["quantity"]
         price = self.data["price"]
-        minimum_stock= self.data["minimum_stock"]
+        minimum_stock = self.data["minimum_stock"]
         description = self.data["description"].strip().lower()
         new_prod = {
             "title": title,
@@ -310,7 +309,7 @@ class Validator_sales(object):
         if "title" not in self.data:
             Message = "Must enter the title key well"
             abort(400, Message)
-        
+
         if "quantity" not in self.data:
             Message = "Must enter the quantity key well"
             abort(400, Message)
@@ -324,11 +323,11 @@ class Validator_sales(object):
         if type(self.data["title"]) is not str:
             Message = "title must be a string"
             abort(400, Message)
-        
+
         if type(self.data["quantity"]) is not int:
             Message = "Quantity must be an integer"
             abort(400, Message)
-        
+
         if self.data["quantity"] <= 0:
             Message = "Quantity must be more than 0"
             abort(400, Message)

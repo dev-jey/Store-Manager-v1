@@ -19,10 +19,9 @@ class Db(object):
                 URL = os.getenv("DB_URL")
             else:
                 URL = os.environ['DATABASE_URL'], sslmode = 'require'
-            print(URL)
             self.conn = psycopg2.connect(database=URL)
-        except Exception as e:
-            print(e)
+        except Exception:
+            pass
         self.conn.autocommit = True
         return self.conn
 
@@ -73,7 +72,7 @@ class Db(object):
             password = str(generate_password_hash("admin", method='sha256'))
             for table in tables:
                 cursor.execute(table)
-        except Exception as e:
+        except Exception:
             pass
         try:
             cursor.execute(
