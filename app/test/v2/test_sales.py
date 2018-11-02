@@ -154,7 +154,7 @@ class TestSales(TestsForApi):
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
-        self.assertEqual(response["Message"], "Must be an admin to undertake this action")
+        self.assertEqual(response["Message"], "Must be an attendant to undertake this action")
         self.assertEqual(resp.status_code, 401)
 
     def test_get_all_sales_admin(self):
