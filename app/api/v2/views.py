@@ -284,10 +284,14 @@ class OneProduct(Resource):
                 product_obj = Product_Model()
                 product_obj.update(productId, data2["title"], data2["category"], data2["price"],
                                                    data2["quantity"], data2["minimum_stock"], data2["description"])
-                return make_response(jsonify({
-                    "Message": "Successfully updated",
-                    "Product": product
-                }), 200)
+                product1 = Product_Model()
+                all_products = product1.get()
+                for item in all_products:
+                    if item["title"] == data2["title"]:
+                        return make_response(jsonify({
+                            "Message": "Successfully updated",
+                            "Product": item
+                        }), 200)
         return make_response(jsonify({
             "Message": "Product non-existent"
         }), 404)

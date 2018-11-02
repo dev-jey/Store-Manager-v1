@@ -53,7 +53,7 @@ class Db(object):
             CREATE TABLE IF NOT EXISTS sales(
                 id serial PRIMARY KEY,
                 email varchar(255) REFERENCES users(email) NOT NULL,
-                title varchar(255) REFERENCES products(title) ON UPDATE RESTRICT ON DELETE RESTRICT,
+                title varchar(255) REFERENCES products(title) ON UPDATE CASCADE ON DELETE CASCADE,
                 quantity int NOT NULL,
                 subtotals int NOT NULL,
                 date varchar(255) NOT NULL)

@@ -52,9 +52,7 @@ class Product_Model(Db):
                 )
 
             except Exception as e:
-                abort(403, "Error Failed to update details for "
-                      + title + " Possible causes of error: " +
-                      "title already taken or the product is referenced in sales table")
+                abort(403, "Error: Failed to update details")
 
     def get(self):
         sql = "SELECT * FROM products"
@@ -82,8 +80,7 @@ class Product_Model(Db):
                 (self.productId,)
             )
         except Exception:
-            abort(403, "Error Failed to delete details. Possible causes of error" +
-                        "the product is referenced in sales table")
+            abort(403, "Error: Failed to delete details")
 
     def updateQuanitity(self, quantity, title):
         '''Method is meant to update a product by editing its details in the
