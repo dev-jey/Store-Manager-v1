@@ -76,7 +76,6 @@ class Db(object):
                     (password, True)
                 )
         except Exception as b:
-            print(b)
             pass
         self.conn.commit()
         self.conn.close()

@@ -154,7 +154,7 @@ class TestSales(TestsForApi):
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
-        self.assertEqual(response["Message"], "Must be an attendant!")
+        self.assertEqual(response["Message"], "Must be an admin to undertake this action")
         self.assertEqual(resp.status_code, 401)
 
     def test_get_all_sales_admin(self):
@@ -174,7 +174,7 @@ class TestSales(TestsForApi):
                                         'x-access-token': self.attendant_token
                                     })
         response = json.loads(resp.data)
-        self.assertEqual(response["Message"], "Must be an admin")
+        self.assertEqual(response["Message"], "Must be an admin to undertake this action")
         self.assertEqual(resp.status_code, 401)
 
     def test_get_one_sale_admin(self):

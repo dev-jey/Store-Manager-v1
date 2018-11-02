@@ -42,7 +42,6 @@ def token_required(fnc):
                 if user["email"] == data["email"]:
                     current_user = user
         except Exception as e:
-            print(e)
             return make_response(jsonify({"message": "token invalid"}),
                                  403)
         return fnc(current_user, *args, **kwargs)
@@ -87,7 +86,7 @@ class SignUp(Resource):
             }), 201)
 
         return make_response(jsonify({
-            "Message": "Must be admin"
+            "Message": "Must be an admin to undertake this action"
         }), 201)
 
 
@@ -177,7 +176,7 @@ class Product(Resource):
         '''Post product endpoint that creates a new product'''
         if current_user and not current_user["admin"]:
             return make_response(jsonify({
-                "Message": "You must be an admin"
+                "Message": "Must be an admin to undertake this action"
             }), 403)
         try:
             data = request.get_json()
@@ -193,10 +192,13 @@ class Product(Resource):
         valid.validate_duplication(data2)
         product = Product_Model(data2)
         product.save()
-        return make_response(jsonify({
-            "Message": "Successfully added",
-            "Products": product.get()
-        }), 201)
+        products = product.get()
+        for product in products:
+            if product["title"] == data2["title"]:
+                return make_response(jsonify({
+                    "Message": "Successfully added",
+                    "Products": product
+                }), 201)
 
     @token_required
     def get(current_user, self):
@@ -246,7 +248,7 @@ class OneProduct(Resource):
         '''Updates a product details'''
         if current_user and not current_user["admin"]:
             return make_response(jsonify({
-                "Message": "You must be an admin"
+                "Message": "Must be an admin to undertake this action"
             }), 403)
         try:
             data = request.get_json()
@@ -254,14 +256,14 @@ class OneProduct(Resource):
             return make_response(jsonify({
                 "Message": "Please, provide the product's details"
             }), 403)
-        valid = Validator_products(data)
-        product = Product_Model(data)
+        product = Product_Model()
         products = product.get()
+
+        if len(products) == 0:
+            return make_response(jsonify({
+                "Message": "No products yet"
+            }), 404)
         for product in products:
-            if len(products) == 0:
-                return make_response(jsonify({
-                    "Message": "No products yet"
-                }), 404)
             if product["id"] == int(productId):
                 if "title" not in data:
                     data["title"] = product["title"]
@@ -275,13 +277,17 @@ class OneProduct(Resource):
                     data["minimum_stock"] = product["minimum_stock"]
                 if "description" not in data:
                     data["description"] = product["description"]
-
-                product_obj = Product_Model.update(self, productId, data["title"], data["category"], data["price"],
-                                                   data["quantity"], data["minimum_stock"], data["description"])
-            return make_response(jsonify({
-                "Message": "Successfully updated",
-                "Products": product
-            }), 200)
+                valid = Validator_products(data)
+                valid.validate_data_types()
+                valid.validate_negations()
+                data2 = valid.strip_spaces()
+                product_obj = Product_Model()
+                product_obj.update(productId, data2["title"], data2["category"], data2["price"],
+                                                   data2["quantity"], data2["minimum_stock"], data2["description"])
+                return make_response(jsonify({
+                    "Message": "Successfully updated",
+                    "Product": product
+                }), 200)
         return make_response(jsonify({
             "Message": "Product non-existent"
         }), 404)
@@ -359,7 +365,7 @@ class Sale(Resource):
             }), 404)
         else:
             return make_response(jsonify({
-                "Message": "Must be an attendant!"
+                "Message": "Must be an admin to undertake this action"
             }), 401)
 
     @token_required
@@ -385,7 +391,7 @@ class Sale(Resource):
             return response
         else:
             return make_response(jsonify({
-                "Message": "Must be an admin"
+                "Message": "Must be an admin to undertake this action"
             }), 401)
 
 
