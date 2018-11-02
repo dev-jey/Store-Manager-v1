@@ -261,8 +261,8 @@ class Validator_products(object):
 
     def validate_negations(self):
         '''Checks to avoid any negative interger/float values from being registered'''
-        if self.data["price"] < 1 or self.data["quantity"] < 1 or self.data["minimum_stock"] < 0:
-            Message = "Price, quantity or minmum stock cant be negative"
+        if self.data["price"] < 1 or self.data["quantity"] < 1 or self.data["minimum_stock"] < 1:
+            Message = "Price, quantity or minmum stock cant be zero or negative"
             abort(400, Message)
 
         if self.data["quantity"] < self.data["minimum_stock"]:

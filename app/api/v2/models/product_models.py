@@ -1,5 +1,5 @@
 import psycopg2
-from flask import jsonify, abort
+from flask import jsonify, abort, make_response
 import datetime
 
 from .db_models import Db
@@ -40,20 +40,19 @@ class Product_Model(Db):
                             (title,))
         row = self.cursor.fetchone()
         self.date = datetime.datetime.now()
+
         if not row or row[0] == productId:
             try:
                 self.cursor.execute(
-                    """UPDATE products SET title = %s, category = %s, price = %s,
-                        quantity = %s, minimum_stock = %s, description = %s, date = %s
-                        where title = %s
-                        """,
-                    (title, category, price, quantity,
-                     minimum_stock, description, self.date, title)
+                    """UPDATE products SET title = '{}', category = '{}', price = '{}',
+                        quantity = '{}', minimum_stock = '{}', description = '{}', date='{}'
+                        WHERE id = {}
+                        """.format(title, category, int(price), int(quantity),
+                                   int(minimum_stock), description, self.date, productId)
                 )
+
             except Exception as e:
-                print(e)
-        else:
-            abort(403, "Product title already exists, try another one")
+                abort(403, "Error: Failed to update details")
 
     def get(self):
         sql = "SELECT * FROM products"
@@ -75,10 +74,13 @@ class Product_Model(Db):
 
     def delete(self, productId):
         self.productId = productId
-        self.cursor.execute(
-            "DELETE from products where id = %s",
-            (self.productId,)
-        )
+        try:
+            self.cursor.execute(
+                "DELETE from products where id = %s",
+                (self.productId,)
+            )
+        except Exception:
+            abort(403, "Error: Failed to delete details")
 
     def updateQuanitity(self, quantity, title):
         '''Method is meant to update a product by editing its details in the

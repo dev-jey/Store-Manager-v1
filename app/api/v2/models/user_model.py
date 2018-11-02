@@ -52,6 +52,3 @@ class User_Model(Db):
                 "INSERT INTO blacklist (token, date) VALUES (%s,%s)",
                 (token, date,)
         )
-    
-    def __repr__(self):
-        return self.conn.close()
