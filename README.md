@@ -1,6 +1,6 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/67645d217d094e27b72c90cc0656fafc)](https://app.codacy.com/app/codeMarble254/Store-Manager-v1?utm_source=github.com&utm_medium=referral&utm_content=codeMarble254/Store-Manager-v1&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/codeMarble254/Store-Manager-v1.svg?branch=develop)](https://travis-ci.org/codeMarble254/Store-Manager-v1)
-[![Coverage Status](https://coveralls.io/repos/github/codeMarble254/Store-Manager-v1/badge.svg?branch=develop)](https://coveralls.io/github/codeMarble254/Store-Manager-v1?branch=develop)
+[![Coverage Status](https://coveralls.io/repos/github/codeMarble254/Store-Manager-v1/badge.svg?)](https://coveralls.io/github/codeMarble254/Store-Manager-v1?branch=develop)
 [![Maintainability](https://api.codeclimate.com/v1/badges/66cf3a604295b849139d/maintainability)](https://codeclimate.com/github/codeMarble254/Store-Manager-v1/maintainability)
 
 # Store-Manager
