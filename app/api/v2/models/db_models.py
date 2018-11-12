@@ -15,11 +15,16 @@ class Db(object):
         try:
             if 'pytest' in modules:
                 URL = os.getenv("TEST_DB_URL")
-            elif os.getenv("APP_SETTINGS") == "development":
+            if os.getenv("APP_SETTINGS") == "development":
                 URL = os.getenv("DB_URL")
             self.conn = psycopg2.connect(database=URL)
         except Exception:
-            self.conn = psycopg2.connect(os.environ['DATABASE_URL'], sslmode = 'require')
+            try:
+                if os.getenv("APP_SETTINGS") == "production":
+                    self.conn = psycopg2.connect(os.environ['DATABASE_URL'],
+                                                 sslmode='require')
+            except:
+                return jsonify({"message": "Connection Failed"})
         self.conn.autocommit = True
         return self.conn
 
@@ -53,7 +58,8 @@ class Db(object):
             CREATE TABLE IF NOT EXISTS sales(
                 id serial PRIMARY KEY,
                 email varchar(255) REFERENCES users(email) NOT NULL,
-                title varchar(255) REFERENCES products(title) ON UPDATE CASCADE ON DELETE CASCADE,
+                title varchar(255) REFERENCES products(title) ON UPDATE
+                 CASCADE ON DELETE CASCADE,
                 quantity int NOT NULL,
                 subtotals int NOT NULL,
                 date varchar(255) NOT NULL)
@@ -67,15 +73,18 @@ class Db(object):
             """
         ]
         try:
+            password = str(generate_password_hash("admin", method='sha256'))
             for table in tables:
                 cursor.execute(table)
-            password = str(generate_password_hash("admin", method='sha256'))
+        except Exception:
+            pass
+        try:
             cursor.execute(
-                    """INSERT INTO users (email, password, admin) 
+                """INSERT INTO users (email, password, admin) 
                     VALUES('admin@gmail.com',%s ,%s);""",
-                    (password, True)
-                )
-        except Exception as b:
+                (password, True)
+            )
+        except:
             pass
         self.conn.commit()
         self.conn.close()

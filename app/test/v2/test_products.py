@@ -3,8 +3,8 @@ from .base_test import *
 
 
 class TestProducts(TestsForApi):
-    def test_for_empty_product_registration_title(self):
-        '''Tests for an empty product registration title'''
+    def test_for_empty_product_registration(self):
+        '''Tests for an empty product registration'''
         resp = self.test_client.post("/api/v2/products",
                                      data=json.dumps({
                                          "title": "",
@@ -308,7 +308,7 @@ class TestProducts(TestsForApi):
                                      })
         response = json.loads(resp.data)
         self.assertEqual(
-            response["message"], "Price, quantity or minmum stock cant be zero or negative")
+            response["message"], "Price, quantity or minmum stock cant be negative")
         self.assertEqual(resp.status_code, 400)
 
     def test_product_description_less_than_20_chars(self):
@@ -397,7 +397,7 @@ class TestProducts(TestsForApi):
                                          'content-type': 'application/json'
                                      })
         response = json.loads(resp.data)
-        self.assertEqual(response["Message"], 'Must be an admin to undertake this action')
+        self.assertEqual(response["Message"], "You must be an admin")
         self.assertEqual(resp.status_code, 403)
 
     def test_for_token_missing_product_registration(self):
