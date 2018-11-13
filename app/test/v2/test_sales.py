@@ -37,7 +37,7 @@ class TestSales(TestsForApi):
                                      headers=self.attendant_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "Must enter the title key well")
+                         "'title' is a required property")
         self.assertEqual(resp.status_code, 400)
 
     def test_post_sale_no_quantity_given(self):
@@ -49,7 +49,7 @@ class TestSales(TestsForApi):
                                      headers=self.attendant_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "Must enter the quantity key well")
+                         "'quantity' is a required property")
         self.assertEqual(resp.status_code, 400)
 
     def test_post_with_no_given_data(self):
@@ -60,7 +60,7 @@ class TestSales(TestsForApi):
                                      headers=self.attendant_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "Must enter the product details in the body")
+                         "'title' is a required property")
         self.assertEqual(resp.status_code, 400)
 
     def test_post_sale_many_fields_given(self):
@@ -74,7 +74,8 @@ class TestSales(TestsForApi):
                                      headers=self.attendant_header)
         response = json.loads(resp.data)
         self.assertEqual(
-            response["message"], "Too many fields provided, only the title and quantity is required")
+            response["message"], 
+            "{'title': 'orange', 'quantity': 1, 'role': 'Admin'} has too many properties")
         self.assertEqual(resp.status_code, 400)
     
     def test_post_sale_negative_quantity_given(self):

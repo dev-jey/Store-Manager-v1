@@ -1,15 +1,18 @@
 from flask import Flask, jsonify, request, make_response
 from flask_restful import Resource
+from flask_expects_json import expects_json
 '''Local imports'''
 from ..utils.sales_validations import Validator_sales
 from ..models.product_models import Product_Model
 from ..models.sale_models import Sales_Model
 from .token import Token
 from .main import Initialize
+from .json_schema import SALE_JSON
 
 
 class Sale(Resource, Initialize):
 
+    @expects_json(SALE_JSON)
     @Token.token_required
     def post(current_user, self):
         '''Create an endpoint for attendants to make sales'''
@@ -19,10 +22,9 @@ class Sale(Resource, Initialize):
         if current_user["admin"]:
             return self.only_attendant
         valid = Validator_sales(data)
-        valid.validate_missing_data()
         valid.validate_data_types()
         title = data["title"].strip().lower()
-        products = self.item.get()
+        products = self.product.get()
         for product in products:
             if product["title"] == title:
                 price = int(product["price"]) * data["quantity"]
@@ -32,7 +34,7 @@ class Sale(Resource, Initialize):
 
                 self.restrict1.restrictSales(data, product, price)
                 sale_obj.save()
-                self.item.updateQuanitity(product["quantity"], title)
+                self.product.updateQuanitity(product["quantity"], title)
                 if product["quantity"] < int(product["minimum_stock"]):
                     return make_response(jsonify({
                         "Message": "Minimum stock reached",

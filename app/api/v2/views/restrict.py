@@ -70,4 +70,4 @@ class Restrictions:
         elif admin not in ["true", "True", "T", "t"]:
             admin = False
         if response:
-            abort(response)
+            abort(400, response)

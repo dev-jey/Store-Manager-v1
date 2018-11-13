@@ -17,27 +17,11 @@ class TestUsers(TestsForApi):
         self.assertEqual(response["Message"], "User registered")
         self.assertEqual(res.status_code, 201)
 
-    def test_extra_field_signup(self):
-        '''Tests for a signup with an extra field'''
-        data = json.dumps({
-            "email": "marys@gmail.com",
-            "password": "mardsd2@Qss",
-                        "admin": "false",
-                        "Address": "Kenya"
-        })
-        res = self.test_client.post("/api/v2/auth/signup",
-                                    data=data,
-                                    headers=self.admin_header)
-        response = json.loads(res.data)
-        self.assertEqual(response["message"],
-                         "Too many fields entered. Only 3 required")
-        self.assertEqual(res.status_code, 400)
-
     def test_email_not_string(self):
         '''Tests for a signup with an integer email'''
         data = json.dumps({
             "email": 12121,
-            "password": "mardsd2@Qss",
+            "password": "mardsd2@Qss.com",
                         "admin": "false"
         })
         res = self.test_client.post("/api/v2/auth/signup",
@@ -45,13 +29,13 @@ class TestUsers(TestsForApi):
                                     headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(response["message"],
-                         "Email must contain string characters only")
+                         "12121 is not of type 'string'")
         self.assertEqual(res.status_code, 400)
 
     def test_password_not_string(self):
         '''Tests for a signup with an int password'''
         data = json.dumps({
-            "email": "e@e",
+            "email": "e@e.com",
             "password": 1233234,
             "admin": "false"
         })
@@ -60,13 +44,13 @@ class TestUsers(TestsForApi):
                                     headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(
-            response["message"], "Password must contain string characters only")
+            response["message"], "1233234 is not of type 'string'")
         self.assertEqual(res.status_code, 400)
 
     def test_role_not_string(self):
         '''Tests for a signup with an int role'''
         data = json.dumps({
-            "email": "e@e",
+            "email": "e@e.com",
             "password": "James@12",
                         "admin": 65454
         })
@@ -75,13 +59,13 @@ class TestUsers(TestsForApi):
                                     headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(response["message"],
-                         "Admin role must contain string characters only")
+                         "65454 is not of type 'string'")
         self.assertEqual(res.status_code, 400)
 
     def test_missing_email_key(self):
         '''Tests for a signup with a missing email key'''
         data = json.dumps({
-            "": "e@e",
+            "": "e@e.com",
             "password": "James@12",
                         "admin": "false"
         })
@@ -90,13 +74,13 @@ class TestUsers(TestsForApi):
                                     headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(response["message"],
-                         "Must enter email attribute precisely")
+                         "'email' is a required property")
         self.assertEqual(res.status_code, 400)
 
     def test_missing_password_key(self):
         '''Tests for a signup with a missing password key'''
         data = json.dumps({
-            "email": "e@e",
+            "email": "e@e.com",
             "": "James@12",
             "admin": "false"
         })
@@ -105,13 +89,13 @@ class TestUsers(TestsForApi):
                                     headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(response["message"],
-                         "Must enter password attribute precisely")
+                         "'password' is a required property")
         self.assertEqual(res.status_code, 400)
 
     def test_missing_role_key(self):
         '''Tests for a signup with a missing role key'''
         data = json.dumps({
-            "email": "e@e",
+            "email": "e@e.com",
             "password": "James@12",
                         "": "true"
         })
@@ -120,55 +104,27 @@ class TestUsers(TestsForApi):
                                     headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(response["message"],
-                         "Must enter admin attribute precisely")
-        self.assertEqual(res.status_code, 400)
-
-    def test_space_in_email(self):
-        '''Tests for a signup with a space in email'''
-        data = json.dumps({
-            "email": "e@e  ",
-            "password": "James@12",
-                        "admin": "false"
-        })
-        res = self.test_client.post("/api/v2/auth/signup",
-                                    data=data,
-                                    headers=self.admin_header)
-        response = json.loads(res.data)
-        self.assertEqual(response["message"], "Email cannot have a space")
-        self.assertEqual(res.status_code, 400)
-
-    def test_space_in_password(self):
-        '''Tests for a signup with a space in password'''
-        data = json.dumps({
-            "email": "e@e",
-            "password": "   James@12",
-            "admin": "false"
-        })
-        res = self.test_client.post("/api/v2/auth/signup",
-                                    data=data,
-                                    headers=self.admin_header)
-        response = json.loads(res.data)
-        self.assertEqual(response["message"], "Password cannot have a space")
+                         "'admin' is a required property")
         self.assertEqual(res.status_code, 400)
 
     def test_empty_email(self):
         '''Tests for a signup with an empty email'''
         data = json.dumps({
             "email": "",
-            "password": "James@12",
+            "password": "James@gmial.com",
             "admin": "false"
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
                                     headers=self.admin_header)
         response = json.loads(res.data)
-        self.assertEqual(response["message"], "Kindly enter your email")
+        self.assertEqual(response["message"], "Invalid email")
         self.assertEqual(res.status_code, 400)
 
     def test_empty_password(self):
         '''Tests for a signup with an empty password'''
         data = json.dumps({
-            "email": "s@s",
+            "email": "s@s.com",
             "password": "",
             "admin": "false"
         })
@@ -176,22 +132,7 @@ class TestUsers(TestsForApi):
                                     data=data,
                                     headers=self.admin_header)
         response = json.loads(res.data)
-        self.assertEqual(response["message"], "Kindly enter your password")
-        self.assertEqual(res.status_code, 400)
-
-    def test_empty_role(self):
-        '''Tests for a signup with an empty role'''
-        data = json.dumps({
-            "email": "s@s",
-            "password": "James@12",
-            "admin": ""
-        })
-        res = self.test_client.post("/api/v2/auth/signup",
-                                    data=data,
-                                    headers=self.admin_header)
-        response = json.loads(res.data)
-        self.assertEqual(response["message"],
-                         "Kindly enter your admin status true/false")
+        self.assertEqual(response["message"], "Password must be long than 6 characters or less than 12")
         self.assertEqual(res.status_code, 400)
 
     def test_wrong_email_signup(self):
@@ -317,7 +258,7 @@ class TestUsers(TestsForApi):
         '''Test for a failing login'''
         response = self.test_client.post("/api/v2/auth/login",
                                          data=json.dumps({
-                                             "email": "m@ew",
+                                             "email": "m@ew.com",
                                              "password": "dxfdfd#eE"
                                          }),
                                          headers=self.main_header)
@@ -329,26 +270,26 @@ class TestUsers(TestsForApi):
         '''Test for login without any data passed in email key'''
         resp = self.test_client.post("/api/v2/auth/login",
                                      data=json.dumps({
-                                         "": "j@gmail",
+                                         "": "j@gmail.com",
                                          "password": "sdinsund@D2"
                                      }),
                                      headers=self.main_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "Email field must be filled precisely")
+                         "'email' is a required property")
         self.assertEqual(resp.status_code, 400)
 
     def test_for_missing_password_login_key_data(self):
         '''Test for login without any data passed in password key'''
         resp = self.test_client.post("/api/v2/auth/login",
                                      data=json.dumps({
-                                         "": "j@gmail",
-                                         "password": "sdinsund@D2"
+                                         "email": "j@gmail.com",
+                                         "": "sdinsund@D2"
                                      }),
                                      headers=self.main_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "Email field must be filled precisely")
+                         "'password' is a required property")
         self.assertEqual(resp.status_code, 400)
 
     def test_for_login_details_data_types_email(self):
@@ -361,58 +302,18 @@ class TestUsers(TestsForApi):
                                      headers=self.main_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "Email must contain string characters only")
+                         "2014 is not of type 'string'")
         self.assertEqual(resp.status_code, 400)
 
     def test_for_login_details_data_types(self):
         '''Test for login details where wrong data types are given'''
         resp = self.test_client.post("/api/v2/auth/login",
                                      data=json.dumps({
-                                         "email": "e@e",
+                                         "email": "e@e.com",
                                          "password": 123454
                                      }),
                                      headers=self.main_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "Password must contain string characters only")
-        self.assertEqual(resp.status_code, 400)
-
-    def test_for_login_details_extra_field(self):
-        '''Test for login details where an extra field is given'''
-        resp = self.test_client.post("/api/v2/auth/login",
-                                     data=json.dumps({
-                                         "email": "e@e",
-                                         "password": "James@12",
-                                         "admin": "true"
-                                     }),
-                                     headers=self.main_header)
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"],
-                         "Too many fields entered. Only email,password required")
-        self.assertEqual(resp.status_code, 400)
-
-    def test_for_login_details_email_with_space(self):
-        '''Test for login details where email has a space'''
-        resp = self.test_client.post("/api/v2/auth/login",
-                                     data=json.dumps({
-                                         "email": "e@e  ",
-                                         "password": "James@12"
-                                     }),
-                                     headers=self.main_header)
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"],
-                         "Invalid email check for space characters")
-        self.assertEqual(resp.status_code, 400)
-
-    def test_for_login_details_password_with_space(self):
-        '''Test for login details where password has a space'''
-        resp = self.test_client.post("/api/v2/auth/login",
-                                     data=json.dumps({
-                                         "email": "e@e",
-                                         "password": "   James@12"
-                                     }),
-                                     headers=self.main_header)
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"],
-                         "Password cant have space characters")
+                         "123454 is not of type 'string'")
         self.assertEqual(resp.status_code, 400)

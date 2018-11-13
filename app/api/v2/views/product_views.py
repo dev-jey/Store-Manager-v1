@@ -1,14 +1,18 @@
 from flask import Flask, jsonify, request, make_response
+from flask_expects_json import expects_json
 from flask_restful import Resource
+
 '''Local imports'''
 from ..utils.product_validations import Validator_products
 from ..models.product_models import Product_Model
 from .token import Token
 from .main import Initialize
+from .json_schema import PRODUCT_JSON
 
 
 class Product(Resource, Initialize):
 
+    @expects_json(PRODUCT_JSON)
     @Token.token_required
     def post(current_user, self):
         '''Post product endpoint that creates a new product'''
@@ -16,14 +20,9 @@ class Product(Resource, Initialize):
             return self.only_admin
         data = self.restrict1.getJsonData()
         valid = Validator_products(data)
-        valid.validate_missing_data()
-        valid.validate_missing_product_data()
-        valid.try_data_types()
+        valid.validate_length_of_data()
         valid.validate_data_types()
         valid.validate_negations()
-        valid.validate_length_of_data()
-        valid.validate_missing_data_values()
-        valid.validate_missing_product_values()
         data2 = valid.strip_spaces()
         valid.validate_duplication(data2)
         product1 = Product_Model(data2)
@@ -68,6 +67,7 @@ class OneProduct(Resource, Initialize):
                 }), 200)
         return self.no_products
 
+    @expects_json(PRODUCT_JSON)
     @Token.token_required
     def put(current_user, self, productId):
         '''Updates a product details'''
@@ -82,14 +82,8 @@ class OneProduct(Resource, Initialize):
         elif len(products) == 0:
             return self.no_products
         valid = Validator_products(data)
-        valid.validate_missing_data()
-        valid.validate_missing_product_data()
-        valid.try_data_types()
-        valid.validate_data_types()
         valid.validate_negations()
         valid.validate_length_of_data()
-        valid.validate_missing_data_values()
-        valid.validate_missing_product_values()
         data2 = valid.strip_spaces()
         product = Product_Model(data2)
         product.update(productId)

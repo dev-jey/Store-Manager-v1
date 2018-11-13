@@ -1,105 +1,7 @@
-
 from .base_test import *
 
 
 class TestProducts(TestsForApi):
-    def test_for_empty_product_registration(self):
-        '''Tests for an empty product registration'''
-        resp = self.test_client.post("/api/v2/products",
-                                     data=json.dumps({
-                                         "title": "",
-                                         "category": "Phones",
-                                         "price": 40000,
-                                         "quantity": 10,
-                                         "minimum_stock": 1,
-                                         "description": "great products to have while at home"
-                                     }),
-                                     headers=self.admin_header)
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Product title is missing")
-        self.assertEqual(resp.status_code, 400)
-
-    def test_for_empty_category_product_registration(self):
-        '''Tests for an empty product category registration'''
-        resp = self.test_client.post("/api/v2/products",
-                                     data=json.dumps({
-                                         "title": "Royce1",
-                                         "category": "",
-                                         "price": 40000,
-                                         "quantity": 10,
-                                         "minimum_stock": 1,
-                                         "description": "great products to have while at home"
-                                     }),
-                                     headers=self.admin_header)
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Product category is missing")
-        self.assertEqual(resp.status_code, 400)
-
-    def test_for_empty_product_price_registration(self):
-        '''Tests for an empty product price registration'''
-        resp = self.test_client.post("/api/v2/products",
-                                     data=json.dumps({
-                                         "title": "Royce2",
-                                         "category": "Food",
-                                         "price": "",
-                                         "quantity": 10,
-                                         "minimum_stock": 1,
-                                         "description": "great products to have while at home"
-                                     }),
-                                     headers=self.admin_header)
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Product price is missing")
-        self.assertEqual(resp.status_code, 400)
-
-    def test_for_empty_product_quantity_registration(self):
-        '''Tests for an empty product quantity registration'''
-        resp = self.test_client.post("/api/v2/products",
-                                     data=json.dumps({
-                                         "title": "Royce3",
-                                         "category": "Food",
-                                         "price": 200,
-                                         "quantity": "",
-                                         "minimum_stock": 1,
-                                         "description": "great products to have while at home"
-                                     }),
-                                     headers=self.admin_header)
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Product quantity is missing")
-        self.assertEqual(resp.status_code, 400)
-
-    def test_for_empty_product_minumum_stock_registration(self):
-        '''Tests for an empty product minimum stock registration'''
-        resp = self.test_client.post("/api/v2/products",
-                                     data=json.dumps({
-                                         "title": "Royce4",
-                                         "category": "Food",
-                                         "price": 200,
-                                         "quantity": 55,
-                                         "minimum_stock": "",
-                                         "description": "great products to have while at home"
-                                     }),
-                                     headers=self.admin_header)
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"],
-                         "Product minimum_stock is missing")
-        self.assertEqual(resp.status_code, 400)
-
-    def test_for_empty_product_description_registration(self):
-        '''Tests for an empty product description registration'''
-        resp = self.test_client.post("/api/v2/products",
-                                     data=json.dumps({
-                                         "title": "Royce5",
-                                         "category": "Food",
-                                         "price": 200,
-                                         "quantity": 12,
-                                         "minimum_stock": 1,
-                                         "description": ""
-                                     }),
-                                     headers=self.admin_header)
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"], "Product description is missing")
-        self.assertEqual(resp.status_code, 400)
-
     def test_for_empty_keys_product_title_registration(self):
         '''Tests for an empty product title key registration'''
         resp = self.test_client.post("/api/v2/products",
@@ -114,7 +16,7 @@ class TestProducts(TestsForApi):
                                      headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "Product title key/field missing or mistyped")
+                         "'title' is a required property")
         self.assertEqual(resp.status_code, 400)
 
     def test_for_empty_keys_product_category_registration(self):
@@ -131,7 +33,7 @@ class TestProducts(TestsForApi):
                                      headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(
-            response["message"], "Product category key/field missing or mistyped")
+            response["message"], "'category' is a required property")
         self.assertEqual(resp.status_code, 400)
 
     def test_for_empty_keys_product_price_registration(self):
@@ -148,7 +50,7 @@ class TestProducts(TestsForApi):
                                      headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "Product price key/field missing or mistyped")
+                         "'price' is a required property")
         self.assertEqual(resp.status_code, 400)
 
     def test_for_empty_keys_product_quantity_registration(self):
@@ -165,7 +67,7 @@ class TestProducts(TestsForApi):
                                      headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(
-            response["message"], "Product quantity key/field missing or mistyped")
+            response["message"], "'quantity' is a required property")
         self.assertEqual(resp.status_code, 400)
 
     def test_for_empty_keys_product_minimum_stock_registration(self):
@@ -182,7 +84,7 @@ class TestProducts(TestsForApi):
                                      headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(
-            response["message"], "Product minimum stock key/field missing or mistyped")
+            response["message"], "'minimum_stock' is a required property")
         self.assertEqual(resp.status_code, 400)
 
     def test_for_empty_keys_product_description_registration(self):
@@ -199,7 +101,7 @@ class TestProducts(TestsForApi):
                                      headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(
-            response["message"], "Product description key/field missing or mistyped")
+            response["message"], "'description' is a required property")
         self.assertEqual(resp.status_code, 400)
 
     def test_for_duplicate_product_registration(self):
@@ -226,24 +128,6 @@ class TestProducts(TestsForApi):
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Minmum stock cant be more than quantity")
-        self.assertEqual(resp.status_code, 400)
-
-    def test_product_more_than_six_attributes(self):
-        '''Test for many attributes'''
-        resp = self.test_client.post("/api/v2/products",
-                                     data=json.dumps({
-                                         "title": "infinix8",
-                                         "category": "phones",
-                                         "price": 3000,
-                                         "quantity": 1,
-                                         "minimum_stock": 5,
-                                         "description": "great phone to have at home daily",
-                                         "date": 12
-                                     }),
-                                     headers=self.admin_header)
-        response = json.loads(resp.data)
-        self.assertEqual(response["message"],
-                         "Error, Excess fields given")
         self.assertEqual(resp.status_code, 400)
 
     def test_product_details_negative(self):
@@ -286,7 +170,7 @@ class TestProducts(TestsForApi):
                                      data=json.dumps({}),
                                      headers=self.admin_header)
         response = json.loads(resp.data)
-        self.assertEqual(response["message"], "No product details given yet")
+        self.assertEqual(response["message"], "'title' is a required property")
         self.assertEqual(resp.status_code, 400)
 
     def test_if_price_is_converted_to_a_float(self):
@@ -397,7 +281,7 @@ class TestProducts(TestsForApi):
                                      headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "Title field only accepts a string")
+                         "1212 is not of type 'string'")
         self.assertEqual(resp.status_code, 400)
 
     def test_post_product_wrong_data_types_category(self):
@@ -414,7 +298,7 @@ class TestProducts(TestsForApi):
                                      headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "Category field only accepts a string")
+                         "455 is not of type 'string'")
         self.assertEqual(resp.status_code, 400)
 
     def test_post_product_wrong_data_types_price(self):
@@ -431,7 +315,7 @@ class TestProducts(TestsForApi):
                                      headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(
-            response["message"], "Price field only accepts a float or an integer")
+            response["message"], "'food' is not of type 'number'")
         self.assertEqual(resp.status_code, 400)
 
     def test_post_product_wrong_data_types_quantity(self):
@@ -448,7 +332,7 @@ class TestProducts(TestsForApi):
                                      headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "Quantity field only accepts an integer")
+                         "'ASas' is not of type 'integer'")
         self.assertEqual(resp.status_code, 400)
 
     def test_post_product_wrong_data_types_minimum_stock(self):
@@ -465,5 +349,5 @@ class TestProducts(TestsForApi):
                                      headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "Minimum stock field only accepts an integer")
+                         "'jemo' is not of type 'integer'")
         self.assertEqual(resp.status_code, 400)

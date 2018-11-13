@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, make_response
 from flask_restful import Resource
+from flask_expects_json import expects_json
 from werkzeug.security import generate_password_hash, check_password_hash
 from instance.config import app_config
 import datetime
@@ -9,9 +10,12 @@ from ..utils.user_validations import User_validator
 from ..models.user_model import User_Model
 from .token import Token
 from .main import Initialize
+from .json_schema import USER_LOGIN_JSON, USER_JSON
+
 
 class SignUp(Resource, Initialize):
     '''Signup endpont'''
+    @expects_json(USER_JSON)
     @Token.token_required
     def post(current_user, self):
         '''Method to create a new user'''
@@ -21,9 +25,6 @@ class SignUp(Resource, Initialize):
             return self.only_admin
         data = self.restrict1.getJsonData()
         valid = User_validator(data)
-        valid.validate_missing_keys_signup()
-        valid.validate_data_types_signup()
-        valid.validate_missing_data_signup()
         valid.validate_signup_password()
         user2 = valid.space_strip()
         valid.validate_user_exists(user2)
@@ -95,14 +96,10 @@ class GetUsers(Resource, Initialize):
 
 class Login(Resource, Initialize):
     '''Login endpoint'''
-
+    @expects_json(USER_LOGIN_JSON)
     def post(self):
         '''Method to login a user and create a unique JWT token'''
         data = self.restrict1.getJsonData()
-        valid = User_validator(data)
-        valid.validate_missing_data_login()
-        valid.validate_data_types_login()
-        valid.validate_empty_items_login()
         email = data["email"].strip()
         password = data["password"].strip()
         users = self.item.get()

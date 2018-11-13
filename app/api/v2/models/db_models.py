@@ -23,7 +23,7 @@ class Db(object):
                 if os.getenv("APP_SETTINGS") == "production":
                     self.conn = psycopg2.connect(os.environ['DATABASE_URL'],
                                                  sslmode='require')
-            except:
+            except Exception as e:
                 return jsonify({"message": "Connection Failed"})
         self.conn.autocommit = True
         return self.conn

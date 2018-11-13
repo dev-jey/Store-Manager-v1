@@ -41,7 +41,7 @@ class TestsForApi(unittest.TestCase):
             "password": "as@dsDdz2a"
         })
 
-        signup_attendant = self.test_client.post("/api/v2/auth/signup",
+        self.test_client.post("/api/v2/auth/signup",
                                                  data=self.attendant,
                                                  headers={
                                                      'x-access-token': self.admin_token,

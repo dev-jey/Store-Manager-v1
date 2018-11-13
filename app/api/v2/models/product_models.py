@@ -46,8 +46,8 @@ class Product_Model(InitializeConnection):
                      self.data["minimum_stock"], self.data["description"],
                      self.date, self.productId)
                 )
-            except Exception as e:
-                print(e)
+            except Exception:
+                pass
         else:
             abort(403, "Product title already exists, try another one")
 
