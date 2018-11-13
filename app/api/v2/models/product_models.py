@@ -1,20 +1,15 @@
 import psycopg2
 from flask import jsonify, abort
-import datetime
 
-from .db_models import Db
+from .main_model import InitializeConnection
 
 
-class Product_Model(Db):
+class Product_Model(InitializeConnection):
     '''Inittializes a new product'''
 
     def __init__(self, data=None):
+        InitializeConnection.__init__(self)
         self.data = data
-        self.date = datetime.datetime.now()
-        self.db = Db()
-        self.conn = self.db.createConnection()
-        self.db.createTables()
-        self.cursor = self.conn.cursor()
 
     def save(self):
         '''Method to save a product by appending it to existing
@@ -38,7 +33,6 @@ class Product_Model(Db):
         self.cursor.execute("SELECT id FROM products WHERE title = %s",
                             (self.data["title"],))
         row = self.cursor.fetchone()
-        self.date = datetime.datetime.now()
         if not row or row[0] == self.productId:
             try:
                 self.cursor.execute(

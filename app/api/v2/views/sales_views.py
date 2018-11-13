@@ -29,7 +29,7 @@ class Sale(Resource, Initialize):
                 email = current_user["email"]
                 sale_obj = Sales_Model(
                     email, product, data["quantity"], price)
-                
+
                 self.restrict1.restrictSales(data, product, price)
                 sale_obj.save()
                 self.item.updateQuanitity(product["quantity"], title)
@@ -68,7 +68,6 @@ class Sale(Resource, Initialize):
 
 
 class OneSale(Resource, Initialize):
-
     @Token.token_required
     def get(current_user, self, saleId):
         '''Gets one sale using its sale Id'''

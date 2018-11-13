@@ -1,25 +1,20 @@
 import psycopg2
 from flask import jsonify
-import datetime
 
-from .db_models import Db
+from .main_model import InitializeConnection
 
 
-class Sales_Model():
+class Sales_Model(InitializeConnection):
     '''Initializes a sale'''
 
     def __init__(self, email=None, product=None,
                  quantity=None, subtotals=None):
+        InitializeConnection.__init__(self)
         if email or product or quantity or subtotals:
             self.email = email
             self.title = product["title"]
             self.quantity = quantity
             self.subtotals = subtotals
-        self.date = datetime.datetime.now()
-        self.db = Db()
-        self.conn = self.db.createConnection()
-        self.db.createTables()
-        self.cursor = self.conn.cursor()
 
     def save(self):
         '''Saves a sale to sale records'''
@@ -30,7 +25,6 @@ class Sales_Model():
              self.subtotals, self.date),)
 
     def get(self):
-        self.cursor = self.conn.cursor()
         sql = "SELECT * FROM sales"
         self.cursor.execute(sql)
         sales = self.cursor.fetchall()

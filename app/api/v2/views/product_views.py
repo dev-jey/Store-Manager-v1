@@ -17,15 +17,20 @@ class Product(Resource, Initialize):
         data = self.restrict1.getJsonData()
         valid = Validator_products(data)
         valid.validate_missing_data()
+        valid.validate_missing_product_data()
+        valid.try_data_types()
         valid.validate_data_types()
         valid.validate_negations()
+        valid.validate_length_of_data()
+        valid.validate_missing_data_values()
+        valid.validate_missing_product_values()
         data2 = valid.strip_spaces()
         valid.validate_duplication(data2)
         product1 = Product_Model(data2)
         product1.save()
         return make_response(jsonify({
             "Message": "Successfully added",
-            "Products": product1.get()
+            "Products": data
         }), 201)
 
     @Token.token_required
@@ -78,8 +83,13 @@ class OneProduct(Resource, Initialize):
             return self.no_products
         valid = Validator_products(data)
         valid.validate_missing_data()
+        valid.validate_missing_product_data()
+        valid.try_data_types()
         valid.validate_data_types()
         valid.validate_negations()
+        valid.validate_length_of_data()
+        valid.validate_missing_data_values()
+        valid.validate_missing_product_values()
         data2 = valid.strip_spaces()
         product = Product_Model(data2)
         product.update(productId)
