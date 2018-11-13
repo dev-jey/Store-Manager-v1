@@ -1,4 +1,4 @@
-from flask import make_response, jsonify, abort
+from flask import abort
 
 
 class Validator_sales(object):
@@ -22,7 +22,7 @@ class Validator_sales(object):
             abort(400, Message)
         try:
             self.data["quantity"] = int(self.data["quantity"])
-        except:
+        except Exception:
             Message = "Quantity must be an integer"
             abort(400, Message)
         if int(self.data["quantity"]) <= 0:

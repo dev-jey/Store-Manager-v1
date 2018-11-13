@@ -1,5 +1,4 @@
-import psycopg2
-from flask import jsonify, abort
+from flask import abort
 
 from .main_model import InitializeConnection
 
@@ -34,7 +33,6 @@ class Product_Model(InitializeConnection):
                             (self.data["title"],))
         row = self.cursor.fetchone()
         if not row or row[0] == self.productId:
-            try:
                 self.cursor.execute(
                     """UPDATE products SET title = %s, category = %s, price = %s,
                         quantity = %s, minimum_stock = %s, description = %s,
@@ -46,8 +44,6 @@ class Product_Model(InitializeConnection):
                      self.data["minimum_stock"], self.data["description"],
                      self.date, self.productId)
                 )
-            except Exception:
-                pass
         else:
             abort(403, "Product title already exists, try another one")
 

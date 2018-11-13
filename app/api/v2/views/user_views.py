@@ -1,11 +1,11 @@
-from flask import Flask, jsonify, request, make_response
+from flask import jsonify, request, make_response
 from flask_restful import Resource
 from flask_expects_json import expects_json
 from werkzeug.security import generate_password_hash, check_password_hash
 from instance.config import app_config
 import datetime
 import jwt
-'''Local imports'''
+
 from ..utils.user_validations import User_validator
 from ..models.user_model import User_Model
 from .token import Token

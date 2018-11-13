@@ -5,7 +5,6 @@ from .views.user_views import SignUp, Login, UpdateUser, Signout, GetUsers
 from .views.product_views import Product, OneProduct
 from .views.sales_views import Sale, OneSale
 
-'''Creation of blue prints and routes for endpoints'''
 blprint2 = Blueprint('api2', __name__, url_prefix="/api/v2")
 api = Api(blprint2)
 api.add_resource(SignUp, "/auth/signup")

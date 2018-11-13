@@ -16,7 +16,6 @@ class Testing(Config):
     '''Class to set Testing mode configurations'''
     DEBUG = False
 
-'''A dictionary to store all configurations for easy access'''
 app_config = {
     "development": Development,
     "testing": Testing

@@ -73,11 +73,10 @@ class TestSales(TestsForApi):
                                      }),
                                      headers=self.attendant_header)
         response = json.loads(resp.data)
-        self.assertEqual(
-            response["message"], 
+        self.assertEqual(response["message"],
             "{'title': 'orange', 'quantity': '1', 'role': 'Admin'} has too many properties")
         self.assertEqual(resp.status_code, 400)
-    
+
     def test_post_sale_negative_quantity_given(self):
         '''Test to assert the quantity less than zero'''
         resp = self.test_client.post("/api/v2/sales",

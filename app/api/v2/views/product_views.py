@@ -1,8 +1,7 @@
-from flask import Flask, jsonify, request, make_response
+from flask import jsonify, make_response
 from flask_expects_json import expects_json
 from flask_restful import Resource
 
-'''Local imports'''
 from ..utils.product_validations import Validator_products
 from ..models.product_models import Product_Model
 from .token import Token
@@ -11,7 +10,6 @@ from .json_schema import PRODUCT_JSON
 
 
 class Product(Resource, Initialize):
-
     @Token.token_required
     @expects_json(PRODUCT_JSON)
     def post(current_user, self):

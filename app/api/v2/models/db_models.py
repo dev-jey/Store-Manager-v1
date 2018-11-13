@@ -1,8 +1,6 @@
 import psycopg2
 import os
 from werkzeug.security import generate_password_hash
-
-from instance.config import Config
 from sys import modules
 
 
@@ -71,20 +69,14 @@ class Db(object):
                 )
             """
         ]
-        try:
-            password = str(generate_password_hash("admin", method='sha256'))
-            for table in tables:
-                cursor.execute(table)
-        except Exception:
-            pass
-        try:
-            cursor.execute(
-                """INSERT INTO users (email, password, admin) 
-                    VALUES('admin@gmail.com',%s ,%s);""",
-                (password, True)
-            )
-        except:
-            pass
+        password = str(generate_password_hash("admin", method='sha256'))
+        for table in tables:
+            cursor.execute(table)
+        cursor.execute(
+            """INSERT INTO users (email, password, admin) 
+                VALUES('admin@gmail.com',%s ,%s);""",
+            (password, True)
+        )
         self.conn.commit()
         self.conn.close()
 

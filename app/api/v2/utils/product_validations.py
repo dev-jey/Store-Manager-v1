@@ -1,5 +1,5 @@
 from ..models.product_models import Product_Model
-from flask import make_response, jsonify, abort
+from flask import abort
 
 
 class Validator_products(object):
@@ -10,7 +10,7 @@ class Validator_products(object):
 
     def validate_negations(self):
         '''Checks to avoid any negative interger/float values 
-        from being registered'''
+           from being registered'''
         if int(self.data["price"]) < 1 or int(self.data["quantity"]) < 1 or int(self.data["minimum_stock"]) < 0:
             Message = "Price, quantity or minmum stock cant be negative"
             abort(400, Message)
@@ -27,7 +27,7 @@ class Validator_products(object):
         if not self.data:
             Message = "No product details given yet"
             abort(400, Message)
-    
+
     def check_data_type_not_string(self):
         if type(self.data["price"]) is not float:
                 Message = "Price field only accepts a float or an integer"
@@ -47,7 +47,7 @@ class Validator_products(object):
             self.data["price"] = float(self.data["price"])
             self.data["quantity"] = int(self.data["quantity"])
             self.data["minimum_stock"] = int(self.data["minimum_stock"])
-        except:
+        except Exception:
             self.check_data_type_not_string()
 
     def strip_spaces(self):

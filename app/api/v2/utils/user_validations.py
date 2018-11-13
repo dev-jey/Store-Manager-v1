@@ -1,5 +1,5 @@
 from ..models.user_model import User_Model
-from flask import make_response, jsonify, abort
+from flask import abort
 import re
 
 
@@ -39,8 +39,9 @@ class User_validator(object):
         elif not any(char.islower() for char in self.data["password"]):
             Message = "Password must have a lower case character"
             abort(400, Message)
-            
-    def validate_user_exists(self, data2):
+
+    @staticmethod
+    def validate_user_exists(data2):
         '''Checks if the registration email already exists on the database'''
         item = User_Model()
         users = item.get()

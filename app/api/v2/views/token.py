@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, make_response
 from functools import wraps
 from instance.config import app_config
 import jwt
-'''Local imports'''
+
 from ..models.user_model import User_Model
 from ..models.db_models import Db
 

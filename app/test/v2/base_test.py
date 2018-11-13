@@ -2,9 +2,7 @@ import unittest
 import json
 from app import create_app
 
-from instance.config import Config
 from app.api.v2.models.db_models import Db
-from app.api.v2.models.user_model import User_Model
 
 
 class TestsForApi(unittest.TestCase):

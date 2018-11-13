@@ -1,6 +1,3 @@
-import psycopg2
-from flask import jsonify
-
 from .main_model import InitializeConnection
 
 
@@ -42,7 +39,8 @@ class Sales_Model(InitializeConnection):
 
         return allsales
 
-    def checkSales(self):
+    @staticmethod
+    def checkSales():
         sale1 = Sales_Model()
         sales = sale1.get()
         return len(sales)

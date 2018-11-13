@@ -1,9 +1,8 @@
-from flask import Flask, jsonify, request, make_response
+from flask import jsonify, make_response
 from flask_restful import Resource
 from flask_expects_json import expects_json
-'''Local imports'''
+
 from ..utils.sales_validations import Validator_sales
-from ..models.product_models import Product_Model
 from ..models.sale_models import Sales_Model
 from .token import Token
 from .main import Initialize
