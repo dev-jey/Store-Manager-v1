@@ -5,19 +5,10 @@ from ..utils.sales_validations import Validator_sales
 from ..models.product_models import Product_Model
 from ..models.sale_models import Sales_Model
 from .token import Token
-from .restrict import Restrictions
+from .main import Initialize
 
 
-class Sale(Resource):
-
-    def __init__(self):
-        self.restrict1 = Restrictions()
-        self.must_login = self.restrict1.must_login
-        self.no_sales = self.restrict1.no_sales
-        self.no_products = self.restrict1.no_products
-        self.only_attendant = self.restrict1.only_attendant
-        self.sales_obj = Sales_Model()
-        self.item = Product_Model()
+class Sale(Resource, Initialize):
 
     @Token.token_required
     def post(current_user, self):
@@ -76,13 +67,7 @@ class Sale(Resource):
         return response
 
 
-class OneSale(Resource):
-    def __init__(self):
-        self.restrict1 = Restrictions()
-        self.must_login = self.restrict1.must_login
-        self.no_sales = self.restrict1.no_sales
-        self.access_denied = self.restrict1.access_denied
-        self.sales_obj = Sales_Model()
+class OneSale(Resource, Initialize):
 
     @Token.token_required
     def get(current_user, self, saleId):

@@ -4,16 +4,10 @@ from flask_restful import Resource
 from ..utils.product_validations import Validator_products
 from ..models.product_models import Product_Model
 from .token import Token
-from .restrict import Restrictions
+from .main import Initialize
 
 
-class Product(Resource):
-    def __init__(self):
-        self.restrict1 = Restrictions()
-        self.only_admin = self.restrict1.only_admin
-        self.must_login = self.restrict1.must_login
-        self.no_products = self.restrict1.no_products
-        self.product = Product_Model()
+class Product(Resource, Initialize):
 
     @Token.token_required
     def post(current_user, self):
@@ -51,13 +45,7 @@ class Product(Resource):
         return response
 
 
-class OneProduct(Resource):
-    def __init__(self):
-        self.restrict1 = Restrictions()
-        self.only_admin = self.restrict1.only_admin
-        self.must_login = self.restrict1.must_login
-        self.no_products = self.restrict1.no_products
-        self.product = Product_Model()
+class OneProduct(Resource, Initialize):
 
     @Token.token_required
     def get(current_user, self, productId):

@@ -8,17 +8,10 @@ import jwt
 from ..utils.user_validations import User_validator
 from ..models.user_model import User_Model
 from .token import Token
-from .restrict import Restrictions
+from .main import Initialize
 
-
-class SignUp(Resource):
+class SignUp(Resource, Initialize):
     '''Signup endpont'''
-
-    def __init__(self):
-        self.restrict1 = Restrictions()
-        self.only_admin = self.restrict1.only_admin
-        self.must_login = self.restrict1.must_login
-
     @Token.token_required
     def post(current_user, self):
         '''Method to create a new user'''
@@ -48,12 +41,7 @@ class SignUp(Resource):
         }), 201)
 
 
-class Signout(Resource):
-    def __init__(self):
-        self.restrict1 = Restrictions()
-        self.must_login = self.restrict1.must_login
-        self.item = User_Model()
-
+class Signout(Resource, Initialize):
     @Token.token_required
     def post(current_user, self):
         if not current_user:
@@ -67,13 +55,7 @@ class Signout(Resource):
             }), 200)
 
 
-class UpdateUser(Resource):
-    def __init__(self):
-        self.restrict1 = Restrictions()
-        self.must_login = self.restrict1.must_login
-        self.only_admin = self.restrict1.only_admin
-        self.no_user = self.restrict1.no_user
-        self.item = User_Model()
+class UpdateUser(Resource, Initialize):
 
     @Token.token_required
     def put(current_user, self, userId):
@@ -96,12 +78,7 @@ class UpdateUser(Resource):
         return self.no_user
 
 
-class GetUsers(Resource):
-    def __init__(self):
-        self.restrict1 = Restrictions()
-        self.must_login = self.restrict1.must_login
-        self.no_user = self.restrict1.no_user
-        self.item = User_Model()
+class GetUsers(Resource, Initialize):
 
     @Token.token_required
     def get(current_user, self):
@@ -116,15 +93,8 @@ class GetUsers(Resource):
         }), 401)
 
 
-class Login(Resource):
+class Login(Resource, Initialize):
     '''Login endpoint'''
-
-    def __init__(self):
-        self.restrict1 = Restrictions()
-        self.must_login = self.restrict1.must_login
-        self.no_user = self.restrict1.no_user
-        self.fail_login = self.restrict1.login_failed
-        self.item = User_Model()
 
     def post(self):
         '''Method to login a user and create a unique JWT token'''
