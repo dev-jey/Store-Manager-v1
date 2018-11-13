@@ -16,8 +16,8 @@ class Product(Resource, Initialize):
     @expects_json(PRODUCT_JSON)
     def post(current_user, self):
         '''Post product endpoint that creates a new product'''
-        if current_user and not current_user["admin"]:
-            return self.only_admin
+        self.restrict1.checkUserStatus(current_user)
+        self.restrict1.checkAdminStatus(current_user)
         data = self.restrict1.getJsonData()
         valid = Validator_products(data)
         valid.check_empty()
@@ -38,8 +38,7 @@ class Product(Resource, Initialize):
     def get(current_user, self):
         '''Get all products endpoint that fetches all products
         and outputs them to the user'''
-        if not current_user:
-            return self.must_login
+        self.restrict1.checkUserStatus(current_user)
         products = self.product.get()
         if len(products) > 0:
             response = make_response(jsonify({
@@ -56,8 +55,7 @@ class OneProduct(Resource, Initialize):
     @Token.token_required
     def get(current_user, self, productId):
         '''Gets one product using its product id'''
-        if not current_user:
-            return self.must_login
+        self.restrict1.checkUserStatus(current_user)
         products = self.product.get()
         if len(products) == 0:
             return self.no_products
@@ -73,15 +71,13 @@ class OneProduct(Resource, Initialize):
     @expects_json(PRODUCT_JSON)
     def put(current_user, self, productId):
         '''Updates a product details'''
-        if current_user and not current_user["admin"]:
-            return self.only_admin
+        self.restrict1.checkUserStatus(current_user)
+        self.restrict1.checkAdminStatus(current_user)
         data = self.restrict1.getJsonData()
         product = Product_Model(data)
         products = product.get()
         found = [prod for prod in products if prod["id"] == int(productId)]
         if not found:
-            return self.no_products
-        elif len(products) == 0:
             return self.no_products
         valid = Validator_products(data)
         valid.check_empty()
@@ -89,6 +85,7 @@ class OneProduct(Resource, Initialize):
         valid.validate_data_types()
         valid.validate_length_of_data()
         valid.validate_negations()
+        valid.validate_availability()
         data2 = valid.strip_spaces()
         product = Product_Model(data2)
         product.update(productId)
@@ -105,8 +102,7 @@ class OneProduct(Resource, Initialize):
     def delete(current_user, self, productId):
         '''deletes product'''
         products = self.product.get()
-        if not current_user["admin"]:
-            return self.only_admin
+        self.restrict1.checkAdminStatus(current_user)
         for item in products:
             if productId == item["id"]:
                 self.product.delete(productId)

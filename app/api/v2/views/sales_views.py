@@ -17,10 +17,8 @@ class Sale(Resource, Initialize):
     def post(current_user, self):
         '''Create an endpoint for attendants to make sales'''
         data = self.restrict1.getJsonData()
-        if not current_user:
-            return self.must_login
-        if current_user["admin"]:
-            return self.only_attendant
+        self.restrict1.checkUserStatus(current_user)
+        self.restrict1.checkAttendantStatus(current_user)
         valid = Validator_sales(data)
         valid.validate_data_types()
         title = data["title"].strip().lower()
@@ -31,28 +29,28 @@ class Sale(Resource, Initialize):
                 email = current_user["email"]
                 sale_obj = Sales_Model(
                     email, product, data["quantity"], price)
-
                 self.restrict1.restrictSales(data, product, price)
                 sale_obj.save()
                 self.product.updateQuanitity(product["quantity"], title)
                 if product["quantity"] < int(product["minimum_stock"]):
-                    return make_response(jsonify({
+                    response = make_response(jsonify({
                         "Message": "Minimum stock reached",
                         "Sales made": product,
                         "Total": price
                     }), 201)
-                return make_response(jsonify({
-                    "message": "successfully sold",
-                    "Sales made": product,
-                    "Total": price
-                }), 201)
+                else:
+                    response = make_response(jsonify({
+                        "message": "successfully sold",
+                        "Sales made": product,
+                        "Total": price
+                    }), 201)
+                return response
         return self.no_products
 
     @Token.token_required
     def get(current_user, self):
         '''Method for getting all sales'''
-        if not current_user:
-            return self.must_login
+        self.restrict1.checkUserStatus(current_user)
         sales = self.sales_obj.get()
         total = 0
         for sale in sales:
@@ -73,8 +71,7 @@ class OneSale(Resource, Initialize):
     @Token.token_required
     def get(current_user, self, saleId):
         '''Gets one sale using its sale Id'''
-        if not current_user:
-            return self.must_login
+        self.restrict1.checkUserStatus(current_user)
         sales = self.sales_obj.get()
         len_Sales = self.sales_obj.checkSales()
         if not len_Sales:

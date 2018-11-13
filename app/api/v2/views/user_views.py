@@ -19,14 +19,13 @@ class SignUp(Resource, Initialize):
     @Token.token_required
     def post(current_user, self):
         '''Method to create a new user'''
-        if not current_user:
-            return self.must_login
-        if not current_user["admin"]:
-            return self.only_admin
+        self.restrict1.checkUserStatus(current_user)
+        self.restrict1.checkAdminStatus(current_user)
         data = self.restrict1.getJsonData()
         valid = User_validator(data)
         valid.validate_missing_data_signup()
         valid.validate_signup_password()
+        valid.check_digits()
         user2 = valid.space_strip()
         valid.validate_user_exists(user2)
         email = data["email"].strip().lower()
@@ -46,8 +45,7 @@ class SignUp(Resource, Initialize):
 class Signout(Resource, Initialize):
     @Token.token_required
     def post(current_user, self):
-        if not current_user:
-            return self.must_login
+        self.restrict1.checkUserStatus(current_user)
         if 'x-access-token' in request.headers:
             token = request.headers["x-access-token"]
             date = datetime.datetime.now()
@@ -62,8 +60,7 @@ class UpdateUser(Resource, Initialize):
     @Token.token_required
     def put(current_user, self, userId):
         '''Update user endpoint'''
-        if not current_user["admin"]:
-            return self.only_admin
+        self.restrict1.checkAdminStatus(current_user)
         users = self.item.get()
         for user in users:
             if user["id"] == userId:
@@ -84,8 +81,7 @@ class GetUsers(Resource, Initialize):
 
     @Token.token_required
     def get(current_user, self):
-        if not current_user:
-            return self.must_login
+        self.restrict1.checkUserStatus(current_user)
         users = self.item.get()
         if len(users) < 1:
             return self.no_user

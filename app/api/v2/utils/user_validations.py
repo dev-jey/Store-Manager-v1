@@ -25,7 +25,12 @@ class User_validator(object):
         elif len(self.data["password"]) < 6 or len(self.data["password"]) > 12:
             Message = "Password must be long than 6 characters or less than 12"
             abort(400, Message)
-        elif not any(char.isdigit() for char in self.data["password"]):
+        elif not re.search("^.*(?=.*[@#$%^&+=]).*$", self.data["password"]):
+            Message = "Password must have a special charater"
+            abort(400, Message)
+
+    def check_digits(self):
+        if not any(char.isdigit() for char in self.data["password"]):
             Message = "Password must have a digit"
             abort(400, Message)
         elif not any(char.isupper() for char in self.data["password"]):
@@ -34,10 +39,7 @@ class User_validator(object):
         elif not any(char.islower() for char in self.data["password"]):
             Message = "Password must have a lower case character"
             abort(400, Message)
-        elif not re.search("^.*(?=.*[@#$%^&+=]).*$", self.data["password"]):
-            Message = "Password must have a special charater"
-            abort(400, Message)
-
+            
     def validate_user_exists(self, data2):
         '''Checks if the registration email already exists on the database'''
         item = User_Model()

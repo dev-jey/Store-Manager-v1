@@ -35,6 +35,18 @@ class Restrictions:
             "Message": "Login failed, check credentials"
         }), 403)
 
+    def checkUserStatus(self, current_user):
+        if not current_user:
+            abort(self.must_login)
+
+    def checkAdminStatus(self, current_user):
+        if not current_user["admin"]:
+            abort(self.only_admin)
+
+    def checkAttendantStatus(self, current_user):
+        if current_user["admin"]:
+            abort(self.only_attendant)
+
     @staticmethod
     def getJsonData():
         return request.get_json()
