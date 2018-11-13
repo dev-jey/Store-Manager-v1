@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, make_response
+from flask import jsonify, request, make_response
 from functools import wraps
 from instance.config import app_config
 import jwt
