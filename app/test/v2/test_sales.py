@@ -11,10 +11,7 @@ class TestSales(TestsForApi):
                                          "title": "tecno",
                                          "quantity": 1
                                      }),
-                                     headers={
-                                         'x-access-token': self.attendant_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.attendant_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"], "successfully sold")
         self.assertEqual(resp.status_code, 201)
@@ -26,12 +23,9 @@ class TestSales(TestsForApi):
                                          "title": "tecno yo",
                                          "quantity": 1
                                      }),
-                                     headers={
-                                         'x-access-token': self.attendant_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.attendant_header)
         response = json.loads(resp.data)
-        self.assertEqual(response["Message"], "Product non-existent")
+        self.assertEqual(response["Message"], "No product/products found")
         self.assertEqual(resp.status_code, 404)
 
     def test_post_sales_no_title_given(self):
@@ -40,10 +34,7 @@ class TestSales(TestsForApi):
                                      data=json.dumps({
                                          "quantity": 1
                                      }),
-                                     headers={
-                                         'x-access-token': self.attendant_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.attendant_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Must enter the title key well")
@@ -55,10 +46,7 @@ class TestSales(TestsForApi):
                                      data=json.dumps({
                                          "title": "tecno"
                                      }),
-                                     headers={
-                                         'x-access-token': self.attendant_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.attendant_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Must enter the quantity key well")
@@ -69,10 +57,7 @@ class TestSales(TestsForApi):
         resp = self.test_client.post("/api/v2/sales",
                                      data=json.dumps({
                                      }),
-                                     headers={
-                                         'x-access-token': self.attendant_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.attendant_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Must enter the product details in the body")
@@ -86,10 +71,7 @@ class TestSales(TestsForApi):
                                          "quantity": 1,
                                          "role": "Admin"
                                      }),
-                                     headers={
-                                         'x-access-token': self.attendant_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.attendant_header)
         response = json.loads(resp.data)
         self.assertEqual(
             response["message"], "Too many fields provided, only the title and quantity is required")
@@ -102,10 +84,7 @@ class TestSales(TestsForApi):
                                          "title": "orange",
                                          "quantity": -1000
                                      }),
-                                     headers={
-                                         'x-access-token': self.attendant_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.attendant_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"], "Quantity must be more than 0")
         self.assertEqual(resp.status_code, 400)
@@ -117,10 +96,7 @@ class TestSales(TestsForApi):
                                          "title": "orange",
                                          "quantity": 1
                                      }),
-                                     headers={
-                                         'x-access-token': self.admin_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["Message"], "Must be an attendant!")
         self.assertEqual(resp.status_code, 401)
@@ -128,9 +104,7 @@ class TestSales(TestsForApi):
     def test_get_all_sales_admin(self):
         '''Test for admin getting all sales'''
         resp = self.test_client.get("/api/v2/sales",
-                                    headers={
-                                        'x-access-token': self.admin_token
-                                    })
+                                    headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["Message"], "Success")
         self.assertEqual(resp.status_code, 200)
@@ -138,9 +112,7 @@ class TestSales(TestsForApi):
     def test_get_all_sales_attendant(self):
         '''Test for attendant getting all sales'''
         resp = self.test_client.get("/api/v2/sales",
-                                    headers={
-                                        'x-access-token': self.attendant_token
-                                    })
+                                    headers=self.attendant_header)
         response = json.loads(resp.data)
         self.assertEqual(response["Message"], "Success")
         self.assertEqual(resp.status_code, 200)
@@ -148,23 +120,17 @@ class TestSales(TestsForApi):
     def test_get_one_sale_admin(self):
         '''Test for getting one sale for an admin'''
         resp = self.test_client.get("/api/v2/sales/1",
-                                    headers={
-                                        'x-access-token': self.admin_token
-                                    })
+                                    headers=self.admin_header)
         self.assertEqual(resp.status_code, 200)
 
     def test_get_one_sale_attendant(self):
         '''Test for getting one sale for an attendant'''
         resp = self.test_client.get("/api/v2/sales/1",
-                                    headers={
-                                        'x-access-token': self.attendant_token
-                                    })
+                                    headers=self.attendant_header)
         self.assertEqual(resp.status_code, 200)
 
     def test_get_one_sale_wrong_id_given(self):
         '''Test for getting one sale when a person enters wrong saleID'''
         resp = self.test_client.get("/api/v2/sales/400",
-                                    headers={
-                                        'x-access-token': self.attendant_token
-                                    })
+                                    headers=self.attendant_header)
         self.assertEqual(resp.status_code, 404)

@@ -14,10 +14,7 @@ class TestProducts(TestsForApi):
                                          "minimum_stock": 1,
                                          "description": "great products to have while at home"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"], "Product title is missing")
         self.assertEqual(resp.status_code, 400)
@@ -33,10 +30,7 @@ class TestProducts(TestsForApi):
                                          "minimum_stock": 1,
                                          "description": "great products to have while at home"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"], "Product category is missing")
         self.assertEqual(resp.status_code, 400)
@@ -52,10 +46,7 @@ class TestProducts(TestsForApi):
                                          "minimum_stock": 1,
                                          "description": "great products to have while at home"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"], "Product price is missing")
         self.assertEqual(resp.status_code, 400)
@@ -71,10 +62,7 @@ class TestProducts(TestsForApi):
                                          "minimum_stock": 1,
                                          "description": "great products to have while at home"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"], "Product quantity is missing")
         self.assertEqual(resp.status_code, 400)
@@ -90,10 +78,7 @@ class TestProducts(TestsForApi):
                                          "minimum_stock": "",
                                          "description": "great products to have while at home"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Product minimum_stock is missing")
@@ -110,10 +95,7 @@ class TestProducts(TestsForApi):
                                          "minimum_stock": 1,
                                          "description": ""
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"], "Product description is missing")
         self.assertEqual(resp.status_code, 400)
@@ -129,10 +111,7 @@ class TestProducts(TestsForApi):
                                          "Minimum_stock": 2,
                                          "description": "great products to have at home while sleeping"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Product title key/field missing or mistyped")
@@ -149,10 +128,7 @@ class TestProducts(TestsForApi):
                                          "Minimum_stock": 2,
                                          "description": "great products to have at home while sleeping"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(
             response["message"], "Product category key/field missing or mistyped")
@@ -169,10 +145,7 @@ class TestProducts(TestsForApi):
                                          "Minimum_stock": 2,
                                          "description": "great products to have at home while sleeping"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Product price key/field missing or mistyped")
@@ -189,10 +162,7 @@ class TestProducts(TestsForApi):
                                          "Minimum_stock": 2,
                                          "description": "great products to have at home while sleeping"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(
             response["message"], "Product quantity key/field missing or mistyped")
@@ -209,10 +179,7 @@ class TestProducts(TestsForApi):
                                          "": 2,
                                          "description": "great products to have at home while sleeping"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(
             response["message"], "Product minimum stock key/field missing or mistyped")
@@ -229,10 +196,7 @@ class TestProducts(TestsForApi):
                                          "minimum_stock": 2,
                                          "": "great products to have at home while sleeping"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(
             response["message"], "Product description key/field missing or mistyped")
@@ -242,10 +206,7 @@ class TestProducts(TestsForApi):
         '''Test for duplicate product registration'''
         resp = self.test_client.post("/api/v2/products",
                                      data=self.product,
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"], "Product already exists")
         self.assertEqual(resp.status_code, 400)
@@ -261,10 +222,7 @@ class TestProducts(TestsForApi):
                                          "minimum_stock": 5,
                                          "description": "great phone to have at home daily"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Minmum stock cant be more than quantity")
@@ -282,10 +240,7 @@ class TestProducts(TestsForApi):
                                          "description": "great phone to have at home daily",
                                          "date": 12
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Error, Excess fields given")
@@ -302,10 +257,7 @@ class TestProducts(TestsForApi):
                                          "minimum_stock": -5,
                                          "description": "great phone to have at home in any situation"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(
             response["message"], "Price, quantity or minmum stock cant be negative")
@@ -322,10 +274,7 @@ class TestProducts(TestsForApi):
                                          "minimum_stock": 5,
                                          "description": "great"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(
             response["message"], "Product description cant be less than 20 characters")
@@ -335,10 +284,7 @@ class TestProducts(TestsForApi):
         '''Test for empty/no product entries'''
         resp = self.test_client.post("/api/v2/products",
                                      data=json.dumps({}),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"], "No product details given yet")
         self.assertEqual(resp.status_code, 400)
@@ -354,10 +300,7 @@ class TestProducts(TestsForApi):
                                          "minimum_stock": 2,
                                          "description": "Great product to possess at school"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["Message"], "Successfully added")
         self.assertEqual(resp.status_code, 201)
@@ -373,10 +316,7 @@ class TestProducts(TestsForApi):
                                          "minimum_stock": 5,
                                          "description": "great products to have at hoome"
                                      }),
-                                     headers={
-                                         'x-access-token': self.admin_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["Message"], "Successfully added")
         self.assertEqual(resp.status_code, 201)
@@ -392,10 +332,7 @@ class TestProducts(TestsForApi):
                                          "minimum_stock": 5,
                                          "description": "great products to have at hoome"
                                      }),
-                                     headers={
-                                         'x-access-token': self.attendant_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.attendant_header)
         response = json.loads(resp.data)
         self.assertEqual(response["Message"], "You must be an admin")
         self.assertEqual(resp.status_code, 403)
@@ -422,37 +359,28 @@ class TestProducts(TestsForApi):
     def test_getting_all_products_success(self):
         '''Test for getting all products'''
         resp = self.test_client.get("/api/v2/products",
-                                    headers={
-                                        'x-access-token': self.admin_token
-                                    })
+                                    headers=self.admin_header)
         self.assertEqual(resp.status_code, 200)
 
     def test_getting_one_product_successful(self):
         '''Test for getting one product'''
         resp = self.test_client.get("/api/v2/products/1",
-                                    headers={
-                                        'x-access-token': self.attendant_token
-                                    })
+                                    headers=self.attendant_header)
         self.assertEqual(resp.status_code, 200)
 
     def test_getting_one_sale_wrong_id(self):
         '''Test for getting one product using wrong id'''
         resp = self.test_client.get("/api/v2/products/5",
-                                    headers={
-                                        'x-access-token': self.attendant_token
-                                    })
+                                    headers=self.attendant_header)
         self.assertEqual(resp.status_code, 404)
 
     def test_for_wrong_product_delete(self):
         '''Tests for a successful product deleting'''
         resp = self.test_client.delete("/api/v2/products/10",
-                                       headers={
-                                           'x-access-token': self.admin_token,
-                                           'content-type': 'application/json'
-                                       })
+                                       headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(
-            response["Message"], "Attempting to delete a product that doesn't exist")
+            response["Message"], "No product/products found")
         self.assertEqual(resp.status_code, 404)
 
     def test_for_product_creation_data_types(self):
@@ -466,10 +394,7 @@ class TestProducts(TestsForApi):
                                          "minimum_stock": 12,
                                          "description": "This is a great product to have while in camping sites"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Title field only accepts a string")
@@ -486,10 +411,7 @@ class TestProducts(TestsForApi):
                                          "minimum_stock": 12,
                                          "description": "This is a great product to have while in camping sites"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Category field only accepts a string")
@@ -506,10 +428,7 @@ class TestProducts(TestsForApi):
                                          "minimum_stock": 12,
                                          "description": "This is a great product to have while in camping sites"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(
             response["message"], "Price field only accepts a float or an integer")
@@ -526,10 +445,7 @@ class TestProducts(TestsForApi):
                                          "minimum_stock": 12,
                                          "description": "This is a great product to have while in camping sites"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Quantity field only accepts an integer")
@@ -546,10 +462,7 @@ class TestProducts(TestsForApi):
                                          "minimum_stock": "jemo",
                                          "description": "This is a great product to have while in camping sites"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json',
-                                         'x-access-token': self.admin_token
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Minimum stock field only accepts an integer")

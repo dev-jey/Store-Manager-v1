@@ -45,12 +45,12 @@ class Product_Model(Db):
                     """UPDATE products SET title = %s, category = %s, price = %s,
                         quantity = %s, minimum_stock = %s, description = %s,
                          date = %s
-                        where title = %s
+                        where id= %s
                         """,
                     (self.data["title"], self.data["category"],
                      self.data["price"], self.data["quantity"],
                      self.data["minimum_stock"], self.data["description"],
-                     self.date, self.data["title"])
+                     self.date, self.productId)
                 )
             except Exception as e:
                 print(e)

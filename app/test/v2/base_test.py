@@ -27,6 +27,10 @@ class TestsForApi(unittest.TestCase):
                                                 'content-type': 'application/json'
                                             })
         self.admin_token = json.loads(admin_login.data.decode())["token"]
+        self.admin_header = {
+            'x-access-token': self.admin_token,
+            'Content-Type': 'application/json'
+        }
         self.attendant = json.dumps({
             "email": "james2@gmail.com",
             "password": "as@dsDdz2a",
@@ -50,6 +54,13 @@ class TestsForApi(unittest.TestCase):
                                                 })
         self.data = json.loads(login_attendant.data.decode())
         self.attendant_token = self.data["token"]
+        self.attendant_header = {
+            'x-access-token': self.attendant_token,
+            'Content-Type': 'application/json'
+        }
+        self.main_header = {
+            'Content-Type': 'application/json'
+        }
         self.product = json.dumps(
             {
                 "title": "tecno",

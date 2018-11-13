@@ -12,10 +12,7 @@ class TestUsers(TestsForApi):
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
-                                    headers={
-                                        'x-access-token': self.admin_token,
-                                        'content-type': 'application/json'
-                                    })
+                                    headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(response["Message"], "User registered")
         self.assertEqual(res.status_code, 201)
@@ -30,10 +27,7 @@ class TestUsers(TestsForApi):
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
-                                    headers={
-                                        'x-access-token': self.admin_token,
-                                        'content-type': 'application/json'
-                                    })
+                                    headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(response["message"],
                          "Too many fields entered. Only 3 required")
@@ -48,10 +42,7 @@ class TestUsers(TestsForApi):
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
-                                    headers={
-                                        'x-access-token': self.admin_token,
-                                        'content-type': 'application/json'
-                                    })
+                                    headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(response["message"],
                          "Email must contain string characters only")
@@ -66,10 +57,7 @@ class TestUsers(TestsForApi):
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
-                                    headers={
-                                        'x-access-token': self.admin_token,
-                                        'content-type': 'application/json'
-                                    })
+                                    headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(
             response["message"], "Password must contain string characters only")
@@ -84,10 +72,7 @@ class TestUsers(TestsForApi):
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
-                                    headers={
-                                        'x-access-token': self.admin_token,
-                                        'content-type': 'application/json'
-                                    })
+                                    headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(response["message"],
                          "Admin role must contain string characters only")
@@ -102,10 +87,7 @@ class TestUsers(TestsForApi):
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
-                                    headers={
-                                        'x-access-token': self.admin_token,
-                                        'content-type': 'application/json'
-                                    })
+                                    headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(response["message"],
                          "Must enter email attribute precisely")
@@ -120,10 +102,7 @@ class TestUsers(TestsForApi):
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
-                                    headers={
-                                        'x-access-token': self.admin_token,
-                                        'content-type': 'application/json'
-                                    })
+                                    headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(response["message"],
                          "Must enter password attribute precisely")
@@ -138,10 +117,7 @@ class TestUsers(TestsForApi):
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
-                                    headers={
-                                        'x-access-token': self.admin_token,
-                                        'content-type': 'application/json'
-                                    })
+                                    headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(response["message"],
                          "Must enter admin attribute precisely")
@@ -156,10 +132,7 @@ class TestUsers(TestsForApi):
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
-                                    headers={
-                                        'x-access-token': self.admin_token,
-                                        'content-type': 'application/json'
-                                    })
+                                    headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(response["message"], "Email cannot have a space")
         self.assertEqual(res.status_code, 400)
@@ -173,10 +146,7 @@ class TestUsers(TestsForApi):
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
-                                    headers={
-                                        'x-access-token': self.admin_token,
-                                        'content-type': 'application/json'
-                                    })
+                                    headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(response["message"], "Password cannot have a space")
         self.assertEqual(res.status_code, 400)
@@ -190,10 +160,7 @@ class TestUsers(TestsForApi):
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
-                                    headers={
-                                        'x-access-token': self.admin_token,
-                                        'content-type': 'application/json'
-                                    })
+                                    headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(response["message"], "Kindly enter your email")
         self.assertEqual(res.status_code, 400)
@@ -207,10 +174,7 @@ class TestUsers(TestsForApi):
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
-                                    headers={
-                                        'x-access-token': self.admin_token,
-                                        'content-type': 'application/json'
-                                    })
+                                    headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(response["message"], "Kindly enter your password")
         self.assertEqual(res.status_code, 400)
@@ -224,10 +188,7 @@ class TestUsers(TestsForApi):
         })
         res = self.test_client.post("/api/v2/auth/signup",
                                     data=data,
-                                    headers={
-                                        'x-access-token': self.admin_token,
-                                        'content-type': 'application/json'
-                                    })
+                                    headers=self.admin_header)
         response = json.loads(res.data)
         self.assertEqual(response["message"],
                          "Kindly enter your admin status true/false")
@@ -240,10 +201,7 @@ class TestUsers(TestsForApi):
                                          "email": "emailcom",
                                          "password": "ssdsdD2@ja",
                                          "admin": "true"}),
-                                     headers={
-                                         'x-access-token': self.admin_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"], "Invalid email")
         self.assertEqual(resp.status_code, 400)
@@ -256,20 +214,14 @@ class TestUsers(TestsForApi):
                                          "password": "ssdsdD2@ja",
                                          "admin": "true"
                                      }),
-                                     headers={
-                                         'x-access-token': self.admin_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.admin_header)
         resp = self.test_client.post("/api/v2/auth/signup",
                                      data=json.dumps({
                                          "email": "maria@gmail.com",
                                          "password": "ssdsdD2@ja",
                                          "admin": "true"
                                      }),
-                                     headers={
-                                         'x-access-token': self.admin_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"], "User already exists")
         self.assertEqual(resp.status_code, 406)
@@ -282,10 +234,7 @@ class TestUsers(TestsForApi):
                                          "password": "dS#e3",
                                          "admin": "true"
                                      }),
-                                     headers={
-                                         'x-access-token': self.admin_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(
             response["message"], "Password must be long than 6 characters or less than 12")
@@ -298,10 +247,7 @@ class TestUsers(TestsForApi):
                                          "email": "jame@gmail.com",
                                          "password": "dhsdsdsdssdhjh3#dDd",
                                          "admin": "true"}),
-                                     headers={
-                                         'x-access-token': self.admin_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(
             response["message"], "Password must be long than 6 characters or less than 12")
@@ -314,10 +260,7 @@ class TestUsers(TestsForApi):
                                          "email": "jame@gmail.com",
                                          "password": "ssrrdjD@",
                                          "admin": "true"}),
-                                     headers={
-                                         'x-access-token': self.admin_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"], "Password must have a digit")
         self.assertEqual(resp.status_code, 400)
@@ -329,10 +272,7 @@ class TestUsers(TestsForApi):
                                          "email": "jame@gmail.com",
                                          "password": "dddsdsd2@",
                                          "admin": "true"}),
-                                     headers={
-                                         'x-access-token': self.admin_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Password must have an upper case character")
@@ -345,10 +285,7 @@ class TestUsers(TestsForApi):
                                          "email": "jame@gmail.com",
                                          "password": "DHDHDDHD2@",
                                          "admin": "true"}),
-                                     headers={
-                                         'x-access-token': self.admin_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Password must have a lower case character")
@@ -361,10 +298,7 @@ class TestUsers(TestsForApi):
                                          "email": "jame@gmail.com",
                                          "password": "ddddssd2D",
                                          "admin": "true"}),
-                                     headers={
-                                         'x-access-token': self.admin_token,
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Password must have a special charater")
@@ -374,9 +308,7 @@ class TestUsers(TestsForApi):
         '''Test for successful login'''
         resp = self.test_client.post("/api/v2/auth/login",
                                      data=self.admin_login_details,
-                                     headers={
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.main_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"], "Login success")
         self.assertEqual(resp.status_code, 200)
@@ -388,9 +320,7 @@ class TestUsers(TestsForApi):
                                              "email": "m@ew",
                                              "password": "dxfdfd#eE"
                                          }),
-                                         headers={
-                                             'content-type': 'application/json'
-                                         })
+                                         headers=self.main_header)
         resp = json.loads(response.data)
         self.assertEqual(resp["Message"], "Login failed, check credentials")
         self.assertEqual(response.status_code, 403)
@@ -402,9 +332,7 @@ class TestUsers(TestsForApi):
                                          "": "j@gmail",
                                          "password": "sdinsund@D2"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.main_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Email field must be filled precisely")
@@ -417,9 +345,7 @@ class TestUsers(TestsForApi):
                                          "": "j@gmail",
                                          "password": "sdinsund@D2"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.main_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Email field must be filled precisely")
@@ -432,9 +358,7 @@ class TestUsers(TestsForApi):
                                          "email": 2014,
                                          "password": "James@12"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.main_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Email must contain string characters only")
@@ -447,9 +371,7 @@ class TestUsers(TestsForApi):
                                          "email": "e@e",
                                          "password": 123454
                                      }),
-                                     headers={
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.main_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Password must contain string characters only")
@@ -463,9 +385,7 @@ class TestUsers(TestsForApi):
                                          "password": "James@12",
                                          "admin": "true"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.main_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Too many fields entered. Only email,password required")
@@ -478,9 +398,7 @@ class TestUsers(TestsForApi):
                                          "email": "e@e  ",
                                          "password": "James@12"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.main_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Invalid email check for space characters")
@@ -493,9 +411,7 @@ class TestUsers(TestsForApi):
                                          "email": "e@e",
                                          "password": "   James@12"
                                      }),
-                                     headers={
-                                         'content-type': 'application/json'
-                                     })
+                                     headers=self.main_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
                          "Password cant have space characters")
