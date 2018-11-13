@@ -46,3 +46,27 @@ class User_validator(object):
             if data2["email"] == user["email"]:
                 Message = "User already exists"
                 abort(406, Message)
+
+    def validate_missing_data_signup(self):
+        '''Validates for any missing data and invalid spaces when someone is signing up'''
+        if self.data["email"] == "":
+            Message = "Kindly enter your email"
+            abort(400, Message)
+
+        if self.data["password"] == "":
+            Message = "Kindly enter your password"
+            abort(400, Message)
+
+        if self.data["admin"] == "":
+            Message = "Kindly enter your admin status true/false"
+            abort(400, Message)
+    
+    def validate_empty_items_login(self):
+        '''Checks if empty values are entered'''
+        if self.data["email"] == "":
+            Message = "Kindly enter your email"
+            abort(400, Message)
+
+        if self.data["password"] == "":
+            Message = "Kindly enter your password"
+            abort(400, Message)

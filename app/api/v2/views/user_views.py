@@ -25,6 +25,7 @@ class SignUp(Resource, Initialize):
             return self.only_admin
         data = self.restrict1.getJsonData()
         valid = User_validator(data)
+        valid.validate_missing_data_signup()
         valid.validate_signup_password()
         user2 = valid.space_strip()
         valid.validate_user_exists(user2)
@@ -102,6 +103,8 @@ class Login(Resource, Initialize):
         data = self.restrict1.getJsonData()
         email = data["email"].strip()
         password = data["password"].strip()
+        valid = User_validator(data)
+        valid.validate_empty_items_login()
         users = self.item.get()
         for user in users:
             if email == user["email"] and check_password_hash(user["password"],

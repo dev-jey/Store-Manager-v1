@@ -22,8 +22,8 @@ def create_app(config_name):
 
     @app.errorhandler(500)
     def server_error(e):
-        logging.exception('An error occurred during a request. %s', e)
-        logging.getLogger('flask_cors').level = logging.DEBUG
-        return "An internal error occured", 500
-    
+        return make_response(jsonify({
+            "message": "An internal error occured"
+        }), 500)
+
     return app

@@ -12,14 +12,16 @@ from .json_schema import PRODUCT_JSON
 
 class Product(Resource, Initialize):
 
-    @expects_json(PRODUCT_JSON)
     @Token.token_required
+    @expects_json(PRODUCT_JSON)
     def post(current_user, self):
         '''Post product endpoint that creates a new product'''
         if current_user and not current_user["admin"]:
             return self.only_admin
         data = self.restrict1.getJsonData()
         valid = Validator_products(data)
+        valid.check_empty()
+        valid.check_int_empty()
         valid.validate_length_of_data()
         valid.validate_data_types()
         valid.validate_negations()
@@ -67,8 +69,8 @@ class OneProduct(Resource, Initialize):
                 }), 200)
         return self.no_products
 
-    @expects_json(PRODUCT_JSON)
     @Token.token_required
+    @expects_json(PRODUCT_JSON)
     def put(current_user, self, productId):
         '''Updates a product details'''
         if current_user and not current_user["admin"]:
@@ -82,8 +84,11 @@ class OneProduct(Resource, Initialize):
         elif len(products) == 0:
             return self.no_products
         valid = Validator_products(data)
-        valid.validate_negations()
+        valid.check_empty()
+        valid.check_int_empty()
+        valid.validate_data_types()
         valid.validate_length_of_data()
+        valid.validate_negations()
         data2 = valid.strip_spaces()
         product = Product_Model(data2)
         product.update(productId)

@@ -9,7 +9,7 @@ class TestSales(TestsForApi):
         resp = self.test_client.post("/api/v2/sales",
                                      data=json.dumps({
                                          "title": "tecno",
-                                         "quantity": 1
+                                         "quantity": "1"
                                      }),
                                      headers=self.attendant_header)
         response = json.loads(resp.data)
@@ -21,7 +21,7 @@ class TestSales(TestsForApi):
         resp = self.test_client.post("/api/v2/sales",
                                      data=json.dumps({
                                          "title": "tecno yo",
-                                         "quantity": 1
+                                         "quantity": "1"
                                      }),
                                      headers=self.attendant_header)
         response = json.loads(resp.data)
@@ -32,7 +32,7 @@ class TestSales(TestsForApi):
         '''Test for posting a sale with no title'''
         resp = self.test_client.post("/api/v2/sales",
                                      data=json.dumps({
-                                         "quantity": 1
+                                         "quantity": "1"
                                      }),
                                      headers=self.attendant_header)
         response = json.loads(resp.data)
@@ -68,14 +68,14 @@ class TestSales(TestsForApi):
         resp = self.test_client.post("/api/v2/sales",
                                      data=json.dumps({
                                          "title": "orange",
-                                         "quantity": 1,
+                                         "quantity": "1",
                                          "role": "Admin"
                                      }),
                                      headers=self.attendant_header)
         response = json.loads(resp.data)
         self.assertEqual(
             response["message"], 
-            "{'title': 'orange', 'quantity': 1, 'role': 'Admin'} has too many properties")
+            "{'title': 'orange', 'quantity': '1', 'role': 'Admin'} has too many properties")
         self.assertEqual(resp.status_code, 400)
     
     def test_post_sale_negative_quantity_given(self):
@@ -83,7 +83,7 @@ class TestSales(TestsForApi):
         resp = self.test_client.post("/api/v2/sales",
                                      data=json.dumps({
                                          "title": "orange",
-                                         "quantity": -1000
+                                         "quantity": "-1000"
                                      }),
                                      headers=self.attendant_header)
         response = json.loads(resp.data)
@@ -95,7 +95,7 @@ class TestSales(TestsForApi):
         resp = self.test_client.post("/api/v2/sales",
                                      data=json.dumps({
                                          "title": "orange",
-                                         "quantity": 1
+                                         "quantity": "1"
                                      }),
                                      headers=self.admin_header)
         response = json.loads(resp.data)

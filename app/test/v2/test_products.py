@@ -8,9 +8,9 @@ class TestProducts(TestsForApi):
                                      data=json.dumps({
                                          "": "infinix1",
                                          "category": "phones",
-                                         "price": 536,
-                                         "quantity": 5,
-                                         "Minimum_stock": 2,
+                                         "price": "536",
+                                         "quantity": "5",
+                                         "Minimum_stock": "2",
                                          "description": "great products to have at home while sleeping"
                                      }),
                                      headers=self.admin_header)
@@ -25,9 +25,9 @@ class TestProducts(TestsForApi):
                                      data=json.dumps({
                                          "title": "infinix2",
                                          "": "phones",
-                                         "price": 536,
-                                         "quantity": 5,
-                                         "Minimum_stock": 2,
+                                         "price": "536",
+                                         "quantity": "5",
+                                         "Minimum_stock": "2",
                                          "description": "great products to have at home while sleeping"
                                      }),
                                      headers=self.admin_header)
@@ -42,9 +42,9 @@ class TestProducts(TestsForApi):
                                      data=json.dumps({
                                          "title": "infinix3",
                                          "category": "phones",
-                                         "": 536,
-                                         "quantity": 5,
-                                         "Minimum_stock": 2,
+                                         "": "536",
+                                         "quantity": "5",
+                                         "Minimum_stock": "2",
                                          "description": "great products to have at home while sleeping"
                                      }),
                                      headers=self.admin_header)
@@ -59,9 +59,9 @@ class TestProducts(TestsForApi):
                                      data=json.dumps({
                                          "title": "infinix4",
                                          "category": "phones",
-                                         "price": 536,
-                                         "": 5,
-                                         "Minimum_stock": 2,
+                                         "price": "536",
+                                         "": "5",
+                                         "Minimum_stock": "2",
                                          "description": "great products to have at home while sleeping"
                                      }),
                                      headers=self.admin_header)
@@ -76,9 +76,9 @@ class TestProducts(TestsForApi):
                                      data=json.dumps({
                                          "title": "infinix5",
                                          "category": "phones",
-                                         "price": 536,
-                                         "quantity": 5,
-                                         "": 2,
+                                         "price": "536",
+                                         "quantity": "5",
+                                         "": "2",
                                          "description": "great products to have at home while sleeping"
                                      }),
                                      headers=self.admin_header)
@@ -93,9 +93,9 @@ class TestProducts(TestsForApi):
                                      data=json.dumps({
                                          "title": "infinix6",
                                          "category": "phones",
-                                         "price": 536,
-                                         "quantity": 5,
-                                         "minimum_stock": 2,
+                                         "price": "536",
+                                         "quantity": "5",
+                                         "minimum_stock": "2",
                                          "": "great products to have at home while sleeping"
                                      }),
                                      headers=self.admin_header)
@@ -119,9 +119,9 @@ class TestProducts(TestsForApi):
                                      data=json.dumps({
                                          "title": "infinix7",
                                          "category": "phones",
-                                         "price": 3000,
-                                         "quantity": 1,
-                                         "minimum_stock": 5,
+                                         "price": "3000",
+                                         "quantity": "1",
+                                         "minimum_stock": "5",
                                          "description": "great phone to have at home daily"
                                      }),
                                      headers=self.admin_header)
@@ -136,9 +136,9 @@ class TestProducts(TestsForApi):
                                      data=json.dumps({
                                          "title": "infinix9",
                                          "category": "phones",
-                                         "price": -3000,
-                                         "quantity": -1,
-                                         "minimum_stock": -5,
+                                         "price": "-3000",
+                                         "quantity": "-1",
+                                         "minimum_stock": "-5",
                                          "description": "great phone to have at home in any situation"
                                      }),
                                      headers=self.admin_header)
@@ -153,9 +153,9 @@ class TestProducts(TestsForApi):
                                      data=json.dumps({
                                          "title": "infinixa",
                                          "category": "phones",
-                                         "price": 3000,
-                                         "quantity": 10,
-                                         "minimum_stock": 5,
+                                         "price": "3000",
+                                         "quantity": "10",
+                                         "minimum_stock": "5",
                                          "description": "great"
                                      }),
                                      headers=self.admin_header)
@@ -179,9 +179,9 @@ class TestProducts(TestsForApi):
                                      data=json.dumps({
                                          "title": "Mandazi",
                                          "category": "food",
-                                         "price": 12050,
-                                         "quantity": 23,
-                                         "minimum_stock": 2,
+                                         "price": "12050",
+                                         "quantity": "23",
+                                         "minimum_stock": "2",
                                          "description": "Great product to possess at school"
                                      }),
                                      headers=self.admin_header)
@@ -195,9 +195,9 @@ class TestProducts(TestsForApi):
                                      data=json.dumps({
                                          "title": "infinixq",
                                          "category": "phones",
-                                         "price": 3000,
-                                         "quantity": 10,
-                                         "minimum_stock": 5,
+                                         "price": "3000",
+                                         "quantity": "10",
+                                         "minimum_stock": "5",
                                          "description": "great products to have at hoome"
                                      }),
                                      headers=self.admin_header)
@@ -211,9 +211,9 @@ class TestProducts(TestsForApi):
                                      data=json.dumps({
                                          "title": "infinixw",
                                          "category": "phones",
-                                         "price": 3000,
-                                         "quantity": 10,
-                                         "minimum_stock": 5,
+                                         "price": "3000",
+                                         "quantity": "10",
+                                         "minimum_stock": "5",
                                          "description": "great products to have at hoome"
                                      }),
                                      headers=self.attendant_header)
@@ -227,9 +227,9 @@ class TestProducts(TestsForApi):
                                      data=json.dumps({
                                          "title": "infinixe",
                                          "category": "phones",
-                                         "price": 3000,
-                                         "quantity": 10,
-                                         "minimum_stock": 5,
+                                         "price": "3000",
+                                         "quantity": "10",
+                                         "minimum_stock": "5",
                                          "description": "great products to have at hoome"
                                      }),
                                      headers={
@@ -273,9 +273,9 @@ class TestProducts(TestsForApi):
                                      data=json.dumps({
                                          "title": 1212,
                                          "category": "phones",
-                                         "price": 10000,
-                                         "quantity": 100,
-                                         "minimum_stock": 12,
+                                         "price": "10000",
+                                         "quantity": "100",
+                                         "minimum_stock": "12",
                                          "description": "This is a great product to have while in camping sites"
                                      }),
                                      headers=self.admin_header)
@@ -289,16 +289,16 @@ class TestProducts(TestsForApi):
         resp = self.test_client.post("/api/v2/products",
                                      data=json.dumps({
                                          "title": "Reebok",
-                                         "category": 455,
-                                         "price": 10000,
-                                         "quantity": 100,
-                                         "minimum_stock": 12,
+                                         "category": 55,
+                                         "price": "10000",
+                                         "quantity": "100",
+                                         "minimum_stock": "12",
                                          "description": "This is a great product to have while in camping sites"
                                      }),
                                      headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "455 is not of type 'string'")
+                         "55 is not of type 'string'")
         self.assertEqual(resp.status_code, 400)
 
     def test_post_product_wrong_data_types_price(self):
@@ -308,14 +308,14 @@ class TestProducts(TestsForApi):
                                          "title": "Reebok1",
                                          "category": "food",
                                          "price": "food",
-                                         "quantity": 100,
-                                         "minimum_stock": 12,
+                                         "quantity": "100",
+                                         "minimum_stock": "12",
                                          "description": "This is a great product to have while in camping sites"
                                      }),
                                      headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(
-            response["message"], "'food' is not of type 'number'")
+            response["message"], "Price field only accepts a float or an integer")
         self.assertEqual(resp.status_code, 400)
 
     def test_post_product_wrong_data_types_quantity(self):
@@ -324,15 +324,15 @@ class TestProducts(TestsForApi):
                                      data=json.dumps({
                                          "title": "Reebok2",
                                          "category": "food",
-                                         "price": 1000,
+                                         "price": "1000",
                                          "quantity": "ASas",
-                                         "minimum_stock": 12,
+                                         "minimum_stock": "12",
                                          "description": "This is a great product to have while in camping sites"
                                      }),
                                      headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "'ASas' is not of type 'integer'")
+                         "Quantity field only accepts an integer")
         self.assertEqual(resp.status_code, 400)
 
     def test_post_product_wrong_data_types_minimum_stock(self):
@@ -341,13 +341,13 @@ class TestProducts(TestsForApi):
                                      data=json.dumps({
                                          "title": "Reebok3",
                                          "category": "food",
-                                         "price": 10000,
-                                         "quantity": 10,
+                                         "price": "10000",
+                                         "quantity": "10",
                                          "minimum_stock": "jemo",
                                          "description": "This is a great product to have while in camping sites"
                                      }),
                                      headers=self.admin_header)
         response = json.loads(resp.data)
         self.assertEqual(response["message"],
-                         "'jemo' is not of type 'integer'")
+                         "Minimum stock field only accepts an integer")
         self.assertEqual(resp.status_code, 400)

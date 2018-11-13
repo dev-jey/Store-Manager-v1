@@ -65,14 +65,14 @@ class TestsForApi(unittest.TestCase):
             {
                 "title": "tecno",
                 "category": "phones",
-                "price": 3000,
-                "quantity": 100,
-                "minimum_stock": 5,
+                "price": "3000",
+                "quantity": "100",
+                "minimum_stock": "5",
                 "description": "great smartphone to have"
             })
         self.sale = json.dumps({
             "title": "tecno",
-            "quantity": 10
+            "quantity": "10"
         })
         self.test_client.post("/api/v2/products", data=self.product,
                               headers={

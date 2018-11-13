@@ -1,6 +1,5 @@
 import psycopg2
 import os
-from flask import jsonify
 from werkzeug.security import generate_password_hash
 
 from instance.config import Config
@@ -23,8 +22,8 @@ class Db(object):
                 if os.getenv("APP_SETTINGS") == "production":
                     self.conn = psycopg2.connect(os.environ['DATABASE_URL'],
                                                  sslmode='require')
-            except Exception as e:
-                return jsonify({"message": "Connection Failed"})
+            except Exception:
+                return "Connection Failed"
         self.conn.autocommit = True
         return self.conn
 

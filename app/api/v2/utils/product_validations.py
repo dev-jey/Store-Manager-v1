@@ -9,7 +9,7 @@ class Validator_products(object):
     def validate_negations(self):
         '''Checks to avoid any negative interger/float values 
         from being registered'''
-        if self.data["price"] < 1 or self.data["quantity"] < 1 or self.data["minimum_stock"] < 0:
+        if int(self.data["price"]) < 1 or int(self.data["quantity"]) < 1 or int(self.data["minimum_stock"]) < 0:
             Message = "Price, quantity or minmum stock cant be negative"
             abort(400, Message)
 
@@ -33,19 +33,17 @@ class Validator_products(object):
             self.data["quantity"] = int(self.data["quantity"])
             self.data["minimum_stock"] = int(self.data["minimum_stock"])
         except:
-            pass
+            if type(self.data["price"]) is not float:
+                Message = "Price field only accepts a float or an integer"
+                abort(400, Message)
 
-        if type(self.data["price"]) is not float:
-            Message = "Price field only accepts a float or an integer"
-            abort(400, Message)
+            if type(self.data["quantity"]) is not int:
+                Message = "Quantity field only accepts an integer"
+                abort(400, Message)
 
-        if type(self.data["quantity"]) is not int:
-            Message = "Quantity field only accepts an integer"
-            abort(400, Message)
-
-        if type(self.data["minimum_stock"]) is not int:
-            Message = "Minimum stock field only accepts an integer"
-            abort(400, Message)
+            if type(self.data["minimum_stock"]) is not int:
+                Message = "Minimum stock field only accepts an integer"
+                abort(400, Message)
 
     def strip_spaces(self):
         title = self.data["title"].strip().lower()
@@ -73,3 +71,29 @@ class Validator_products(object):
             if data2["title"] == product["title"]:
                 Message = "Product already exists"
                 abort(400, Message)
+
+    def check_empty(self):
+        if self.data["title"] == "":
+                Message = "Product title is missing"
+                abort(400, Message)
+
+        if self.data["category"] == "":
+            Message = "Product category is missing"
+            abort(400, Message)
+
+        if self.data["description"] == "":
+            Message = "Product description is missing"
+            abort(400, Message)
+    
+    def check_int_empty(self):
+        if self.data["price"] == "":
+            Message = "Product price is missing"
+            abort(400, Message)
+
+        if self.data["quantity"] == "":
+            Message = "Product quantity is missing"
+            abort(400, Message)
+
+        if self.data["minimum_stock"] == "":
+            Message = "Product minimum_stock is missing"
+            abort(400, Message)

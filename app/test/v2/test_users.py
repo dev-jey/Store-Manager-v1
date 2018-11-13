@@ -118,7 +118,7 @@ class TestUsers(TestsForApi):
                                     data=data,
                                     headers=self.admin_header)
         response = json.loads(res.data)
-        self.assertEqual(response["message"], "Invalid email")
+        self.assertEqual(response["message"], "Kindly enter your email")
         self.assertEqual(res.status_code, 400)
 
     def test_empty_password(self):
@@ -132,7 +132,7 @@ class TestUsers(TestsForApi):
                                     data=data,
                                     headers=self.admin_header)
         response = json.loads(res.data)
-        self.assertEqual(response["message"], "Password must be long than 6 characters or less than 12")
+        self.assertEqual(response["message"], "Kindly enter your password")
         self.assertEqual(res.status_code, 400)
 
     def test_wrong_email_signup(self):
