@@ -9,40 +9,40 @@
 ### To run this project you should follow the following steps
 **Find the web UI here**  
 
-<https://codemarble254.github.io/Store-Manager/UI/> 
+<https://codemarble254.github.io/Store-Manager-Final/UI/> 
 
 **Find the app on heroku**  
 
 <https://jemo-store-manager.herokuapp.com/> 
 
-    1. Create a virual enviroment with the command
+   1. Create a virual enviroment with the command
 
 ```
     $ virtualenv -p python3 env
 ```
 
-    2. Activate the env with the command
+   2. Activate the env with the command
 
 ```
     $ source env/bin/activate
 ```
 
-    3. Install git
+   3. Install git
 ```
     sudo apt install git
 
 ```
 
-    4. clone this repo
+   4. clone this repo
 ```
     $ git clone https://github.com/codeMarble254/Store-Manager-v1.git
 ```
-    5. cd into the folder 
+   5. cd into the folder 
 ```
     Store-Manager-v1
 ```
 
-    6. export environment variables 
+   6. export environment variables 
 ```
     $ export DB_URL="storemanager"
     $ export TEST_DB_URL="test_db"
@@ -51,34 +51,34 @@
     $ export FLASK_APP=run.py
 ```
 
-    7. create the development database
+   7. create the development database
 ```
     createdb storemanager
 ```
 
-    8. create the testing database
+   8. create the testing database
 ```
     $ createdb test_db
 ```
 
-    9. Switch to `develop` branch
+   9. Switch to `develop` branch
 ```
     $ git checkout develop
 ```
 
-    10. install requirements
+   10. install requirements
 ```
     $ pip install -r requirements.txt
 ```
 
 ### Now we are ready to run
 
-    11. for tests run
+   11. for tests run
 ```
     pytest -v --cov=app
 ```
 
-    12. for the application run  
+   12. for the application run  
 ```
     $ flask run
 ```
@@ -112,7 +112,9 @@ Flask \
 Postgres SQL
 
 ## **Acknowledgements**
-
-    1. Andela Kenya
-
-    2. My collegues and group mates
+```
+Andela Kenya
+```
+```
+My collegues and group mates
+```
