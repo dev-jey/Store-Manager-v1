@@ -1,32 +1,26 @@
-import psycopg2
-from flask import jsonify, make_response, abort
-from werkzeug.security import generate_password_hash
-from .db_models import Db
+'''This module does all user data manipulation'''
+from .main_model import InitializeConnection
 
 
-class User_Model(Db):
+class User_Model(InitializeConnection):
 
     '''Initializes a new user object'''
 
     def __init__(self, email=None, password=None, admin=False):
+        InitializeConnection.__init__(self)
         self.email = email
         self.password = password
         self.admin = admin
-        self.db = Db()
-        self.conn = self.db.createConnection()
-        self.db.createTables()
-        self.cursor = self.conn.cursor()
 
     def save(self):
+        '''method for saving users'''
         self.cursor.execute(
             "INSERT INTO users(email,password,admin) VALUES(%s,%s,%s)", (
                 self.email, self.password, self.admin,)
         )
-        self.cursor.execute("SELECT id FROM users WHERE email = %s", (self.email,))
-        row = self.cursor.fetchone()
-        self.id = row[0]
 
     def get(self):
+        '''Method to get all users from db'''
         sql = "SELECT * FROM users"
         self.cursor.execute(sql)
         users = self.cursor.fetchall()
@@ -42,13 +36,17 @@ class User_Model(Db):
         return allusers
 
     def update(self, userId):
+        '''Method should  update a user and set him/her to admin'''
         self.cursor.execute(
             "UPDATE users SET admin = %s WHERE id = %s", (True, userId,)
         )
-    
+
     def logout(self, token, date):
         '''method to logout a user from the system'''
         self.cursor.execute(
-                "INSERT INTO blacklist (token, date) VALUES (%s,%s)",
-                (token, date,)
+            "INSERT INTO blacklist (token, date) VALUES (%s,%s)",
+            (token, date,)
         )
+
+    def __repr__(self):
+        return self.conn.close()
