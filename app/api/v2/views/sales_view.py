@@ -1,13 +1,15 @@
 from flask import jsonify, make_response
 from flask_restful import Resource
+from flask_expects_json import expects_json
 
 from ..models.sales_model import Sale_Model
 from .token import Token
 from .main import Initialize
-
+from .json_schema import CART_JSON
 
 class Sale(Resource, Initialize):
 
+    @expects_json(CART_JSON)
     @Token.token_required
     def post(current_user, self):
         '''Create an endpoint for attendants to make sales'''

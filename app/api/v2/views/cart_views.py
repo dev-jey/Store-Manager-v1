@@ -110,7 +110,7 @@ class OneItem(Resource, Initialize):
     
     @Token.token_required
     def put(current_user, self, itemId):
-        '''Method for deleting a single item in cart'''
+        '''Method for updating a single item in cart'''
         self.restrict1.checkUserStatus(current_user)
         self.restrict1.checkAttendantStatus(current_user)
         data = self.restrict1.getJsonData()

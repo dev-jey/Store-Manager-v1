@@ -2,7 +2,7 @@ from .main_model import InitializeConnection
 
 
 class Cart_Model(InitializeConnection):
-    '''Initializes a sale'''
+    '''Initializes a cart'''
 
     def __init__(self, email=None, product=None,
                  quantity=None, subtotals=None):
@@ -14,7 +14,7 @@ class Cart_Model(InitializeConnection):
             self.subtotals = subtotals
 
     def save(self):
-        '''Saves a sale to sale records'''
+        '''Saves a cart item to the table'''
         self.cursor.execute(
             """INSERT INTO cart(email, title, quantity, subtotals,
              date) VALUES(%s,%s,%s,%s,%s)""",
@@ -47,6 +47,7 @@ class Cart_Model(InitializeConnection):
 
 
     def get(self):
+        '''Get all cart elements'''
         sql = "SELECT * FROM cart"
         self.cursor.execute(sql)
         cart = self.cursor.fetchall()
@@ -65,6 +66,7 @@ class Cart_Model(InitializeConnection):
         return allitems
 
     def get_one_item_quantity(self, title):
+        '''Get the quantity of one item in the cart'''
         self.cursor.execute(
             """SELECT quantity FROM cart Where title = %s""", (
                title,)
@@ -74,6 +76,7 @@ class Cart_Model(InitializeConnection):
         return new_quantity
     
     def get_one_item(self, title):
+        '''Get one cart item from the table'''
         self.cursor.execute(
             """SELECT * FROM cart Where title = %s""", (
                title,)
@@ -92,11 +95,13 @@ class Cart_Model(InitializeConnection):
         return cart_item
 
     def delete(self):
+        '''Empty cart'''
         self.cursor.execute(
             "DELETE from cart"
         )
     
     def delete_one(self, itemId):
+        '''Delete a single element from the cart'''
         self.cursor.execute(
             "DELETE from cart where id = %s",
             (itemId,)
@@ -105,6 +110,7 @@ class Cart_Model(InitializeConnection):
 
     @staticmethod
     def checkCart():
+        '''Check if the cart is empty'''
         cart1 = Cart_Model()
         cart = cart1.get()
         return len(cart)
