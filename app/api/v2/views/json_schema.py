@@ -32,7 +32,7 @@ USER_LOGIN_JSON = {
     },
     'required': ['email', 'password']
 }
-SALE_JSON = {
+CART_JSON = {
     'type': 'object',
     'maxProperties': 2,
     'properties': {

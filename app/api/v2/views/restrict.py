@@ -19,8 +19,12 @@ class Restrictions:
             "Message": "No product/products found"
         }), 404)
 
+        self.no_items = make_response(jsonify({
+            "Message": "No item in cart"
+        }), 404)
+
         self.no_sales = make_response(jsonify({
-            "Message": "Failure, no sales made yet"
+            "Message": "No sale/sales found"
         }), 404)
 
         self.no_user = make_response(jsonify({
@@ -52,14 +56,14 @@ class Restrictions:
         return request.get_json()
 
     @staticmethod
-    def restrictSales(data, product, price):
+    def restrictCart(data, quantity, price):
         response = None
-        if data["quantity"] > product["quantity"] and product["quantity"] != 0:
+        if data["quantity"] > quantity and quantity != 0:
             response = make_response(jsonify({
                 "Message": "Attempting to sell more than there is in stock"
             }), 404)
-        elif product["quantity"] > 0:
-            product["quantity"] = product["quantity"] - \
+        elif quantity > 0:
+            quantity = quantity - \
                 data["quantity"]
         else:
             response = make_response(jsonify({

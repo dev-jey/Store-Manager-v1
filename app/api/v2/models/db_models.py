@@ -52,11 +52,20 @@ class Db(object):
                   """,
 
             """
-            CREATE TABLE IF NOT EXISTS sales(
+            CREATE TABLE IF NOT EXISTS cart(
                 id serial PRIMARY KEY,
                 email varchar(255) REFERENCES users(email) NOT NULL,
                 title varchar(255) REFERENCES products(title) ON UPDATE
                  CASCADE ON DELETE CASCADE,
+                quantity int NOT NULL,
+                subtotals int NOT NULL,
+                date varchar(255) NOT NULL)
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS sales(
+                id serial PRIMARY KEY,
+                email varchar(255) REFERENCES users(email) NOT NULL,
+                title varchar(255) REFERENCES products(title) ON DELETE CASCADE,
                 quantity int NOT NULL,
                 subtotals int NOT NULL,
                 date varchar(255) NOT NULL)
