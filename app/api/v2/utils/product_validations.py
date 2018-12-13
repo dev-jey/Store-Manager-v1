@@ -1,4 +1,5 @@
 from ..models.product_models import Product_Model
+from ..models.category_model import Category_Model
 from flask import abort
 
 
@@ -19,6 +20,15 @@ class Validator_products(object):
             Message = "Minmum stock cant be more than quantity"
             abort(400, Message)
 
+    def check_category_valid(self):
+        '''checks if entered category is valid'''
+        category_obj = Category_Model()
+        categories = category_obj.get()
+        there = [cat for cat in categories if cat["title"].strip(
+        ).lower() == self.data["category"].strip().lower()]
+        if not there:
+            abort(400, "Category non existent")
+
     def validate_length_of_data(self):
         '''Verifies data types of product details'''
         if len(self.data["description"]) < 20:
@@ -30,8 +40,8 @@ class Validator_products(object):
 
     def check_data_type_not_string(self):
         if type(self.data["price"]) is not float:
-                Message = "Price field only accepts a float or an integer"
-                abort(400, Message)
+            Message = "Price field only accepts a float or an integer"
+            abort(400, Message)
 
         if type(self.data["quantity"]) is not int:
             Message = "Quantity field only accepts an integer"
@@ -51,12 +61,12 @@ class Validator_products(object):
             self.check_data_type_not_string()
 
     def strip_spaces(self):
-        title = self.data["title"].strip().lower()
-        category = self.data["category"].strip().lower()
+        title = self.data["title"].lower()
+        category = self.data["category"].lower()
         quantity = self.data["quantity"]
         price = self.data["price"]
         minimum_stock = self.data["minimum_stock"]
-        description = self.data["description"].strip().lower()
+        description = self.data["description"].lower()
         new_prod = {
             "title": title,
             "category": category,
@@ -71,20 +81,19 @@ class Validator_products(object):
         '''Checks if the product title to be
          registered already exists in database'''
         for product in self.products:
-            if data2["title"] == product["title"]:
+            if data2["title"] == product["title"].lower():
                 Message = "Product already exists"
                 abort(400, Message)
 
     def check_empty(self):
         if self.data["title"] == "":
-                Message = "Product title is missing"
-                abort(400, Message)
+            Message = "Product title is missing"
+            abort(400, Message)
 
         if self.data["category"] == "":
             Message = "Product category is missing"
             abort(400, Message)
 
-    
     def check_int_empty(self):
         if self.data["price"] == "":
             Message = "Product price is missing"
@@ -101,7 +110,7 @@ class Validator_products(object):
         if self.data["description"] == "":
             Message = "Product description is missing"
             abort(400, Message)
-    
+
     def validate_availability(self):
         if len(self.products) < 0:
             Message = "No product/products found"

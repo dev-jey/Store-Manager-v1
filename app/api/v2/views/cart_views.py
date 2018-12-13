@@ -31,17 +31,22 @@ class Cart(Resource, Initialize):
                 cart = self.cart_obj.get()
                 for itm in cart:
                     if itm["title"] == title:
-                        remaining_quantity = product["quantity"]- itm["quantity"]
-                        self.restrict1.restrictCart(data, remaining_quantity, price)
-                        self.cart_obj.updateQuanitity(data["quantity"], price, title)
-                        new_quantity = self.cart_obj.get_one_item_quantity(title)
-                        remaining_quantity_new = product["quantity"]- new_quantity
+                        remaining_quantity = product["quantity"] - \
+                            itm["quantity"]
+                        self.restrict1.restrictCart(
+                            data, remaining_quantity, price)
+                        self.cart_obj.updateQuanitity(
+                            data["quantity"], price, title)
+                        new_quantity = self.cart_obj.get_one_item_quantity(
+                            title)
+                        remaining_quantity_new = product["quantity"] - \
+                            new_quantity
                         return make_response(jsonify({
-                        "message": "Added",
-                        "Title": product["title"],
-                        "quantity":product["quantity"],
-                        "Available stock": remaining_quantity_new,
-                        "Price":product["price"]
+                            "message": "Added",
+                            "Title": product["title"],
+                            "quantity": product["quantity"],
+                            "Available stock": remaining_quantity_new,
+                            "Price": product["price"]
                         }), 201)
                 self.restrict1.restrictCart(data, product["quantity"], price)
                 cart_obj.save()
@@ -57,9 +62,9 @@ class Cart(Resource, Initialize):
                     response = make_response(jsonify({
                         "message": "Added",
                         "Title": product["title"],
-                        "quantity":product["quantity"],
-                        "Available stock":product["quantity"]-data["quantity"],
-                        "Price":product["price"]
+                        "quantity": product["quantity"],
+                        "Available stock": product["quantity"]-data["quantity"],
+                        "Price": product["price"]
                     }), 201)
                 return response
         return self.no_products
@@ -88,7 +93,8 @@ class Cart(Resource, Initialize):
         '''Method for deleting all items in cart'''
         self.restrict1.checkUserStatus(current_user)
         self.cart_obj.delete()
-        return make_response(jsonify({"message":"cart empty"}))
+        return make_response(jsonify({"message": "cart empty"}))
+
 
 class OneItem(Resource, Initialize):
     @Token.token_required
@@ -107,7 +113,7 @@ class OneItem(Resource, Initialize):
                     "Cart": item
                 }), 200)
         return self.no_items
-    
+
     @Token.token_required
     def put(current_user, self, itemId):
         '''Method for updating a single item in cart'''
@@ -128,11 +134,15 @@ class OneItem(Resource, Initialize):
                 self.restrict1.checkUser(current_user, itm)
                 for product in products:
                     if product["title"] == itm["title"]:
-                        remaining_quantity = product["quantity"]- itm["quantity"]
-                        self.restrict1.restrictCart(data, remaining_quantity, product["price"])
+                        remaining_quantity = product["quantity"] - \
+                            itm["quantity"]
+                        self.restrict1.restrictCart(
+                            data, remaining_quantity, product["price"])
                         price = int(product["price"]) * data["quantity"]
-                        self.cart_obj.add_or_reduce_quantity(data["quantity"], price, itm["title"])
-                        updated_item = self.cart_obj.get_one_item(product["title"])
+                        self.cart_obj.add_or_reduce_quantity(
+                            data["quantity"], price, itm["title"])
+                        updated_item = self.cart_obj.get_one_item(
+                            product["title"])
                         return make_response(jsonify({
                             "Message": "Quantity updated successfully",
                             "Cart": updated_item

@@ -178,7 +178,7 @@ class TestProducts(TestsForApi):
         resp = self.test_client.post("/api/v2/products",
                                      data=json.dumps({
                                          "title": "Mandazi",
-                                         "category": "food",
+                                         "category": "phones",
                                          "price": "12050",
                                          "quantity": "23",
                                          "minimum_stock": "2",

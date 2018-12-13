@@ -16,9 +16,11 @@ class Product_Model(InitializeConnection):
         self.cursor.execute(
             """INSERT INTO products(title,category,price,quantity,
             minimum_stock,description, date) VALUES(%s,%s,%s,%s,%s,%s,%s)""",
-            (self.data["title"], self.data["category"], self.data["price"],
+            (self.data["title"].strip(), self.data["category"].strip(),
+             self.data["price"],
              self.data["quantity"],
-             self.data["minimum_stock"], self.data["description"], self.date),
+             self.data["minimum_stock"],
+             self.data["description"].strip(), self.date),
         )
         self.cursor.execute("SELECT id FROM products WHERE title = %s",
                             (self.data["title"],))
@@ -33,23 +35,43 @@ class Product_Model(InitializeConnection):
                             (self.data["title"],))
         row = self.cursor.fetchone()
         if not row or row[0] == self.productId:
-                self.cursor.execute(
-                    """UPDATE products SET title = %s, category = %s, price = %s,
+            self.cursor.execute(
+                """UPDATE products SET title = %s, category = %s, price = %s,
                         quantity = %s, minimum_stock = %s, description = %s,
                          date = %s
                         where id= %s
                         """,
-                    (self.data["title"], self.data["category"],
-                     self.data["price"], self.data["quantity"],
-                     self.data["minimum_stock"], self.data["description"],
-                     self.date, self.productId)
-                )
+                (self.data["title"].strip(), self.data["category"].strip(),
+                 self.data["price"], self.data["quantity"],
+                 self.data["minimum_stock"], self.data["description"].strip(),
+                 self.date, self.productId)
+            )
         else:
             abort(403, "Product title already exists, try another one")
 
     def get(self):
         sql = "SELECT * FROM products"
         self.cursor.execute(sql)
+        products = self.cursor.fetchall()
+        allproducts = []
+        for product in products:
+            list_of_items = list(product)
+            oneproduct = {}
+            oneproduct["id"] = list_of_items[0]
+            oneproduct["title"] = list_of_items[1]
+            oneproduct["category"] = list_of_items[2]
+            oneproduct["price"] = list_of_items[3]
+            oneproduct["quantity"] = list_of_items[4]
+            oneproduct["minimum_stock"] = list_of_items[5]
+            oneproduct["description"] = list_of_items[6]
+            allproducts.append(oneproduct)
+        return allproducts
+
+    def get_category_products(self, title):
+        self.cursor.execute(
+            "SELECT * FROM products where category =%s",
+            (title,)
+        )
         products = self.cursor.fetchall()
         allproducts = []
         for product in products:

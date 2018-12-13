@@ -5,15 +5,6 @@ class Validator_cart(object):
     def __init__(self, data=None):
         self.data = data
 
-    def strip_spacing(self):
-        title = self.data["title"].strip().lower()
-        quantity = self.data["quantity"]
-        new_cart = {
-            "title": title,
-            "quantity": quantity
-        }
-        return new_cart
-
     def validate_data_types(self):
         '''validates datatype of the title passed'''
 
