@@ -41,3 +41,11 @@ CART_JSON = {
     },
     'required': ['title', 'quantity']
 }
+CATEGORY_JSON = {
+    'type': 'object',
+    'maxProperties': 1,
+    'properties': {
+        'title': {'type': 'string'}
+    },
+    'required': ['title']
+}

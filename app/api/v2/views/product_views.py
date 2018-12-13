@@ -22,10 +22,11 @@ class Product(Resource, Initialize):
         valid.check_int_empty()
         valid.validate_length_of_data()
         valid.validate_data_types()
+        valid.check_category_valid()
         valid.validate_negations()
         data2 = valid.strip_spaces()
         valid.validate_duplication(data2)
-        product1 = Product_Model(data2)
+        product1 = Product_Model(data)
         product1.save()
         return make_response(jsonify({
             "Message": "Successfully added",
@@ -84,8 +85,7 @@ class OneProduct(Resource, Initialize):
         valid.validate_length_of_data()
         valid.validate_negations()
         valid.validate_availability()
-        data2 = valid.strip_spaces()
-        product = Product_Model(data2)
+        product = Product_Model(data)
         product.update(productId)
         prods = Product_Model()
         producs = prods.get()
@@ -107,3 +107,21 @@ class OneProduct(Resource, Initialize):
                 return make_response(jsonify({
                     "message": "Deleted successfully"}), 200)
         return self.no_products
+
+
+class CategoryProduct(Resource, Initialize):
+    '''Gets products from a specific category'''
+    @Token.token_required
+    def get(current_user, self, itemId):
+        '''gets products from a specified category'''
+        self.restrict1.checkUserStatus(current_user)
+        categories = self.category_obj.get()
+        for category in categories:
+            if category["id"] == itemId:
+                print(category["title"])
+                products = self.product.get_category_products(category["title"].strip().lower())
+                return make_response(jsonify({
+                    "message": "success",
+                    "products": products
+                }))
+        return self.restrict1.no_products

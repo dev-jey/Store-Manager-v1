@@ -40,11 +40,11 @@ class TestsForApi(unittest.TestCase):
         })
 
         self.test_client.post("/api/v2/auth/signup",
-                                                 data=self.attendant,
-                                                 headers={
-                                                     'x-access-token': self.admin_token,
-                                                     'content-type': 'application/json'
-                                                 })
+                              data=self.attendant,
+                              headers={
+                                  'x-access-token': self.admin_token,
+                                  'content-type': 'application/json'
+                              })
         login_attendant = self.test_client.post("/api/v2/auth/login",
                                                 data=self.attendant_login_details,
                                                 headers={
@@ -72,16 +72,23 @@ class TestsForApi(unittest.TestCase):
             "title": "tecno",
             "quantity": "10"
         })
+        self.test_client.post("/api/v2/categories", data=json.dumps({
+            "title": "phones"
+        }),
+            headers={
+            'content-type': 'application/json',
+            'x-access-token': self.admin_token
+        })
         self.test_client.post("/api/v2/products", data=self.product,
                               headers={
                                   'content-type': 'application/json',
                                   'x-access-token': self.admin_token
                               })
         self.test_client.post("/api/v2/sales", data=self.sale,
-                                  headers={
-                                      'content-type': 'application/json',
-                                      'x-access-token': self.attendant_token
-                                  })
+                              headers={
+                                  'content-type': 'application/json',
+                                  'x-access-token': self.attendant_token
+                              })
         self.context = self.app.app_context()
         self.context.push()
 

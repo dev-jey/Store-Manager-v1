@@ -31,6 +31,10 @@ class Restrictions:
             "Message": "No user/users found"
         }), 404)
 
+        self.no_categories = make_response(jsonify({
+            "Message": "No category/categories found"
+        }), 404)
+
         self.access_denied = make_response(jsonify({
             "Message": "Access denied"
         }), 401)

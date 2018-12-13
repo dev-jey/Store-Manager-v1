@@ -40,10 +40,19 @@ class Db(object):
                 )
             """,
 
+            """
+            CREATE TABLE IF NOT EXISTS categories(
+                id serial PRIMARY KEY,
+                title varchar(255) NOT NULL UNIQUE,
+                date varchar(255) NOT NULL
+                )
+            """,
+
             """CREATE TABLE IF NOT EXISTS products(
                 id serial PRIMARY KEY,
                  title varchar(255) NOT NULL UNIQUE,
-                 category varchar NOT NULL,
+                  category varchar(255) REFERENCES categories(title) ON 
+                  UPDATE CASCADE ON DELETE CASCADE,
                   price float(45) NOT NULL,
                   quantity int NOT NULL,
                   minimum_stock int NOT NULL,
