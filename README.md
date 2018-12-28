@@ -9,7 +9,7 @@
 ### To run this project you should follow the following steps
 **Find the web UI here**  
 
-<https://codemarble254.github.io/Store-Manager-Final/UI/> 
+<https://codact.github.io/Store-Manager-Final/UI/> 
 
 **Find the app on heroku**  
 
