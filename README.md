@@ -108,8 +108,3 @@ Python \
 Flask \
 Postgres SQL
 
-## **Acknowledgements**
-
-    1. Andela Kenya
-
-    2. My collegues and group mates
