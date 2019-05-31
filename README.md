@@ -7,9 +7,6 @@
 ## This is a simple store management application
 
 ### To run this project you should follow the following steps
-**Find the web UI here**  
-
-<https://codact.github.io/Store-Manager-Final/UI/> 
 
 **Find the app on heroku**  
 
