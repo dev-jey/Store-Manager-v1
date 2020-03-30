@@ -1,7 +1,7 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/67645d217d094e27b72c90cc0656fafc)](https://app.codacy.com/app/codeMarble254/Store-Manager-v1?utm_source=github.com&utm_medium=referral&utm_content=codeMarble254/Store-Manager-v1&utm_campaign=Badge_Grade_Dashboard)
-[![Build Status](https://travis-ci.org/codeMarble254/Store-Manager-v1.svg?branch=bg-fix-heroku-deployment-161331066)](https://travis-ci.org/codeMarble254/Store-Manager-v1)
-[![Maintainability](https://api.codeclimate.com/v1/badges/844b5306d2d6cae17f34/maintainability)](https://codeclimate.com/github/codeMarble254/Store-Manager-v1/maintainability)
-[![Coverage Status](https://coveralls.io/repos/github/codeMarble254/Store-Manager-v1/badge.svg?branch=develop)](https://coveralls.io/github/codeMarble254/Store-Manager-v1?branch=develop)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/67645d217d094e27b72c90cc0656fafc)](https://app.codacy.com/app/dev-jey/Store-Manager-v1?utm_source=github.com&utm_medium=referral&utm_content=codeMarble254/Store-Manager-v1&utm_campaign=Badge_Grade_Dashboard)
+[![Build Status](https://travis-ci.org/codeMarble254/Store-Manager-v1.svg?branch=bg-fix-heroku-deployment-161331066)](https://travis-ci.org/dev-jey/Store-Manager-v1)
+[![Maintainability](https://api.codeclimate.com/v1/badges/844b5306d2d6cae17f34/maintainability)](https://codeclimate.com/github/dev-jey/Store-Manager-v1/maintainability)
+[![Coverage Status](https://coveralls.io/repos/github/codeMarble254/Store-Manager-v1/badge.svg?branch=develop)](https://coveralls.io/github/dev-jey/Store-Manager-v1?branch=develop)
 
 # Store-Manager
 ## This is a simple store management application
