@@ -72,7 +72,7 @@ class UpdateUser(Resource, Initialize):
                 else:
                     response = make_response(jsonify({
                         "message":  "User already an admin"
-                    }), 403)
+                    }), 401)
                 return response
         return self.no_user
 

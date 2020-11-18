@@ -41,7 +41,7 @@ class Restrictions:
 
         self.login_failed = make_response(jsonify({
             "Message": "Login failed, check credentials"
-        }), 403)
+        }), 401)
 
     def checkUserStatus(self, current_user):
         if not current_user:
