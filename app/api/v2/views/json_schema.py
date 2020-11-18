@@ -36,10 +36,10 @@ CART_JSON = {
     'type': 'object',
     'maxProperties': 2,
     'properties': {
-        'title': {'type': 'string'},
+        'id': {'type': 'string'},
         'quantity': {'type': 'string'}
     },
-    'required': ['title', 'quantity']
+    'required': ['id', 'quantity']
 }
 CATEGORY_JSON = {
     'type': 'object',

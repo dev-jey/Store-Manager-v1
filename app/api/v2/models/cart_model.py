@@ -21,19 +21,19 @@ class Cart_Model(InitializeConnection):
             (self.email, self.title, self.quantity,
              self.subtotals, self.date),)
 
-    def updateQuanitity(self, quantity, price, title):
+    def updateQuanitity(self, quantity, price, _id):
         '''Method is meant to update an item in cart quantity by editing its details in the
         cart table'''
         self.cursor = self.conn.cursor()
-        self.cursor.execute("SELECT quantity,subtotals from cart WHERE title=%s", (title,))
+        self.cursor.execute("SELECT quantity,subtotals from cart WHERE id=%s", (_id,))
         existing_item = self.cursor.fetchone()
         existing_quantity = int(existing_item[0])
         subtotal = int(existing_item[1])
         new_quantity = existing_quantity + quantity
         new_subtotal = subtotal + price
         self.cursor.execute(
-            """UPDATE cart SET quantity = %s, subtotals=%s Where title = %s""", (
-                new_quantity,new_subtotal, title,)
+            """UPDATE cart SET quantity = %s, subtotals=%s Where id = %s""", (
+                new_quantity,new_subtotal, _id,)
         )
     
     def add_or_reduce_quantity(self, quantity, price, title):
@@ -65,11 +65,11 @@ class Cart_Model(InitializeConnection):
 
         return allitems
 
-    def get_one_item_quantity(self, title):
+    def get_one_item_quantity(self, _id):
         '''Get the quantity of one item in the cart'''
         self.cursor.execute(
-            """SELECT quantity FROM cart Where title = %s""", (
-               title,)
+            """SELECT quantity FROM cart Where id = %s""", (
+               _id,)
         )
         cart_items = self.cursor.fetchone()
         new_quantity = int(cart_items[0])

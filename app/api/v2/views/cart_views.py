@@ -20,25 +20,25 @@ class Cart(Resource, Initialize):
         self.restrict1.checkAttendantStatus(current_user)
         valid = Validator_cart(data)
         valid.validate_data_types()
-        title = data["title"].strip().lower()
+        id_ = data["id"].strip().lower()
         products = self.product.get()
         for product in products:
-            if product["title"] == title:
+            if str(product["id"]) == id_:
                 price = int(product["price"]) * data["quantity"]
                 email = current_user["email"]
                 cart_obj = Cart_Model(
                     email, product, data["quantity"], price)
                 cart = self.cart_obj.get()
                 for itm in cart:
-                    if itm["title"] == title:
+                    if str(itm["id"]) == id_:
                         remaining_quantity = product["quantity"] - \
                             itm["quantity"]
                         self.restrict1.restrictCart(
                             data, remaining_quantity, price)
                         self.cart_obj.updateQuanitity(
-                            data["quantity"], price, title)
+                            data["quantity"], price, id_)
                         new_quantity = self.cart_obj.get_one_item_quantity(
-                            title)
+                            id_)
                         remaining_quantity_new = product["quantity"] - \
                             new_quantity
                         return make_response(jsonify({
