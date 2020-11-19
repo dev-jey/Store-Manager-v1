@@ -15,8 +15,8 @@ class User_Model(InitializeConnection):
     def save(self):
         '''method for saving users'''
         self.cursor.execute(
-            "INSERT INTO users(email,password,admin) VALUES(%s,%s,%s)", (
-                self.email, self.password, self.admin,)
+            "INSERT INTO users(email,password,admin, date) VALUES(%s,%s,%s)", (
+                self.email, self.password, self.admin,self.date,)
         )
 
     def get(self):
@@ -37,9 +37,14 @@ class User_Model(InitializeConnection):
 
     def update(self, userId):
         '''Method should  update a user and set him/her to admin'''
-        self.cursor.execute(
-            "UPDATE users SET admin = %s WHERE id = %s", (True, userId,)
-        )
+        if self.admin:
+            self.cursor.execute(
+                "UPDATE users SET admin = %s WHERE id = %s", (False, userId,)
+            )
+        else:
+            self.cursor.execute(
+                "UPDATE users SET admin = %s WHERE id = %s", (True, userId,)
+            )
 
     def logout(self, token, date):
         '''method to logout a user from the system'''

@@ -14,9 +14,9 @@ class Product_Model(InitializeConnection):
         '''Method to save a product by appending it to existing
         products table'''
         self.cursor.execute(
-            """INSERT INTO products(title,category,price,quantity,
+            """INSERT INTO products(title,category_id,price,quantity,
             minimum_stock,description, date) VALUES(%s,%s,%s,%s,%s,%s,%s)""",
-            (self.data["title"].strip(), self.data["category"].strip(),
+            (self.data["title"].strip(), self.data["category_id"].strip(),
              self.data["price"],
              self.data["quantity"],
              self.data["minimum_stock"],
@@ -36,12 +36,12 @@ class Product_Model(InitializeConnection):
         row = self.cursor.fetchone()
         if not row or row[0] == self.productId:
             self.cursor.execute(
-                """UPDATE products SET title = %s, category = %s, price = %s,
+                """UPDATE products SET title = %s, category_id = %s, price = %s,
                         quantity = %s, minimum_stock = %s, description = %s,
                          date = %s
                         where id= %s
                         """,
-                (self.data["title"].strip(), self.data["category"].strip(),
+                (self.data["title"].strip(), self.data["category_id"].strip(),
                  self.data["price"], self.data["quantity"],
                  self.data["minimum_stock"], self.data["description"].strip(),
                  self.date, self.productId)
@@ -56,10 +56,15 @@ class Product_Model(InitializeConnection):
         allproducts = []
         for product in products:
             list_of_items = list(product)
+            self.cursor.execute(
+                "SELECT * FROM categories WHERE id =%s",
+                (list_of_items[2],)
+            )
+            category_details = self.cursor.fetchone()
             oneproduct = {}
             oneproduct["id"] = list_of_items[0]
             oneproduct["title"] = list_of_items[1]
-            oneproduct["category"] = list_of_items[2]
+            oneproduct["category"] = category_details[1]
             oneproduct["price"] = list_of_items[3]
             oneproduct["quantity"] = list_of_items[4]
             oneproduct["minimum_stock"] = list_of_items[5]
@@ -69,7 +74,7 @@ class Product_Model(InitializeConnection):
 
     def get_category_products(self, title):
         self.cursor.execute(
-            "SELECT * FROM products where category =%s",
+            "SELECT * FROM products where category_id =%s",
             (title,)
         )
         products = self.cursor.fetchall()
@@ -79,7 +84,7 @@ class Product_Model(InitializeConnection):
             oneproduct = {}
             oneproduct["id"] = list_of_items[0]
             oneproduct["title"] = list_of_items[1]
-            oneproduct["category"] = list_of_items[2]
+            oneproduct["category_id"] = list_of_items[2]
             oneproduct["price"] = list_of_items[3]
             oneproduct["quantity"] = list_of_items[4]
             oneproduct["minimum_stock"] = list_of_items[5]
@@ -94,11 +99,11 @@ class Product_Model(InitializeConnection):
             (self.productId,)
         )
 
-    def updateQuanitity(self, quantity, title):
+    def updateQuanitity(self, quantity, product_id):
         '''Method is meant to update a product by editing its details in the
         products table'''
         self.cursor = self.conn.cursor()
         self.cursor.execute(
-            """UPDATE products SET quantity = %s Where title = %s""", (
-                quantity, title,)
+            """UPDATE products SET quantity = %s WHERE id = %s""", (
+                quantity, product_id,)
         )

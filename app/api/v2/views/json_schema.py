@@ -7,11 +7,11 @@ PRODUCT_JSON = {
         'price': {'type': 'string'},
         'quantity': {'type': 'string'},
         'description': {'type': 'string'},
-        'category': {'type': 'string'},
+        'category_id': {'type': 'string'},
         'minimum_stock': {'type': 'string'},
     },
     'required': ['title', 'price', 'description',
-                 'category', 'quantity', 'minimum_stock']
+                 'category_id', 'quantity', 'minimum_stock']
 }
 USER_JSON = {
     'type': 'object',

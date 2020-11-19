@@ -24,8 +24,7 @@ class Validator_products(object):
         '''checks if entered category is valid'''
         category_obj = Category_Model()
         categories = category_obj.get()
-        there = [cat for cat in categories if cat["title"].strip(
-        ).lower() == self.data["category"].strip().lower()]
+        there = [cat for cat in categories if str(cat["id"]) == self.data["category_id"]]
         if not there:
             abort(400, "Category non existent")
 
@@ -62,14 +61,14 @@ class Validator_products(object):
 
     def strip_spaces(self):
         title = self.data["title"].lower()
-        category = self.data["category"].lower()
+        category = self.data["category_id"]
         quantity = self.data["quantity"]
         price = self.data["price"]
         minimum_stock = self.data["minimum_stock"]
         description = self.data["description"].lower()
         new_prod = {
             "title": title,
-            "category": category,
+            "category_id": category,
             "quantity": quantity,
             "price": price,
             "minimum_stock": minimum_stock,
@@ -90,7 +89,7 @@ class Validator_products(object):
             Message = "Product title is missing"
             abort(400, Message)
 
-        if self.data["category"] == "":
+        if self.data["category_id"] == "":
             Message = "Product category is missing"
             abort(400, Message)
 

@@ -4,6 +4,7 @@ from flask_expects_json import expects_json
 
 from ..utils.cart_validations import Validator_cart
 from ..models.cart_model import Cart_Model
+from ..models.product_models import Product_Model
 from .token import Token
 from .main import Initialize
 from .json_schema import CART_JSON
@@ -25,22 +26,23 @@ class Cart(Resource, Initialize):
         for product in products:
             if str(product["id"]) == id_:
                 price = int(product["price"]) * data["quantity"]
-                email = current_user["email"]
+                user_id = current_user["id"]
                 cart_obj = Cart_Model(
-                    email, product, data["quantity"], price)
+                    user_id, product, data["quantity"], price)
                 cart = self.cart_obj.get()
                 for itm in cart:
-                    if str(itm["id"]) == id_:
+                    if str(itm["product_id"]) == id_:
                         remaining_quantity = product["quantity"] - \
                             itm["quantity"]
                         self.restrict1.restrictCart(
                             data, remaining_quantity, price)
                         self.cart_obj.updateQuanitity(
-                            data["quantity"], price, id_)
+                            data["quantity"], price, int(itm['id']))
                         new_quantity = self.cart_obj.get_one_item_quantity(
-                            id_)
+                            int(itm['id']))
                         remaining_quantity_new = product["quantity"] - \
-                            new_quantity
+                            data['quantity']
+                        self.product.updateQuanitity(int(remaining_quantity_new), int(id_))
                         return make_response(jsonify({
                             "message": "Added",
                             "Title": product["title"],
@@ -50,6 +52,7 @@ class Cart(Resource, Initialize):
                         }), 201)
                 self.restrict1.restrictCart(data, product["quantity"], price)
                 cart_obj.save()
+                self.product.updateQuanitity(int(product["quantity"]-data["quantity"]), int(id_))
                 if product["quantity"] < int(product["minimum_stock"]):
                     response = make_response(jsonify({
                         "Message": "Minimum stock reached",
@@ -92,6 +95,13 @@ class Cart(Resource, Initialize):
     def delete(current_user, self):
         '''Method for deleting all items in cart'''
         self.restrict1.checkUserStatus(current_user)
+        cart = self.cart_obj.get()
+        products = self.product.get()
+        for product in products:
+            for item in cart:
+                print(item['product_id'], product['id'])
+                if item['product_id'] == product['id']:
+                    self.product.updateQuanitity(int(item["quantity"]+product["quantity"]), int(product['id']))
         self.cart_obj.delete()
         return make_response(jsonify({"message": "cart empty"}))
 
@@ -143,6 +153,7 @@ class OneItem(Resource, Initialize):
                             data["quantity"], price, itm["title"])
                         updated_item = self.cart_obj.get_one_item(
                             product["title"])
+                        self.product.updateQuanitity(int(remaining_quantity), int(id_))
                         return make_response(jsonify({
                             "Message": "Quantity updated successfully",
                             "Cart": updated_item
@@ -157,11 +168,15 @@ class OneItem(Resource, Initialize):
         cart = self.cart_obj.get()
         if not len_cart:
             return self.no_items
-        for item in cart:
-            if int(itemId) == item["id"]:
-                self.restrict1.checkUser(current_user, item)
-                self.cart_obj.delete_one(itemId)
-                return make_response(jsonify({
-                    "Message": "Deleted successfully"
-                }), 200)
+        products = self.product.get()
+        for product in products:
+            if product['id'] == itemId:
+                for item in cart:
+                    if int(itemId) == item["id"]:
+                        self.restrict1.checkUser(current_user, item)
+                        self.product.updateQuanitity(int(item["quantity"]+product["quantity"]), int(id_))
+                        self.cart_obj.delete_one(itemId)
+                        return make_response(jsonify({
+                            "Message": "Deleted successfully"
+                        }), 200)
         return self.no_items

@@ -1,5 +1,6 @@
 import psycopg2
 import os
+import datetime
 from werkzeug.security import generate_password_hash
 from sys import modules
 
@@ -36,7 +37,8 @@ class Db(object):
                 id serial PRIMARY KEY,
                 email varchar(255) UNIQUE NOT NULL,
                 password varchar(255) NOT NULL,
-                admin BOOLEAN NOT NULL
+                admin BOOLEAN NOT NULL,
+                date varchar(255) NOT NULL
                 )
             """,
 
@@ -51,7 +53,7 @@ class Db(object):
             """CREATE TABLE IF NOT EXISTS products(
                 id serial PRIMARY KEY,
                  title varchar(255) NOT NULL UNIQUE,
-                  category varchar(255) REFERENCES categories(title) ON 
+                  category_id int REFERENCES categories(id) ON 
                   UPDATE CASCADE ON DELETE CASCADE,
                   price float(45) NOT NULL,
                   quantity int NOT NULL,
@@ -63,8 +65,8 @@ class Db(object):
             """
             CREATE TABLE IF NOT EXISTS cart(
                 id serial PRIMARY KEY,
-                email varchar(255) REFERENCES users(email) NOT NULL,
-                title varchar(255) REFERENCES products(title) ON UPDATE
+                user_id int REFERENCES users(id) NOT NULL,
+                product_id int REFERENCES products(id) ON UPDATE
                  CASCADE ON DELETE CASCADE,
                 quantity int NOT NULL,
                 subtotals int NOT NULL,
@@ -73,8 +75,9 @@ class Db(object):
             """
             CREATE TABLE IF NOT EXISTS sales(
                 id serial PRIMARY KEY,
-                email varchar(255) REFERENCES users(email) NOT NULL,
-                title varchar(255) REFERENCES products(title) ON DELETE CASCADE,
+                user_id int REFERENCES users(id) NOT NULL,
+                cart_id int REFERENCES cart(id) NOT NULL,
+                product_id int REFERENCES products(id) ON DELETE CASCADE,
                 quantity int NOT NULL,
                 subtotals int NOT NULL,
                 date varchar(255) NOT NULL)
@@ -87,14 +90,15 @@ class Db(object):
                 )
             """
         ]
-        password = str(generate_password_hash("admin", method='sha256'))
+        password = str(generate_password_hash(os.environ.get('PASSWORD'), method='sha256'))
+        email = os.environ.get('EMAIL')
         for table in tables:
             cursor.execute(table)
         try:
             cursor.execute(
-                """INSERT INTO users (email, password, admin) 
-                    VALUES('admin@gmail.com',%s ,%s);""",
-                (password, True)
+                """INSERT INTO users (email, password, admin, date) 
+                    VALUES(%s,%s ,%s, %s);""",
+                (email, password, True, datetime.datetime.now())
             )
         except Exception:
             pass

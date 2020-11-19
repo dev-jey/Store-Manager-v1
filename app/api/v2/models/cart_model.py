@@ -4,21 +4,21 @@ from .main_model import InitializeConnection
 class Cart_Model(InitializeConnection):
     '''Initializes a cart'''
 
-    def __init__(self, email=None, product=None,
+    def __init__(self, user_id=None, product=None,
                  quantity=None, subtotals=None):
         InitializeConnection.__init__(self)
-        if email or product or quantity or subtotals:
-            self.email = email
-            self.title = product["title"]
+        if user_id or product or quantity or subtotals:
+            self.user_id = user_id
+            self.product_id = product["id"]
             self.quantity = quantity
             self.subtotals = subtotals
 
     def save(self):
         '''Saves a cart item to the table'''
         self.cursor.execute(
-            """INSERT INTO cart(email, title, quantity, subtotals,
+            """INSERT INTO cart(user_id, product_id, quantity, subtotals,
              date) VALUES(%s,%s,%s,%s,%s)""",
-            (self.email, self.title, self.quantity,
+            (self.user_id, self.product_id, self.quantity,
              self.subtotals, self.date),)
 
     def updateQuanitity(self, quantity, price, _id):
@@ -56,8 +56,8 @@ class Cart_Model(InitializeConnection):
             list_of_items= list(item)
             oneitem = {}
             oneitem["id"] = list_of_items[0]
-            oneitem["email"] = list_of_items[1]
-            oneitem["title"] = list_of_items[2]
+            oneitem["user_id"] = list_of_items[1]
+            oneitem["product_id"] = list_of_items[2]
             oneitem["quantity"] = list_of_items[3]
             oneitem["subtotals"] = list_of_items[4]
             oneitem["date"] = list_of_items[5]

@@ -4,19 +4,20 @@ from .main_model import InitializeConnection
 class Sale_Model(InitializeConnection):
     '''Initializes a sale'''
 
-    def __init__(self, email=None, title=None,
+    def __init__(self, user_id=None, product_id=None, cart_id=None, 
                  quantity=None, subtotals=None):
         InitializeConnection.__init__(self)
-        if email or title or quantity or subtotals:
-            self.email = email
-            self.title = title
+        if user_id or product_id or quantity or subtotals or cart_id:
+            self.user_id = user_id
+            self.product_id = product_id
+            self.cart_id = cart_id
             self.quantity = quantity
             self.subtotals = subtotals
 
     def save(self):
         '''Saves a sale to sale records'''
         self.cursor.execute(
-            """INSERT INTO sales(email, title, quantity, subtotals,
+            """INSERT INTO sales(user_id, product_id, quantity, subtotals,
              date) VALUES(%s,%s,%s,%s,%s)""",
             (self.email, self.title, self.quantity,
              self.subtotals, self.date),)

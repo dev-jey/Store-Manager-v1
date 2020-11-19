@@ -67,11 +67,10 @@ class Restrictions:
                 "Message": "Attempting to sell more than there is in stock"
             }), 404)
         elif quantity > 0:
-            quantity = quantity - \
-                data["quantity"]
+            response = None
         else:
             response = make_response(jsonify({
-                "Message": "Products sold up"
+                "Message": "You cannot add more than is in stock"
             }), 404)
         if response:
             abort(response)

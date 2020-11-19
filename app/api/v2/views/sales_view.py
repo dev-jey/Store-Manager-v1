@@ -3,6 +3,7 @@ from flask_restful import Resource
 from flask_expects_json import expects_json
 
 from ..models.sales_model import Sale_Model
+from ..models.product_models import Product_Model
 from .token import Token
 from .main import Initialize
 from .json_schema import CART_JSON
@@ -21,8 +22,12 @@ class Sale(Resource, Initialize):
                 "Message": "No items to sell"
             }), 404)
         for item in cart_items:
-            sales_obj = Sale_Model(current_user["email"], item["title"],
+            sales_obj = Sale_Model(current_user["id"], item["id"], cart["id"],
             item["quantity"], item["subtotals"])
+            products = self.product.get()
+            for product in products:
+                if item["id"] == product['id']:
+                    self.product.updateQuanitity(item["quantity"], product['id'])
             sales_obj.save()
         self.cart_obj.delete()
         return make_response(jsonify({
