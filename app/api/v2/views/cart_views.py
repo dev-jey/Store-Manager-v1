@@ -32,10 +32,8 @@ class Cart(Resource, Initialize):
                 cart = self.cart_obj.get()
                 for itm in cart:
                     if str(itm["product_id"]) == id_:
-                        remaining_quantity = product["quantity"] - \
-                            itm["quantity"]
                         self.restrict1.restrictCart(
-                            data, remaining_quantity, price)
+                            data, product["quantity"], price)
                         self.cart_obj.updateQuanitity(
                             data["quantity"], price, int(itm['id']))
                         new_quantity = self.cart_obj.get_one_item_quantity(

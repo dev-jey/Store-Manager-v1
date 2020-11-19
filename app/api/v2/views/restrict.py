@@ -61,19 +61,10 @@ class Restrictions:
 
     @staticmethod
     def restrictCart(data, quantity, price):
-        response = None
-        if data["quantity"] > quantity and quantity != 0:
-            response = make_response(jsonify({
-                "Message": "Attempting to sell more than there is in stock"
-            }), 404)
-        elif quantity > 0:
-            response = None
-        else:
-            response = make_response(jsonify({
+        if quantity == 0:
+            abort(make_response(jsonify({
                 "Message": "You cannot add more than is in stock"
-            }), 404)
-        if response:
-            abort(response)
+            }), 401))
 
     def checkUser(self, current_user, item):
         if not current_user["admin"] and not current_user["email"] == item["email"]:
