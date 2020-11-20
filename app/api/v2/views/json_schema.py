@@ -34,13 +34,15 @@ USER_LOGIN_JSON = {
 }
 CART_JSON = {
     'type': 'object',
-    'maxProperties': 2,
+    'maxProperties': 3,
     'properties': {
-        'id': {'type': 'string'},
-        'quantity': {'type': 'string'}
+        'id': {'type': 'integer'},
+        'quantity': {'type': 'integer'},
+        'status': {'type': 'integer'},
     },
-    'required': ['id', 'quantity']
+    'required': ['id', 'quantity', 'status']
 }
+
 CATEGORY_JSON = {
     'type': 'object',
     'maxProperties': 1,

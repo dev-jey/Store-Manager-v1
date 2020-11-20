@@ -21,17 +21,18 @@ class Cart(Resource, Initialize):
         self.restrict1.checkAttendantStatus(current_user)
         valid = Validator_cart(data)
         valid.validate_data_types()
-        id_ = data["id"].strip().lower()
+        id_ = data["id"]
         products = self.product.get()
         for product in products:
-            if str(product["id"]) == id_:
+            if product["id"] == id_:
                 price = int(product["price"]) * data["quantity"]
                 user_id = current_user["id"]
                 cart_obj = Cart_Model(
                     user_id, product, data["quantity"], price)
                 cart = self.cart_obj.get()
                 for itm in cart:
-                    if str(itm["product_id"]) == id_:
+                    print(itm)
+                    if itm["product"]['id'] == id_:
                         self.restrict1.restrictCart(
                             data, product["quantity"], price)
                         self.cart_obj.updateQuanitity(
@@ -69,6 +70,47 @@ class Cart(Resource, Initialize):
                     }), 201)
                 return response
         return self.no_products
+
+    @expects_json(CART_JSON)
+    @Token.token_required
+    def put(current_user, self):
+        '''Method for updating a single item in cart'''
+        self.restrict1.checkUserStatus(current_user)
+        self.restrict1.checkAttendantStatus(current_user)
+        data = self.restrict1.getJsonData()
+        valid = Validator_cart(data)
+        valid.validate_data_types()
+        quantity = data["quantity"]
+        cart = self.cart_obj.get()
+        products = self.product.get()
+        len_cart = self.cart_obj.checkCart()
+        cart = self.cart_obj.get()
+        if not len_cart:
+            return self.no_items
+        for itm in cart:
+            if itm["product"]["id"] == data['id']:
+                self.restrict1.checkUser(current_user, itm)
+                for product in products:
+                    if product["title"] == itm["product"]["title"]:
+                        if data["status"] == 1:
+                            remaining_quantity = product["quantity"] - 1
+                        elif data["status"] == 2:
+                            remaining_quantity = product["quantity"] + 1
+                        else:
+                            remaining_quantity = product["quantity"] - itm["quantity"]
+                        self.product.updateQuanitity(int(remaining_quantity), int(itm["product"]["id"]))
+                        self.restrict1.restrictCart(
+                            data, product["quantity"], product["price"])
+                        price = int(product["price"]) * data["quantity"]
+                        self.cart_obj.add_or_reduce_quantity(
+                            data["quantity"], price, itm["product"]["id"])
+                        updated_item = self.cart_obj.get_one_item(
+                            product["id"])
+                        return make_response(jsonify({
+                            "Message": "Quantity updated successfully",
+                            "Cart": updated_item
+                        }), 200)
+        return self.no_items
 
     @Token.token_required
     def get(current_user, self):
@@ -122,41 +164,6 @@ class OneItem(Resource, Initialize):
                 }), 200)
         return self.no_items
 
-    @Token.token_required
-    def put(current_user, self, itemId):
-        '''Method for updating a single item in cart'''
-        self.restrict1.checkUserStatus(current_user)
-        self.restrict1.checkAttendantStatus(current_user)
-        data = self.restrict1.getJsonData()
-        valid = Validator_cart(data)
-        valid.validate_data_types()
-        quantity = data["quantity"]
-        cart = self.cart_obj.get()
-        products = self.product.get()
-        len_cart = self.cart_obj.checkCart()
-        cart = self.cart_obj.get()
-        if not len_cart:
-            return self.no_items
-        for itm in cart:
-            if itm["id"] == itemId:
-                self.restrict1.checkUser(current_user, itm)
-                for product in products:
-                    if product["title"] == itm["title"]:
-                        remaining_quantity = product["quantity"] - \
-                            itm["quantity"]
-                        self.restrict1.restrictCart(
-                            data, remaining_quantity, product["price"])
-                        price = int(product["price"]) * data["quantity"]
-                        self.cart_obj.add_or_reduce_quantity(
-                            data["quantity"], price, itm["title"])
-                        updated_item = self.cart_obj.get_one_item(
-                            product["title"])
-                        self.product.updateQuanitity(int(remaining_quantity), int(id_))
-                        return make_response(jsonify({
-                            "Message": "Quantity updated successfully",
-                            "Cart": updated_item
-                        }), 200)
-        return self.no_items
 
     @Token.token_required
     def delete(current_user, self, itemId):

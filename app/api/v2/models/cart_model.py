@@ -36,13 +36,13 @@ class Cart_Model(InitializeConnection):
                 new_quantity,new_subtotal, _id,)
         )
     
-    def add_or_reduce_quantity(self, quantity, price, title):
+    def add_or_reduce_quantity(self, quantity, price, product_id):
         '''Method is meant to update an item in cart quantity by editing its details in the
         cart table'''
         self.cursor = self.conn.cursor()
         self.cursor.execute(
-            """UPDATE cart SET quantity = %s, subtotals=%s Where title = %s""", (
-                quantity,price, title,)
+            """UPDATE cart SET quantity = %s, subtotals=%s Where product_id = %s""", (
+                quantity,price, product_id,)
         )
 
 
@@ -57,7 +57,19 @@ class Cart_Model(InitializeConnection):
             oneitem = {}
             oneitem["id"] = list_of_items[0]
             oneitem["user_id"] = list_of_items[1]
-            oneitem["product_id"] = list_of_items[2]
+            
+            self.cursor.execute(
+                "SELECT * FROM products WHERE id =%s",
+                (list_of_items[2],)
+            )
+            product_details = self.cursor.fetchone()
+
+            oneitem["product"] = {
+                "id": product_details[0],
+                "title": product_details[1],
+                "price":product_details[3],
+                "quantity":product_details[4]
+            }
             oneitem["quantity"] = list_of_items[3]
             oneitem["subtotals"] = list_of_items[4]
             oneitem["date"] = list_of_items[5]
@@ -75,19 +87,32 @@ class Cart_Model(InitializeConnection):
         new_quantity = int(cart_items[0])
         return new_quantity
     
-    def get_one_item(self, title):
+    def get_one_item(self, product_id):
         '''Get one cart item from the table'''
         self.cursor.execute(
-            """SELECT * FROM cart Where title = %s""", (
-               title,)
+            """SELECT * FROM cart Where product_id = %s""", (
+               product_id,)
         )
         cart_items = self.cursor.fetchone()
         cart_item = []
-        list_of_items= list(cart_items)
+
         oneitem = {}
+        list_of_items= list(cart_items)
+        oneitem["user_id"] = list_of_items[1]
+            
+        self.cursor.execute(
+            "SELECT * FROM products WHERE id =%s",
+            (cart_items[2],)
+        )
+        product_details = self.cursor.fetchone()
+
+        oneitem["product"] = {
+            "id": product_details[0],
+            "title": product_details[1],
+            "price":product_details[3],
+            "quantity":product_details[4]
+        }
         oneitem["id"] = list_of_items[0]
-        oneitem["email"] = list_of_items[1]
-        oneitem["title"] = list_of_items[2]
         oneitem["quantity"] = list_of_items[3]
         oneitem["subtotals"] = list_of_items[4]
         oneitem["date"] = list_of_items[5]

@@ -67,7 +67,7 @@ class Restrictions:
             }), 401))
 
     def checkUser(self, current_user, item):
-        if not current_user["admin"] and not current_user["email"] == item["email"]:
+        if not current_user["admin"] and not current_user["id"] == item["user_id"]:
             abort(self.access_denied)
 
     @staticmethod
