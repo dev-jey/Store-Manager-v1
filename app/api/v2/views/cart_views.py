@@ -135,12 +135,14 @@ class Cart(Resource, Initialize):
     def delete(current_user, self):
         '''Method for deleting all items in cart'''
         self.restrict1.checkUserStatus(current_user)
+        len_cart = self.cart_obj.checkCart()
+        if not len_cart:
+            return self.no_items
         cart = self.cart_obj.get()
         products = self.product.get()
         for product in products:
             for item in cart:
-                print(item['product_id'], product['id'])
-                if item['product_id'] == product['id']:
+                if item['product']['id'] == product['id']:
                     self.product.updateQuanitity(int(item["quantity"]+product["quantity"]), int(product['id']))
         self.cart_obj.delete()
         return make_response(jsonify({"message": "cart empty"}))
@@ -175,11 +177,11 @@ class OneItem(Resource, Initialize):
             return self.no_items
         products = self.product.get()
         for product in products:
-            if product['id'] == itemId:
+            if product['id'] == int(itemId):
                 for item in cart:
-                    if int(itemId) == item["id"]:
+                    if int(itemId) == item["product"]["id"]:
                         self.restrict1.checkUser(current_user, item)
-                        self.product.updateQuanitity(int(item["quantity"]+product["quantity"]), int(id_))
+                        self.product.updateQuanitity(int(item["quantity"]+product["quantity"]), int(product['id']))
                         self.cart_obj.delete_one(itemId)
                         return make_response(jsonify({
                             "Message": "Deleted successfully"

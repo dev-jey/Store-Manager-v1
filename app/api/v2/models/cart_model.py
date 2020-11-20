@@ -128,7 +128,7 @@ class Cart_Model(InitializeConnection):
     def delete_one(self, itemId):
         '''Delete a single element from the cart'''
         self.cursor.execute(
-            "DELETE from cart where id = %s",
+            "DELETE from cart where product_id = %s",
             (itemId,)
         )
 

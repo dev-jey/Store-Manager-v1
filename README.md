@@ -46,6 +46,8 @@
     $ export APP_SETTINGS="development"
     $ export SECRET_KEY="{your key}"
     $ export FLASK_APP=run.py
+    $ export EMAIL="email"
+    $ export PASSWORD="password"
 ```
 
     7. create the development database
