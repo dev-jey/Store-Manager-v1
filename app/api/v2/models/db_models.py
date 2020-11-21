@@ -76,7 +76,7 @@ class Db(object):
             CREATE TABLE IF NOT EXISTS sales(
                 id serial PRIMARY KEY,
                 user_id int REFERENCES users(id) NOT NULL,
-                cart_id int REFERENCES cart(id) NOT NULL,
+                cart_id int NOT NULL,
                 product_id int REFERENCES products(id) ON DELETE CASCADE,
                 quantity int NOT NULL,
                 subtotals int NOT NULL,

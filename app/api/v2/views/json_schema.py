@@ -51,3 +51,12 @@ CATEGORY_JSON = {
     },
     'required': ['title']
 }
+
+CHANGE_JSON = {
+    'type': 'object',
+    'maxProperties': 1,
+    'properties': {
+        'received': {'type': 'integer'}
+    },
+    'required': ['received']
+}

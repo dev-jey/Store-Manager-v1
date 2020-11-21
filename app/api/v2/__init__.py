@@ -3,7 +3,7 @@ from flask_restful import Api, Resource
 
 from .views.user_views import SignUp, Login, UpdateUser, Signout, GetUsers
 from .views.product_views import Product, OneProduct, CategoryProduct
-from .views.cart_views import Cart, OneItem
+from .views.cart_views import Cart, OneItem, Change
 from .views.sales_view import Sale, OneSale
 from .views.categories_views import Category, OneCategory
 
@@ -15,6 +15,7 @@ api.add_resource(Product, "/products")
 api.add_resource(OneProduct, "/products/<int:productId>")
 api.add_resource(CategoryProduct, "/products/categories/<int:itemId>")
 api.add_resource(Cart, "/cart")
+api.add_resource(Change, "/change")
 api.add_resource(OneItem, "/cart/<int:itemId>")
 api.add_resource(Sale, "/sales")
 api.add_resource(Category, "/categories")

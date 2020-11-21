@@ -7,7 +7,7 @@ from ..models.cart_model import Cart_Model
 from ..models.product_models import Product_Model
 from .token import Token
 from .main import Initialize
-from .json_schema import CART_JSON
+from .json_schema import CART_JSON, CHANGE_JSON
 
 
 class Cart(Resource, Initialize):
@@ -34,7 +34,7 @@ class Cart(Resource, Initialize):
                     print(itm)
                     if itm["product"]['id'] == id_:
                         self.restrict1.restrictCart(
-                            data, product["quantity"], price)
+                            data, product["quantity"], price, data['status'])
                         self.cart_obj.updateQuanitity(
                             data["quantity"], price, int(itm['id']))
                         new_quantity = self.cart_obj.get_one_item_quantity(
@@ -49,7 +49,7 @@ class Cart(Resource, Initialize):
                             "Available stock": remaining_quantity_new,
                             "Price": product["price"]
                         }), 201)
-                self.restrict1.restrictCart(data, product["quantity"], price)
+                self.restrict1.restrictCart(data, product["quantity"], price, data['status'])
                 cart_obj.save()
                 self.product.updateQuanitity(int(product["quantity"]-data["quantity"]), int(id_))
                 if product["quantity"] < int(product["minimum_stock"]):
@@ -100,7 +100,7 @@ class Cart(Resource, Initialize):
                             remaining_quantity = product["quantity"] - itm["quantity"]
                         self.product.updateQuanitity(int(remaining_quantity), int(itm["product"]["id"]))
                         self.restrict1.restrictCart(
-                            data, product["quantity"], product["price"])
+                            data, product["quantity"], product["price"], data['status'])
                         price = int(product["price"]) * data["quantity"]
                         self.cart_obj.add_or_reduce_quantity(
                             data["quantity"], price, itm["product"]["id"])
@@ -147,6 +147,30 @@ class Cart(Resource, Initialize):
         self.cart_obj.delete()
         return make_response(jsonify({"message": "cart empty"}))
 
+
+class Change(Resource, Initialize):
+
+    @expects_json(CHANGE_JSON) 
+    @Token.token_required
+    def post(current_user, self):
+        '''Method for deleting a single item in cart'''
+        self.restrict1.checkUserStatus(current_user)
+        data = self.restrict1.getJsonData()
+        len_cart = self.cart_obj.checkCart()
+        cart = self.cart_obj.get()
+        if not len_cart:
+            return self.no_items
+        total = 0
+        for item in cart:
+            total = total + item["subtotals"]
+        if total > data["received"]:
+            return make_response(jsonify({
+                            "Error": "The amount given is less than the total"
+                        }), 401)
+        return make_response(jsonify({
+                            "Message": "Success",
+                            "Change": data["received"] - total
+                        }), 200)
 
 class OneItem(Resource, Initialize):
     @Token.token_required

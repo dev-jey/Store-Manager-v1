@@ -60,8 +60,8 @@ class Restrictions:
         return request.get_json()
 
     @staticmethod
-    def restrictCart(data, quantity, price):
-        if quantity == 0:
+    def restrictCart(data, quantity, price, status):
+        if data['quantity'] > quantity and status == 1:
             abort(make_response(jsonify({
                 "Message": "You cannot add more than is in stock"
             }), 401))

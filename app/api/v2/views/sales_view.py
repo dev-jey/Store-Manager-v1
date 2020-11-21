@@ -1,3 +1,4 @@
+import random
 from flask import jsonify, make_response
 from flask_restful import Resource
 from flask_expects_json import expects_json
@@ -10,24 +11,20 @@ from .json_schema import CART_JSON
 
 class Sale(Resource, Initialize):
 
-    @expects_json(CART_JSON)
     @Token.token_required
     def post(current_user, self):
         '''Create an endpoint for attendants to make sales'''
         self.restrict1.checkUserStatus(current_user)
         self.restrict1.checkAttendantStatus(current_user)
+        random_id = ' '.join([str(random.randint(0, 999)).zfill(3) for _ in range(2)])
         cart_items = self.cart_obj.get()
         if not cart_items:
             return make_response(jsonify({
                 "Message": "No items to sell"
             }), 404)
         for item in cart_items:
-            sales_obj = Sale_Model(current_user["id"], item["id"], cart["id"],
-            item["quantity"], item["subtotals"])
-            products = self.product.get()
-            for product in products:
-                if item["id"] == product['id']:
-                    self.product.updateQuanitity(item["quantity"], product['id'])
+            sales_obj = Sale_Model(int(current_user["id"]), int(item["product"]["id"]), int(random_id.replace(" ", "")),
+            int(item["quantity"]), int(item["subtotals"]))
             sales_obj.save()
         self.cart_obj.delete()
         return make_response(jsonify({
@@ -39,11 +36,11 @@ class Sale(Resource, Initialize):
     def get(current_user, self):
         '''Method for getting all items in cart'''
         self.restrict1.checkUserStatus(current_user)
-        sales = self.sales_obj.get()
+        sales = self.sales_obj.get(current_user['id'])
         total = 0
         for item in sales:
             total = total + item["subtotals"]
-        len_sales = self.sales_obj.checkSales()
+        len_sales = self.sales_obj.checkSales(current_user['id'])
         if len_sales:
             response = make_response(jsonify({
                 "Message": "Success",

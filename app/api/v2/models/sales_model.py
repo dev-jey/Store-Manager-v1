@@ -17,14 +17,14 @@ class Sale_Model(InitializeConnection):
     def save(self):
         '''Saves a sale to sale records'''
         self.cursor.execute(
-            """INSERT INTO sales(user_id, product_id, quantity, subtotals,
-             date) VALUES(%s,%s,%s,%s,%s)""",
-            (self.email, self.title, self.quantity,
-             self.subtotals, self.date),)
+            """INSERT INTO sales(user_id, cart_id, product_id, quantity, subtotals,
+             date) VALUES(%s,%s,%s,%s,%s,%s)""",
+            (self.user_id,self.cart_id, self.product_id, self.quantity,
+             self.subtotals, self.date,))
     
-    def get(self):
-        sql = "SELECT * FROM sales"
-        self.cursor.execute(sql)
+    def get(self, user_id):
+        self.cursor.execute("""SELECT * FROM sales WHERE user_id=%s""",
+        (user_id,))
         cart = self.cursor.fetchall()
         allitems = []
         for item in cart:
@@ -42,7 +42,7 @@ class Sale_Model(InitializeConnection):
     
     def delete(self):
         self.cursor.execute(
-            "DELETE from sales"
+            "DELETE * from sales"
         )
     
     def delete_one(self, itemId):
@@ -53,7 +53,7 @@ class Sale_Model(InitializeConnection):
 
 
     @staticmethod
-    def checkSales():
+    def checkSales(user_id):
         sale1 = Sale_Model()
-        sales = sale1.get()
+        sales = sale1.get(user_id)
         return len(sales)
