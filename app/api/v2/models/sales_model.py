@@ -1,4 +1,5 @@
 from .main_model import InitializeConnection
+from itertools import groupby
 
 
 class Sale_Model(InitializeConnection):
@@ -22,23 +23,37 @@ class Sale_Model(InitializeConnection):
             (self.user_id,self.cart_id, self.product_id, self.quantity,
              self.subtotals, self.date,))
     
-    def get(self, user_id):
-        self.cursor.execute("""SELECT * FROM sales WHERE user_id=%s""",
-        (user_id,))
-        cart = self.cursor.fetchall()
-        allitems = []
-        for item in cart:
+    def get(self, admin, current_user):
+        total = 0
+        if admin:
+            self.cursor.execute("SELECT * FROM sales")
+        if not admin:
+            self.cursor.execute("""SELECT * FROM sales WHERE user_id=%s""",
+            (current_user,))
+        sales = self.cursor.fetchall()
+        cart_items = []
+        for item in sales:
             list_of_items= list(item)
             oneitem = {}
             oneitem["id"] = list_of_items[0]
-            oneitem["email"] = list_of_items[1]
-            oneitem["title"] = list_of_items[2]
-            oneitem["quantity"] = list_of_items[3]
-            oneitem["subtotals"] = list_of_items[4]
-            oneitem["date"] = list_of_items[5]
-            allitems.append(oneitem)
-
-        return allitems
+            self.cursor.execute("""SELECT email FROM users WHERE id=%s""",
+            (current_user,))
+            user_details = self.cursor.fetchone()
+            oneitem["attendant_email"] = user_details[0]
+            oneitem["cart_id"] = list_of_items[2]
+            self.cursor.execute("""SELECT title, price, description FROM products WHERE id=%s""",
+            (list_of_items[3],))
+            product_details = self.cursor.fetchone()
+            oneitem["product_title"] = product_details[0]
+            oneitem["product_price"] = product_details[1]
+            oneitem["product_description"] = product_details[2]
+            oneitem["quantity"] = list_of_items[4]
+            oneitem["subtotals"] = list_of_items[5]
+            oneitem["date"] = list_of_items[6]
+            total = total + list_of_items[5]
+            cart_items.append(oneitem)
+            res = [list(v) for l,v in groupby(sorted(cart_items, key=lambda x:x['cart_id']), lambda x: x['cart_id'])]
+        return res, total
     
     def delete(self):
         self.cursor.execute(
@@ -53,7 +68,7 @@ class Sale_Model(InitializeConnection):
 
 
     @staticmethod
-    def checkSales(user_id):
+    def checkSales(admin, user):
         sale1 = Sale_Model()
-        sales = sale1.get(user_id)
+        sales = sale1.get(admin, user)
         return len(sales)

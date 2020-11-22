@@ -34,13 +34,10 @@ class Sale(Resource, Initialize):
 
     @Token.token_required
     def get(current_user, self):
-        '''Method for getting all items in cart'''
+        '''Method for getting all items in sales'''
         self.restrict1.checkUserStatus(current_user)
-        sales = self.sales_obj.get(current_user['id'])
-        total = 0
-        for item in sales:
-            total = total + item["subtotals"]
-        len_sales = self.sales_obj.checkSales(current_user['id'])
+        sales, total = self.sales_obj.get(current_user['admin'], current_user['id'])
+        len_sales = self.sales_obj.checkSales(current_user['admin'], current_user['id'])
         if len_sales:
             response = make_response(jsonify({
                 "Message": "Success",
